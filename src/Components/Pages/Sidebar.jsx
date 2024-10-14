@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import logo from '../../assets/mainlogo.png'; // Adjust extension if necessary
 import {
   MdDashboard,
   MdShoppingCart,
@@ -146,13 +147,8 @@ const menuItems = [
   { key: 'logout', icon: <MdLogout />, label: 'Logout', to: '/logout' },
 ];
 
-export default function Sidebar({ user }) {
-  const [collapsed, setCollapsed] = useState(false);
+export default function Sidebar({ collapsed, toggleSidebar }) {
   const navigate = useNavigate();
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
 
   const renderMenuItems = (items) => {
     return items.map((item) => {
@@ -174,7 +170,7 @@ export default function Sidebar({ user }) {
   return (
     <>
       <Button
-        onClick={toggleCollapsed}
+        onClick={toggleSidebar}  // Call the function passed from App
         style={{
           position: 'fixed',
           top: 16,
@@ -198,10 +194,18 @@ export default function Sidebar({ user }) {
           bottom: 0,
         }}
       >
-        <div className={`flex justify-center items-center ${collapsed ? 'h-12' : 'h-24'} transition-all duration-300`}>
-          <h1 className={`font-semibold text-4xl ${collapsed ? 'hidden' : 'block'}`}>
-            Genius Shop
-          </h1>
+        <div className={`flex justify-center items-center ${collapsed ? 'h-12' : 'h-24' } transition-all duration-300`}>
+          {collapsed ? (
+            <img
+              src={logo} // Replace with your logo path
+              alt="Logo"
+              className="h-8" // Set height for the logo
+            />
+          ) : (
+            <h1 className={`font-semibold text-xl`}>
+              Arrc Tech Ecommerce
+            </h1>
+          )}
         </div>
         <Menu
           mode="inline"

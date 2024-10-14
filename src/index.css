@@ -74,4 +74,11 @@
   .dropdownmenu-wrapper li a:hover {
     background: #f0f0f0; /* Background on hover */
   }
+  .icon-circle {
+    perspective: 1000px; /* Allow for 3D space */
+  }
+  
+  .icon-circle:hover {
+    transform: rotateY(180deg);
+  }
   

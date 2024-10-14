@@ -49,6 +49,21 @@ const MainCategories = () => {
   const handleImageChange = (e) => {
     setNewCategory((prev) => ({ ...prev, image: e.target.files[0] }));
   };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleStatusChange = async (categoryId, newStatus) => {
+    try {
+      await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}`, { status: newStatus });
+      // Update categories in the state
+      setCategories(prev =>
+        prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
+      );
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,7 +104,8 @@ const MainCategories = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <button onClick={() => setIsModalOpen(true)} className="btn btn-primary rounded-2xl px-4 py-1 bg-violet-600 text-white  hover:bg-violet-700 focus:outline-none">
+        <button onClick={() => setIsModalOpen(true)} 
+          className="btn btn-primary rounded-2xl px-4 py-1 bg-violet-600 text-white hover:bg-violet-700 focus:outline-none">
           + Add New
         </button>
       </div>
@@ -107,41 +123,44 @@ const MainCategories = () => {
           </tr>
         </thead>
         <tbody>
-          {currentCategories.map((category, index) => (
-            <tr  key={index} className="hover:bg-gray-100 ">
+          {currentCategories.map((category) => (
+            <tr key={category._id} className="hover:bg-gray-100 ">
               <td className="py-2 px-4 border">{category.name}</td>
               <td className="py-2 px-4 border">{category.slug}</td>
               <td className="py-2 flex justify-center px-4 border">
-  <button className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200">
-    <EditOutlined className="h-5 w-5 mr-1" />
-    Create
-  </button>
-  <button className="flex items-center rounded-2xl text-white  bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1  focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
-    <EditOutlined className="h-5 w-5 mr-1" />
-    Manage
-  </button>
-</td>
-
+                <button className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200">
+                  <EditOutlined className="h-5 w-5 mr-1" />
+                  Create
+                </button>
+                <button className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
+                  <EditOutlined className="h-5 w-5 mr-1" />
+                  Manage
+                </button>
+              </td>
               <td className="py-2 px-4 border">
                 {category.image ? <img src={category.image} alt={category.name} className="w-12 h-12 rounded" /> : '-'}
               </td>
-              <td className="py-2 px-4 border">{category.status}</td>
+              <td className="py-2 px-4 border">
+                <select
+                  value={category.status}
+                  onChange={(e) => handleStatusChange(category._id, e.target.value)}
+                  className="border rounded px-2 py-1"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </td>
               <td className="py-2 px-4 border">{category.featured ? 'Yes' : 'No'}</td>
-              {/* <td className="py-2 px-4 border">
-                <button className="text-blue-500 hover:text-blue-700">Manage</button>
-                <button className="text-blue-500 hover:text-blue-700 ml-2">Edit</button>
-              </td> */}
               <td className="py-2 flex justify-center px-4 border">
-  <button className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2  transition ease-in-out duration-200">
-    <EditOutlined className="h-5 w-5 mr-1" />
-    Edit
-  </button>
-  <button className="flex items-center rounded-2xl text-white  bg-red-600 hover:bg-red-700 ml-2 px-3 py-1  focus:outline-none focus:ring-2   transition ease-in-out duration-200">
-    <TrashIcon className="h-5 w-5 mr-1" />
-    delet
-  </button>
-</td>
-
+                <button className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200">
+                  <EditOutlined className="h-5 w-5 mr-1" />
+                  Edit
+                </button>
+                <button className="flex items-center rounded-2xl text-white bg-red-600 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
+                  <TrashIcon className="h-5 w-5 mr-1" />
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -159,6 +178,17 @@ const MainCategories = () => {
           >
             Previous
           </button>
+                  {/* Page Number Indicators */}
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`btn ml-2 px-4 py-2 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded hover:bg-gray-400 focus:outline-none`}
+          >
+            {index + 1}
+          </button>
+        ))}
+
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
