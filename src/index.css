@@ -81,4 +81,27 @@
   .icon-circle:hover {
     transform: rotateY(180deg);
   }
+
+
+
+
+
+
+
+
+
+  /* sidebarcolor */
+  /* Custom CSS file (e.g., sidebar.css) */
+.ant-menu-item:hover, 
+.ant-menu-item-active, 
+.ant-menu-item-selected {
+  background-color: #2dd4bf !important;  /* Change this to your desired hover color */
+  color: white !important;  /* Change text color */
+}
+
+.ant-menu-submenu-title:hover {
+  background-color: #2dd4bf !important;  /* Change this to your desired hover color */
+  color: white !important;  /* Change text color */
+}
+
   

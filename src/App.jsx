@@ -26,9 +26,9 @@ const App = () => {
           <div className="h-12">
             <Navbar />
           </div>
-          <div className='mt-10 ml-5'><Breadcrumb /></div>
-          <div className="flex-1 bg-white">
-            <Routes>
+          <div className='mt-10  ml-5'><Breadcrumb /></div>
+          <div className="flex-1 ">
+            <Routes >
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin/products/types" element={<AddNewProduct />} />
               <Route path="/admin/category" element={<MainCategories />} />

@@ -1,25 +1,43 @@
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const MainCategories = () => {
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null); // Define selectedCategoryId state
+  const [attributesList, setAttributesList] = useState([]); // State for attributes list
+  const [showAttributes, setShowAttributes] = useState(false); // State to toggle attributes display
+  const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
+
+  const itemsPerPage = 6;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAttributeModalOpen, setIsAttributeModalOpen] = useState(false); // For attribute modal
+
   const [newCategory, setNewCategory] = useState({
     name: '',
     slug: '',
     image: null,
   });
+  const [newAttribute, setNewAttribute] = useState({
+    name: '',
+    option: '',
+    allowPriceField: false,
+    showOnDetailsPage: false,
+  });
+
+
 
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/categories'); // Adjust this path based on your API
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories'); // Adjust this path based on your API
         console.log('Fetched categories:', response.data); // Log the response
         if (Array.isArray(response.data)) {
           setCategories(response.data);
@@ -46,6 +64,11 @@ const MainCategories = () => {
     setNewCategory((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleAttributeChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    setNewAttribute((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
   const handleImageChange = (e) => {
     setNewCategory((prev) => ({ ...prev, image: e.target.files[0] }));
   };
@@ -55,7 +78,7 @@ const MainCategories = () => {
 
   const handleStatusChange = async (categoryId, newStatus) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}`, { status: newStatus });
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
       // Update categories in the state
       setCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
@@ -77,7 +100,7 @@ const MainCategories = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/categories', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -91,12 +114,72 @@ const MainCategories = () => {
       console.error('Error creating category:', error);
     }
   };
+  const handleAttributeSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+        const response = await axios.post(`http://127.0.0.1:5000/api/categories/${selectedCategoryId}/attributes`, newAttribute);
+        // Assuming you have the selected category ID in state and an endpoint to handle adding attributes
+        setCategories(prev =>
+            prev.map(cat => (cat._id === selectedCategoryId ? { ...cat, attributes: [...cat.attributes, response.data] } : cat))
+        );
+        setNewAttribute({ name: '', option: '', allowPriceField: false, showOnDetailsPage: false });
+        setIsAttributeModalOpen(false); // Close modal after submission
+        
+    } catch (error) {
+        console.error('Error adding attribute:', error);
+    }
+};
+  const handleCategorySelect = (id) => {
+    setSelectedCategoryId(id);
+  };
+
+
+
+  const handleManageClick = (category) => {
+    setSelectedCategoryId(category._id);
+    setAttributesList(category.attributes || []); // Set the selected category's attributes
+    setShowAttributes(true); // Show the attributes list
+  };
+
+  // const handleDeleteAttribute = async (attributeId) => {
+  //   try {
+  //     await axios.delete(`http://127.0.0.1:5000/api/attributes/${attributeId}`); // Adjust the endpoint as necessary
+  //     setAttributesList(prev => prev.filter(attr => attr._id !== attributeId)); // Remove the attribute from the list
+  //   } catch (error) {
+  //     console.error('Error deleting attribute:', error);
+  //   }
+  // };
+// Function to handle edit - open the modal and set the selected attribute
+const handleEditAttribute = (attribute) => {
+  setNewAttribute({
+    name: attribute.name,
+    option: attribute.option,
+    allowPriceField: attribute.allowPriceField,
+    showOnDetailsPage: attribute.showOnDetailsPage,
+  });
+  setEditingAttributeId(attribute._id); // Store the ID for updating
+  setIsAttributeModalOpen(true); // Close modal after submission
+  setShowAttributes(false); // Show the attributes list
+
+};
+
+// Function to handle delete - send request to backend to remove the attribute
+const handleDeleteAttribute = async (attributeId) => {
+  try {
+    await deleteAttributeFromCategory(selectedCategoryId, attributeId); // API request to delete
+    await fetchAttributes(); // Refresh the list of attributes
+  } catch (error) {
+    console.error("Error deleting attribute:", error);
+  }
+};
+
 
   return (
     <div className="content-area px-6">
       <h4 className="heading text-2xl font-semibold mb-4">Main Categories</h4>
 
-      <div className="flex justify-between mb-4">
+      <div className="flex  justify-between mb-4">
         <input
           type="text"
           placeholder="Search..."
@@ -117,8 +200,8 @@ const MainCategories = () => {
             <th className="py-2 px-4 border">Slug</th>
             <th className="py-2 px-4 border">Attribute</th>
             <th className="py-2 px-4 border">Image</th>
-            <th className="py-2 px-4 border">Status</th>
             <th className="py-2 px-4 border">Featured</th>
+            <th className="py-2 px-4 border">Status</th>
             <th className="py-2 px-4 border">Options</th>
           </tr>
         </thead>
@@ -127,36 +210,58 @@ const MainCategories = () => {
             <tr key={category._id} className="hover:bg-gray-100 ">
               <td className="py-2 px-4 border">{category.name}</td>
               <td className="py-2 px-4 border">{category.slug}</td>
-              <td className="py-2 flex justify-center px-4 border">
-                <button className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200">
+              <td className="py-2 flex  px-4 border">
+                <button
+                  onClick={() => {
+                    handleCategorySelect(category._id); // Set the selected category ID
+                    setIsAttributeModalOpen(true);
+                  }}
+                  className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200"
+                >
                   <EditOutlined className="h-5 w-5 mr-1" />
                   Create
                 </button>
-                <button className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
-                  <EditOutlined className="h-5 w-5 mr-1" />
-                  Manage
-                </button>
+                {/* Show Manage button only if there are attributes */}
+                {category.attributes && category.attributes.length > 0 && (
+                  <button 
+                  onClick={() => handleManageClick(category)}
+
+                  className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
+                    <EditOutlined className="h-5 w-5 mr-1" />
+                    Manage
+                  </button>
+                )}
               </td>
-              <td className="py-2 px-4 border">
+              <td className="py-2 px-4   border">
                 {category.image ? <img src={category.image} alt={category.name} className="w-12 h-12 rounded" /> : '-'}
               </td>
               <td className="py-2 px-4 border">
                 <select
+                  value={category.featured}
+                  onChange={(e) => handleStatusChange(category._id, e.target.value)}
+                  className="border bg-pink-300 text-white rounded px-2 py-1"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                </td>
+
+              <td className="py-2 px-4 border">
+                <select
                   value={category.status}
                   onChange={(e) => handleStatusChange(category._id, e.target.value)}
-                  className="border rounded px-2 py-1"
+                  className="border bg-sky-300 text-white rounded px-2 py-1"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
               </td>
-              <td className="py-2 px-4 border">{category.featured ? 'Yes' : 'No'}</td>
               <td className="py-2 flex justify-center px-4 border">
-                <button className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200">
+                <button className="flex items-center rounded-2xl text-white bg-blue-900 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200">
                   <EditOutlined className="h-5 w-5 mr-1" />
                   Edit
                 </button>
-                <button className="flex items-center rounded-2xl text-white bg-red-600 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
+                <button className="flex items-center rounded-2xl text-white bg-red-900 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
                   <TrashIcon className="h-5 w-5 mr-1" />
                   Delete
                 </button>
@@ -166,6 +271,77 @@ const MainCategories = () => {
         </tbody>
       </table>
 
+            {/* Add New Attribute Modal */}
+            {isAttributeModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded shadow-md w-96">
+            <h2 className="text-2xl font-bold mb-4">Add New Attribute</h2>
+            <form onSubmit={handleAttributeSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Name *</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newAttribute.name}
+                  onChange={handleAttributeChange}
+                  required
+                  className="w-full border px-4 py-2 rounded focus:outline-none"
+                  placeholder="In any language"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Option *</label>
+                <input
+                  type="text"
+                  name="option"
+                  value={newAttribute.option}
+                  onChange={handleAttributeChange}
+                  required
+                  className="w-full border px-4 py-2 rounded focus:outline-none"
+                  placeholder="Option label in English"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">
+                <input
+                  type="checkbox"
+                  name="allowPriceField"
+                  checked={newAttribute.allowPriceField}
+                  onChange={handleAttributeChange}
+                  className="mr-2"
+                />Allow Price Field</label>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">
+                <input
+                  type="checkbox"
+                  name="showOnDetailsPage"
+                  checked={newAttribute.showOnDetailsPage}
+                  onChange={handleAttributeChange}
+                  className="mr-2"
+                />Show on Details Page</label>
+              </div>
+              <div className="flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => setIsAttributeModalOpen(false)}
+                  className="btn px-4 py-1 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none"
+                >
+                  Create Attribute
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+
       <div className="flex justify-between mt-4">
         <div>
           <span>{`Showing ${currentPage * itemsPerPage - itemsPerPage + 1} to ${Math.min(currentPage * itemsPerPage, filteredCategories.length)} of ${filteredCategories.length} entries`}</span>
@@ -174,7 +350,7 @@ const MainCategories = () => {
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="btn px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none disabled:opacity-50"
+            className="btn px-4 py-1 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none disabled:opacity-50"
           >
             Previous
           </button>
@@ -183,7 +359,7 @@ const MainCategories = () => {
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
-            className={`btn ml-2 px-4 py-2 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'} rounded hover:bg-gray-400 focus:outline-none`}
+            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-gray-300'} rounded hover:bg-gray-400 focus:outline-none`}
           >
             {index + 1}
           </button>
@@ -192,12 +368,62 @@ const MainCategories = () => {
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="btn ml-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none disabled:opacity-50"
+            className="btn ml-2 px-4 py-1 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none disabled:opacity-50"
           >
             Next
           </button>
         </div>
       </div>
+      {/* Render attributes list if the Manage button is clicked */}
+
+      {showAttributes && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    {/* Modal content */}
+    <div className="bg-white w-1/2 p-6 rounded-lg shadow-lg">
+      <h5 className="font-semibold text-lg mb-4">Attributes {selectedCategoryId.name}</h5>
+
+      <ul className="list-disc pl-5">
+        {attributesList.map((attribute) => (
+          <li key={attribute._id} className="flex justify-between items-center py-2 border-b">
+            <div className="flex flex-col">
+              <span><strong>Name:</strong> {attribute.name}</span>
+              <span><strong>Option:</strong> {attribute.option}</span>
+              <span><strong>Allow Price Field:</strong> {attribute.allowPriceField ? 'Yes' : 'No'}</span>
+              <span><strong>Show on Details Page:</strong> {attribute.showOnDetailsPage ? 'Yes' : 'No'}</span>
+            </div>
+            <div className="flex">
+              <button
+                              onClick={() => handleEditAttribute(attribute)}
+
+                              className="text-blue-500  hover:text-blue-700 mr-2"
+                              aria-label="Edit attribute">
+                              <FontAwesomeIcon className='h-6' icon={faEdit} />
+        </button>
+              <button
+              
+                onClick={() => handleDeleteAttribute(attribute._id)}
+                className="text-red-500 p-3 hover:text-red-700"
+                aria-label="Delete attribute"
+                      >
+        <FontAwesomeIcon className='h-6' icon={faTrash} />
+        </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Close button */}
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={() => setShowAttributes(false)}
+          className="text-white bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Modal for adding a new category */}
       {isModalOpen && (
