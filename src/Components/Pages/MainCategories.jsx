@@ -87,6 +87,18 @@ const MainCategories = () => {
       console.error('Error updating status:', error);
     }
   };
+  const handlefeaturedChange = async (categoryId, newfeatured) => {
+    try {
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { featured: newfeatured });
+      // Update categories in the state
+      setCategories(prev =>
+        prev.map(cat => (cat._id === categoryId ? { ...cat, featured: newfeatured } : cat))
+      );
+    } catch (error) {
+      console.error('Error updating featured:', error);
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,7 +130,7 @@ const MainCategories = () => {
     e.preventDefault();
     
     try {
-        const response = await axios.post(`http://127.0.0.1:5000/api/categories/${selectedCategoryId}/attributes`, newAttribute);
+        const response = await axios.post(`https://ecommerce-panel-backend.onrender.com/api/categories/${selectedCategoryId}/attributes`, newAttribute);
         // Assuming you have the selected category ID in state and an endpoint to handle adding attributes
         setCategories(prev =>
             prev.map(cat => (cat._id === selectedCategoryId ? { ...cat, attributes: [...cat.attributes, response.data] } : cat))
@@ -142,15 +154,6 @@ const MainCategories = () => {
     setShowAttributes(true); // Show the attributes list
   };
 
-  // const handleDeleteAttribute = async (attributeId) => {
-  //   try {
-  //     await axios.delete(`http://127.0.0.1:5000/api/attributes/${attributeId}`); // Adjust the endpoint as necessary
-  //     setAttributesList(prev => prev.filter(attr => attr._id !== attributeId)); // Remove the attribute from the list
-  //   } catch (error) {
-  //     console.error('Error deleting attribute:', error);
-  //   }
-  // };
-// Function to handle edit - open the modal and set the selected attribute
 const handleEditAttribute = (attribute) => {
   setNewAttribute({
     name: attribute.name,
@@ -238,7 +241,7 @@ const handleDeleteAttribute = async (attributeId) => {
               <td className="py-2 px-4 border">
                 <select
                   value={category.featured}
-                  onChange={(e) => handleStatusChange(category._id, e.target.value)}
+                  onChange={(e) =>handlefeaturedChange (category._id, e.target.value)}
                   className="border bg-pink-300 text-white rounded px-2 py-1"
                 >
                   <option value="active">Active</option>
@@ -350,7 +353,7 @@ const handleDeleteAttribute = async (attributeId) => {
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="btn px-4 py-1 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none disabled:opacity-50"
+            className="btn px-4 py-1  rounded border focus:outline-none disabled:opacity-50"
           >
             Previous
           </button>
@@ -359,7 +362,7 @@ const handleDeleteAttribute = async (attributeId) => {
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
-            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-gray-300'} rounded hover:bg-gray-400 focus:outline-none`}
+            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} rounded hover:bg-gray-200 focus:outline-none`}
           >
             {index + 1}
           </button>
@@ -368,7 +371,7 @@ const handleDeleteAttribute = async (attributeId) => {
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="btn ml-2 px-4 py-1 bg-gray-300 rounded hover:bg-gray-400 focus:outline-none disabled:opacity-50"
+            className="btn ml-2 px-4 py-1  rounded hover:bg-gray-200 border focus:outline-none disabled:opacity-50"
           >
             Next
           </button>

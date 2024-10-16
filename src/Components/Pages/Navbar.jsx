@@ -154,7 +154,9 @@ const Navbar = ({ collapsed, setCollapsed, user, onLogout }) => {
         {/* User Profile Dropdown */}
         <Dropdown overlay={userMenu} trigger={['click']} placement="bottomRight">
           <div className="flex items-center">
-            <Avatar size="large" icon={<UserOutlined />} />
+            <Avatar size="large"
+            
+             icon={<UserOutlined />} />
             <span className="ml-2">{user ? user.name : 'User'}</span> {/* Show user name */}
           </div>
         </Dropdown>

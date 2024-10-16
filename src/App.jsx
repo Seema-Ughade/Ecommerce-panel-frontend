@@ -10,7 +10,9 @@ import Breadcrumb from './Components/Pages/Breadcrumb';
 import MainCategories from './Components/Pages/MainCategories';
 import SubCategories from './Components/Pages/SubCategories';
 import ChildCategories from './Components/Pages/ChildCategories';
-
+import Categories from './Components/Pages/Categories';
+import Posts from './Components/Pages/Posts';
+import ManageStaffs from './Components/Pages/ManageStaffs'
 const App = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -35,6 +37,9 @@ const App = () => {
               <Route path="/admin/subcategory" element={<SubCategories />} />
               <Route path="/admin/childcategory" element={<ChildCategories />} />
               <Route path="/admin/products/types" element={<AddNewProduct />} />
+              <Route path="/admin/blog/categories" element={<Categories />} />
+              <Route path="/admin/blog/posts" element={<Posts />} />
+              <Route path="/admin/blog/manage-staffs" element={<ManageStaffs />} />
             </Routes>
           </div>
         </div>

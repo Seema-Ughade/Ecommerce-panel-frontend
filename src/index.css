@@ -85,6 +85,32 @@
 
 
 
+/* The scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+  height: 12px; /* Height of the scrollbar for horizontal scrolling */
+}
+
+/* The track (background of the scrollbar) */
+::-webkit-scrollbar-track {
+  background: #e0e0ff; /* Light violet color for the scrollbar track */
+}
+
+/* The draggable part of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #ac78ec; /* Violet color for the scrollbar thumb */
+  border-radius: 6px; /* Round the edges of the thumb */
+}
+
+/* Hover effect on the thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: #ac78ec; /* Darker violet color when hovering over the scrollbar thumb */
+}
+
+/* Optional: Define styles for the scrollbar corner (for both horizontal and vertical) */
+::-webkit-scrollbar-corner {
+  /* background: #e0e0ff; Light violet color for the scrollbar corner */
+}
 
 
 
