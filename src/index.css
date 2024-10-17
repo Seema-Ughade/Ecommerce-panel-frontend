@@ -88,18 +88,19 @@
 /* The scrollbar */
 ::-webkit-scrollbar {
   width: 12px; /* Width of the scrollbar */
-  height: 12px; /* Height of the scrollbar for horizontal scrolling */
+  height: 10px; /* Height of the scrollbar for horizontal scrolling */
 }
 
 /* The track (background of the scrollbar) */
 ::-webkit-scrollbar-track {
-  background: #e0e0ff; /* Light violet color for the scrollbar track */
+  background: #f0f0f0; /* Light violet color for the scrollbar track */
 }
 
 /* The draggable part of the scrollbar */
 ::-webkit-scrollbar-thumb {
-  background: #ac78ec; /* Violet color for the scrollbar thumb */
+  background: lightgray; /* Violet color for the scrollbar thumb */
   border-radius: 6px; /* Round the edges of the thumb */
+  
 }
 
 /* Hover effect on the thumb */

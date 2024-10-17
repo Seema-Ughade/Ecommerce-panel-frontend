@@ -22,7 +22,7 @@ const MainCategories = () => {
   const [newCategory, setNewCategory] = useState({
     name: '',
     slug: '',
-    image: null,
+    image: '',
   });
   const [newAttribute, setNewAttribute] = useState({
     name: '',
@@ -147,7 +147,17 @@ const MainCategories = () => {
   };
 
 
-
+  const handleDeleteCategory = async (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        await axios.delete(`http://127.0.0.1:5000/api/categories/${categoryId}`);
+        setCategories(prev => prev.filter(cat => cat._id !== categoryId)); // Update state
+      } catch (error) {
+        console.error('Error deleting category:', error);
+      }
+    }
+  };
+  
   const handleManageClick = (category) => {
     setSelectedCategoryId(category._id);
     setAttributesList(category.attributes || []); // Set the selected category's attributes
@@ -180,7 +190,7 @@ const handleDeleteAttribute = async (attributeId) => {
 
   return (
     <div className="content-area px-6">
-      <h4 className="heading text-2xl font-semibold mb-4">Main Categories</h4>
+      <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">Main Categories</h4>
 
       <div className="flex  justify-between mb-4">
         <input
@@ -264,7 +274,10 @@ const handleDeleteAttribute = async (attributeId) => {
                   <EditOutlined className="h-5 w-5 mr-1" />
                   Edit
                 </button>
-                <button className="flex items-center rounded-2xl text-white bg-red-900 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
+                <button
+  onClick={() => handleDeleteCategory(category._id)} // Pass the category ID
+
+                 className="flex items-center rounded-2xl text-white bg-red-900 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
                   <TrashIcon className="h-5 w-5 mr-1" />
                   Delete
                 </button>
