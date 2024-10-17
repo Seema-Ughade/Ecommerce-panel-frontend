@@ -150,7 +150,7 @@ const MainCategories = () => {
   const handleDeleteCategory = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await axios.delete(`http://127.0.0.1:5000/api/categories/${categoryId}`);
+        await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`);
         setCategories(prev => prev.filter(cat => cat._id !== categoryId)); // Update state
       } catch (error) {
         console.error('Error deleting category:', error);
