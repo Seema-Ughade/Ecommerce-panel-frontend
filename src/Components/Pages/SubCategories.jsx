@@ -177,7 +177,7 @@ const handleSubCategoryNameChange = (e) => {
 
   const handleStatusChange = async (categoryId, newStatus) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/subcategories/${categoryId}/status`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/subcategories/${categoryId}/status`, { status: newStatus });
       console.log('Updated Subcategory:', response.data); // Log the updated subcategory
       // Update categories in the state
       setSubCategories(prev =>

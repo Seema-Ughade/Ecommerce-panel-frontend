@@ -112,7 +112,7 @@ const MainCategories = () => {
   
   const handleFeaturedChange = async (categoryId, newFeatured) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}/featured`, { featured: newFeatured });
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}/featured`, { featured: newFeatured });
       setCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, featured: newFeatured } : cat))
       );
@@ -138,7 +138,7 @@ const MainCategories = () => {
   //   }
 
   //   try {
-  //     const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
+  //     const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/categories', formData, {
   //       headers: {
   //         'Content-Type': 'multipart/form-data',
   //       },
@@ -172,7 +172,7 @@ const MainCategories = () => {
       }
   
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/categories', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -304,7 +304,7 @@ const handleDeleteAttribute = async (attributeId) => {
   
     try {
       const response = await axios.put(
-        `http://127.0.0.1:5000/api/categories/${editingCategoryId}`,
+        `https://ecommerce-panel-backend.onrender.com/api/categories/${editingCategoryId}`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
