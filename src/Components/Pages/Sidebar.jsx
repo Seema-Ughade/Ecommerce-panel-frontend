@@ -85,10 +85,10 @@ const menuItems = [
   { key: 'dashboard', icon: <MdDashboard />, label: 'Dashboard', to: '/dashboard' },
   {
     key: 'orders',
-    icon: <MdShoppingCart/>, 
+    icon: <MdShoppingCart />,
     label: 'Orders',
     children: [
-      { key: 'all-orders', icon: <MdShoppingCart />,  label: 'All Orders', to: '/admin/orders' },
+      { key: 'all-orders', icon: <MdShoppingCart />, label: 'All Orders', to: '/admin/orders' },
       { key: 'pending-orders', icon: <MdHourglassEmpty />, label: 'Pending Orders', to: '/admin/orders?status=pending' },
       { key: 'processing-orders', icon: <MdBuild />, label: 'Processing Orders', to: '/admin/orders?status=processing' },
       { key: 'completed-orders', icon: <MdCheckCircle />, label: 'Completed Orders', to: '/admin/orders?status=completed' },
@@ -126,17 +126,17 @@ const menuItems = [
       { key: 'child-category', icon: <MdFolderSpecial />, label: 'Child Category', to: '/admin/childcategory' },
     ],
   },
-  
+
   {
     key: 'products',
     icon: <MdAdd />,
     label: 'Products',
     children: [
-      { key: 'add-product', icon: <MdAddBox />,  label: 'Add New Product', to: '/admin/products/types' },
+      { key: 'add-product', icon: <MdAddBox />, label: 'Add New Product', to: '/admin/products/types' },
       { key: 'all-products', icon: <MdList />, label: 'All Products', to: '/admin/products' },
       { key: 'deactivated-product', icon: <MdVisibilityOff />, label: 'Deactivated Product', to: '/admin/products/deactive' },
-      { key: 'product-catalogs',  icon: <MdGridView />, label: 'Product Catalogs', to: '/admin/products/catalogs' },
-      { key: 'product-settings',  icon: <MdSettings />, label: 'Product Settings', to: '/admin/products/product-settings' },
+      { key: 'product-catalogs', icon: <MdGridView />, label: 'Product Catalogs', to: '/admin/products/catalogs' },
+      { key: 'product-settings', icon: <MdSettings />, label: 'Product Settings', to: '/admin/products/product-settings' },
     ],
   },
   {
@@ -148,7 +148,7 @@ const menuItems = [
       { key: 'all-affiliate-products', icon: <MdList />, label: 'All Affiliate Products', to: '/admin/products/import/index' },
     ],
   },
-  
+
   {
     key: 'bulk-product-upload',
     icon: <MdUpload />,
@@ -161,7 +161,7 @@ const menuItems = [
     label: 'Product Discussion',
     children: [
       { key: 'product-reviews', icon: <MdRateReview />, label: 'Product Reviews', to: '/admin/ratings' },
-      { key: 'reports', icon: <MdReport />,  label: 'Reports', to: '/admin/reports' },
+      { key: 'reports', icon: <MdReport />, label: 'Reports', to: '/admin/reports' },
     ],
   },
   { key: 'set-coupons', icon: <MdPercent />, label: 'Set Coupons', to: '/admin/coupon' },
@@ -175,7 +175,7 @@ const menuItems = [
       { key: 'customer-default-image', icon: <MdImage />, label: 'Customer Default Image', to: '/admin/user/default/image' },
     ],
   },
-  
+
   {
     key: 'riders',
     icon: <MdGroup />,
@@ -183,7 +183,7 @@ const menuItems = [
     children: [
       { key: 'rider-list', icon: <MdList />, label: 'Rider List', to: '/admin/riders' },
       { key: 'rider-withdraws', icon: <MdAttachMoney />, label: 'Withdraws', to: '/admin/riders/withdraws' },
-      ],
+    ],
   },
   {
     key: 'customer-deposits',
@@ -193,7 +193,7 @@ const menuItems = [
       { key: 'completed-deposits', icon: <MdCheckCircle />, label: 'Completed Deposits', to: '/admin/users/deposits/all' },
       { key: 'pending-deposits', icon: <MdHourglassEmpty />, label: 'Pending Deposits', to: '/admin/users/deposits/pending' },
       { key: 'transactions', icon: <MdAttachMoney />, label: 'Transactions', to: '/admin/users/transactions' },
-  
+
     ],
   },
   {
@@ -203,7 +203,7 @@ const menuItems = [
     children: [
       { key: 'vendors-list', icon: <MdPeople />, label: 'Vendors List', to: '/admin/vendors' },
       { key: 'vendor-withdraws', icon: <MdMonetizationOn />, label: 'Withdraws', to: '/admin/vendors/withdraws' },
-        ],
+    ],
   },
   {
     key: 'vendor-subscriptions',
@@ -246,7 +246,7 @@ const menuItems = [
       { key: 'categories', icon: <MdCategory />, label: 'Categories', to: '/admin/blog/categories' },
       { key: 'posts', icon: <MdPostAdd />, label: 'Posts', to: '/admin/blog/posts' },
       { key: 'settings', icon: <MdSettings />, label: 'Blog Settings', to: '/admin/blog/settings' },
-      ],
+    ],
   },
   {
     key: 'general-settings',
@@ -361,9 +361,6 @@ const menuItems = [
     label: 'Manage Roles',
     to: '/admin/role',
   },
-  
-
-
   { key: 'admin-logs', icon: <MdHistory />, label: 'Admin Logs', to: '/admin/logs' },
   { key: 'logout', icon: <MdLogout />, label: 'Logout', to: '/logout' },
 ];
@@ -372,9 +369,9 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
   const navigate = useNavigate();
 
   const renderMenuItems = (items) => {
-    
+
     return items.map((item) => {
-      
+
       if (item.children) {
         return (
           <SubMenu key={item.key} icon={item.icon} title={item.label}>
@@ -417,7 +414,7 @@ export default function Sidebar({ collapsed, toggleSidebar }) {
           bottom: 0,
         }}
       >
-        <div className={`flex justify-center items-center ${collapsed ? 'h-12' : 'h-24' } transition-all duration-300`}>
+        <div className={`flex justify-center items-center ${collapsed ? 'h-12' : 'h-24'} transition-all duration-300`}>
           {collapsed ? (
             <img
               src={logo} // Replace with your logo path

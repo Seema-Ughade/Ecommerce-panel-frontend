@@ -16,7 +16,7 @@ const SubCategories = () => {
   const [attributesList, setAttributesList] = useState([]); // State for attributes list
   const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -61,20 +61,20 @@ const SubCategories = () => {
 
   const handleAttributeSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-        const response = await axios.post(`https://ecommerce-panel-backend.onrender.com/api/subcategories/${selectedCategoryId}/attributes`, newAttribute);
-        // Assuming you have the selected category ID in state and an endpoint to handle adding attributes
-        setSubCategories(prev =>
-            prev.map(cat => (cat._id === selectedCategoryId ? { ...cat, attributes: [...cat.attributes, response.data] } : cat))
-        );
-        setNewAttribute({ name: '', option: '', allowPriceField: false, showOnDetailsPage: false });
-        setIsAttributeModalOpen(false); // Close modal after submission
-        
+      const response = await axios.post(`https://ecommerce-panel-backend.onrender.com/api/subcategories/${selectedCategoryId}/attributes`, newAttribute);
+      // Assuming you have the selected category ID in state and an endpoint to handle adding attributes
+      setSubCategories(prev =>
+        prev.map(cat => (cat._id === selectedCategoryId ? { ...cat, attributes: [...cat.attributes, response.data] } : cat))
+      );
+      setNewAttribute({ name: '', option: '', allowPriceField: false, showOnDetailsPage: false });
+      setIsAttributeModalOpen(false); // Close modal after submission
+
     } catch (error) {
-        console.error('Error adding attribute:', error);
+      console.error('Error adding attribute:', error);
     }
-};
+  };
 
 
   const handleModalClose = () => {
@@ -118,19 +118,19 @@ const SubCategories = () => {
 
   const generateSlug = (name) => {
     return name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')  // Replace non-alphanumeric characters with '-'
-        .replace(/^-|-$/g, '')       // Remove leading or trailing hyphens
-        .trim();                     // Remove any extra spaces
-};
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')  // Replace non-alphanumeric characters with '-'
+      .replace(/^-|-$/g, '')       // Remove leading or trailing hyphens
+      .trim();                     // Remove any extra spaces
+  };
 
-const handleSubCategoryNameChange = (e) => {
-  const name = e.target.value;
-  setSubCategoryName(name);
-  setSubCategorySlug(generateSlug(name)); // Generate the slug whenever the name changes
-};
+  const handleSubCategoryNameChange = (e) => {
+    const name = e.target.value;
+    setSubCategoryName(name);
+    setSubCategorySlug(generateSlug(name)); // Generate the slug whenever the name changes
+  };
 
-  
+
   const fetchSubCategories = async () => {
     try {
       const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/subcategories');
@@ -189,7 +189,7 @@ const handleSubCategoryNameChange = (e) => {
   };
 
 
-const handleManageClick = (category) => {
+  const handleManageClick = (category) => {
     setSelectedCategoryId(category._id);
     setAttributesList(category.attributes || []); // Set the selected category's attributes
     setShowAttributes(true); // Show the attributes list
@@ -206,9 +206,9 @@ const handleManageClick = (category) => {
     setEditingAttributeId(attribute._id); // Store the ID for updating
     setIsAttributeModalOpen(true); // Close modal after submission
     setShowAttributes(false); // Show the attributes list
-  
+
   };
-  
+
 
   const filteredsubCategories = subCategories.filter(subcategory =>
     subcategory.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -240,7 +240,7 @@ const handleManageClick = (category) => {
     //   </div>
 
 
-      <div className="content-area px-6">
+    <div className="content-area px-6">
       <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">Sub Categories</h4>
 
       <div className="flex  justify-between mb-4">
@@ -252,10 +252,10 @@ const handleManageClick = (category) => {
             setSearchTerm(e.target.value);
             setCurrentPage(1); // Reset to first page on search
           }}
-            className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <button 
-          onClick={handleAddNewClick}          
+        <button
+          onClick={handleAddNewClick}
           className="btn btn-primary rounded-2xl px-4 py-1 bg-violet-600 text-white hover:bg-violet-700 focus:outline-none">
           + Add New
         </button>
@@ -278,47 +278,47 @@ const handleManageClick = (category) => {
         </thead>
         <tbody>
           {subCategoriesnew.length > 0 ? (
-            subCategoriesnew.map((subCategory) => ( 
+            subCategoriesnew.map((subCategory) => (
               <tr key={subCategory._id} className="hover:bg-gray-100 text-center ">
                 <td className="py-2 px-4 border">{subCategory.mainCategory}</td>
                 <td className="py-2 px-4 border">{subCategory.name}</td>
                 <td className="py-2 px-4 border">{subCategory.slug}</td>
                 <td className="py-2  flex px-4 border">
-                <button
-                  onClick={() => {
-                    handleCategorySelect(subCategory._id); // Set the selected category ID
-                    setIsAttributeModalOpen(true);
-                  }}
-                  className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200"
-                >
-                  <EditOutlined className="h-5 w-5 mr-1" />
-                  Create
-                </button>
-                {/* Show Manage button only if there are attributes */}
-                {subCategory.attributes && subCategory.attributes.length > 0 && (
-                  <button 
-                  onClick={() => handleManageClick(subCategory)}
-
-                  className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
+                  <button
+                    onClick={() => {
+                      handleCategorySelect(subCategory._id); // Set the selected category ID
+                      setIsAttributeModalOpen(true);
+                    }}
+                    className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200"
+                  >
                     <EditOutlined className="h-5 w-5 mr-1" />
-                    Manage
+                    Create
                   </button>
-                )}
-              </td>
-              <td className="py-2 px-4 border">
-                <select
-                  value={subCategory.status}
-                  onChange={(e) => handleStatusChange(subCategory._id, e.target.value)}
-                  className="border bg-sky-300 text-white rounded px-2 py-1"
-                  style={{
-                    backgroundColor: subCategory.status === "active" ? "#1e7e34" : "#bd2130",
-                    color: "white", // Text color for visibility
-                  }}
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </td>
+                  {/* Show Manage button only if there are attributes */}
+                  {subCategory.attributes && subCategory.attributes.length > 0 && (
+                    <button
+                      onClick={() => handleManageClick(subCategory)}
+
+                      className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
+                      <EditOutlined className="h-5 w-5 mr-1" />
+                      Manage
+                    </button>
+                  )}
+                </td>
+                <td className="py-2 px-4 border">
+                  <select
+                    value={subCategory.status}
+                    onChange={(e) => handleStatusChange(subCategory._id, e.target.value)}
+                    className="border bg-sky-300 text-white rounded px-2 py-1"
+                    style={{
+                      backgroundColor: subCategory.status === "active" ? "#1e7e34" : "#bd2130",
+                      color: "white", // Text color for visibility
+                    }}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </td>
 
                 <td className="py-2 flex justify-center px-4 border">
                   <button
@@ -337,62 +337,62 @@ const handleManageClick = (category) => {
                   </button>
                 </td>
               </tr>
-                 ))
-                ) : null}
-            
+            ))
+          ) : null}
+
         </tbody>
       </table>
 
       {showAttributes && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    {/* Modal content */}
-    <div className="bg-white w-1/2 p-6 rounded-lg shadow-lg">
-      <h5 className="font-semibold text-lg mb-4">Attributes {selectedCategoryId.name}</h5>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          {/* Modal content */}
+          <div className="bg-white w-1/2 p-6 rounded-lg shadow-lg">
+            <h5 className="font-semibold text-lg mb-4">Attributes {selectedCategoryId.name}</h5>
 
-      <ul className="list-disc pl-5">
-        {attributesList.map((attribute) => (
-          <li key={attribute._id} className="flex justify-between items-center py-2 border-b">
-            <div className="flex flex-col">
-              <span><strong>Name:</strong> {attribute.name}</span>
-              <span><strong>Option:</strong> {attribute.option}</span>
-              <span><strong>Allow Price Field:</strong> {attribute.allowPriceField ? 'Yes' : 'No'}</span>
-              <span><strong>Show on Details Page:</strong> {attribute.showOnDetailsPage ? 'Yes' : 'No'}</span>
-            </div>
-            <div className="flex">
+            <ul className="list-disc pl-5">
+              {attributesList.map((attribute) => (
+                <li key={attribute._id} className="flex justify-between items-center py-2 border-b">
+                  <div className="flex flex-col">
+                    <span><strong>Name:</strong> {attribute.name}</span>
+                    <span><strong>Option:</strong> {attribute.option}</span>
+                    <span><strong>Allow Price Field:</strong> {attribute.allowPriceField ? 'Yes' : 'No'}</span>
+                    <span><strong>Show on Details Page:</strong> {attribute.showOnDetailsPage ? 'Yes' : 'No'}</span>
+                  </div>
+                  <div className="flex">
+                    <button
+                      onClick={() => handleEditAttribute(attribute)}
+
+                      className="text-blue-500  hover:text-blue-700 mr-2"
+                      aria-label="Edit attribute">
+                      <FontAwesomeIcon className='h-6' icon={faEdit} />
+                    </button>
+                    <button
+
+                      onClick={() => handleEditAttribute(attribute._id)}
+                      className="text-red-500 p-3 hover:text-red-700"
+                      aria-label="Delete attribute"
+                    >
+                      <FontAwesomeIcon className='h-6' icon={faTrash} />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Close button */}
+            <div className="flex justify-end mt-4">
               <button
-                              onClick={() => handleEditAttribute(attribute)}
-
-                              className="text-blue-500  hover:text-blue-700 mr-2"
-                              aria-label="Edit attribute">
-                              <FontAwesomeIcon className='h-6' icon={faEdit} />
-        </button>
-              <button
-              
-                onClick={() => handleEditAttribute(attribute._id)}
-                className="text-red-500 p-3 hover:text-red-700"
-                aria-label="Delete attribute"
-                      >
-        <FontAwesomeIcon className='h-6' icon={faTrash} />
-        </button>
+                onClick={() => setShowAttributes(false)}
+                className="text-white bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded"
+              >
+                Close
+              </button>
             </div>
-          </li>
-        ))}
-      </ul>
+          </div>
+        </div>
+      )}
 
-      {/* Close button */}
-      <div className="flex justify-end mt-4">
-        <button
-          onClick={() => setShowAttributes(false)}
-          className="text-white bg-gray-700 hover:bg-gray-900 px-4 py-2 rounded"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-{isAttributeModalOpen && (
+      {isAttributeModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded shadow-md w-96">
             <h2 className="text-2xl font-bold mb-4">Add New Attribute</h2>
@@ -423,23 +423,23 @@ const handleManageClick = (category) => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">
-                <input
-                  type="checkbox"
-                  name="allowPriceField"
-                  checked={newAttribute.allowPriceField}
-                  onChange={handleAttributeChange}
-                  className="mr-2"
-                />Allow Price Field</label>
+                  <input
+                    type="checkbox"
+                    name="allowPriceField"
+                    checked={newAttribute.allowPriceField}
+                    onChange={handleAttributeChange}
+                    className="mr-2"
+                  />Allow Price Field</label>
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium">
-                <input
-                  type="checkbox"
-                  name="showOnDetailsPage"
-                  checked={newAttribute.showOnDetailsPage}
-                  onChange={handleAttributeChange}
-                  className="mr-2"
-                />Show on Details Page</label>
+                  <input
+                    type="checkbox"
+                    name="showOnDetailsPage"
+                    checked={newAttribute.showOnDetailsPage}
+                    onChange={handleAttributeChange}
+                    className="mr-2"
+                  />Show on Details Page</label>
               </div>
               <div className="flex justify-between">
                 <button
@@ -461,7 +461,7 @@ const handleManageClick = (category) => {
         </div>
       )}
 
-<div className="flex justify-between mt-4">
+      <div className="flex justify-between mt-4">
         <div>
           <span>{`Showing ${currentPage * itemsPerPage - itemsPerPage + 1} to ${Math.min(currentPage * itemsPerPage, filteredsubCategories.length)} of ${filteredsubCategories.length} entries`}</span>
         </div>
@@ -473,16 +473,16 @@ const handleManageClick = (category) => {
           >
             Previous
           </button>
-                  {/* Page Number Indicators */}
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => handlePageChange(index + 1)}
-            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} border rounded hover:bg-gray-200 focus:outline-none`}
-          >
-            {index + 1}
-          </button>
-        ))}
+          {/* Page Number Indicators */}
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} border rounded hover:bg-gray-200 focus:outline-none`}
+            >
+              {index + 1}
+            </button>
+          ))}
 
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
@@ -539,7 +539,7 @@ const handleManageClick = (category) => {
                   className="border px-4 py-2 w-full rounded"
                   value={subCategorySlug}
                   readOnly // Make the slug read-only
-                  />
+                />
               </div>
 
               {/* Action Buttons */}
