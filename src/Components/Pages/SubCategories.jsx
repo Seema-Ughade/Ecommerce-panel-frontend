@@ -15,6 +15,10 @@ const SubCategories = () => {
   const [editMode, setEditMode] = useState(false);
   const [attributesList, setAttributesList] = useState([]); // State for attributes list
   const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const itemsPerPage = 6;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [currentSubCategoryId, setCurrentSubCategoryId] = useState(null);
   const [error, setError] = useState('');
@@ -206,14 +210,52 @@ const handleManageClick = (category) => {
   };
   
 
+  const filteredsubCategories = subCategories.filter(subcategory =>
+    subcategory.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredsubCategories.length / itemsPerPage);
+
+  // Get the subcategories for the current page
+  const subCategoriesnew = filteredsubCategories.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
 
   return (
-    <div className="content-area p-6">
-      <div className="mr-breadcrumb mb-4 flex justify-between items-center">
-        <h4 className="heading text-2xl font-semibold">Sub Categories</h4>
+    // <div className="content-area p-6">
+    //   <div className="mr-breadcrumb mb-4 flex justify-between items-center">
+    //     <h4 className="heading text-2xl font-semibold">Sub Categories</h4>
+    //     <button 
+    //       onClick={handleAddNewClick} 
+    //       className="btn btn-primary rounded-2xl px-4 py-1 bg-violet-600 text-white hover:bg-violet-700 focus:outline-none">
+    //       + Add New
+    //     </button>
+    //   </div>
+
+
+      <div className="content-area px-6">
+      <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">Sub Categories</h4>
+
+      <div className="flex  justify-between mb-4">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1); // Reset to first page on search
+          }}
+            className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
         <button 
-          onClick={handleAddNewClick} 
+          onClick={handleAddNewClick}          
           className="btn btn-primary rounded-2xl px-4 py-1 bg-violet-600 text-white hover:bg-violet-700 focus:outline-none">
           + Add New
         </button>
@@ -235,13 +277,13 @@ const handleManageClick = (category) => {
           </tr>
         </thead>
         <tbody>
-          {subCategories.length > 0 ? (
-            subCategories.map((subCategory) => (
-              <tr key={subCategory._id}>
+          {subCategoriesnew.length > 0 ? (
+            subCategoriesnew.map((subCategory) => ( 
+              <tr key={subCategory._id} className="hover:bg-gray-100 text-center ">
                 <td className="py-2 px-4 border">{subCategory.mainCategory}</td>
                 <td className="py-2 px-4 border">{subCategory.name}</td>
                 <td className="py-2 px-4 border">{subCategory.slug}</td>
-                <td className="py-2 flex  px-4 border">
+                <td className="py-2  flex px-4 border">
                 <button
                   onClick={() => {
                     handleCategorySelect(subCategory._id); // Set the selected category ID
@@ -326,7 +368,7 @@ const handleManageClick = (category) => {
         </button>
               <button
               
-                onClick={() => handleDeleteAttribute(attribute._id)}
+                onClick={() => handleEditAttribute(attribute._id)}
                 className="text-red-500 p-3 hover:text-red-700"
                 aria-label="Delete attribute"
                       >
@@ -418,6 +460,39 @@ const handleManageClick = (category) => {
           </div>
         </div>
       )}
+
+<div className="flex justify-between mt-4">
+        <div>
+          <span>{`Showing ${currentPage * itemsPerPage - itemsPerPage + 1} to ${Math.min(currentPage * itemsPerPage, filteredsubCategories.length)} of ${filteredsubCategories.length} entries`}</span>
+        </div>
+        <div>
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="btn px-4 py-1  rounded border focus:outline-none disabled:opacity-50"
+          >
+            Previous
+          </button>
+                  {/* Page Number Indicators */}
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} border rounded hover:bg-gray-200 focus:outline-none`}
+          >
+            {index + 1}
+          </button>
+        ))}
+
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="btn ml-2 px-4 py-1  rounded hover:bg-gray-200 border focus:outline-none disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
 
       {/* Modal for adding new subcategory */}
       {showModal && (
