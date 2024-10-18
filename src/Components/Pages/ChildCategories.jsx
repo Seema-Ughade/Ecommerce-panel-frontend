@@ -488,7 +488,7 @@ const handleDeleteAttribute = async (attributeId) => {
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
-            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} rounded hover:bg-gray-200 focus:outline-none`}
+            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} border rounded hover:bg-gray-200 focus:outline-none`}
           >
             {index + 1}
           </button>

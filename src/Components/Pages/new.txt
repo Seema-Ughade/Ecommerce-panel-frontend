@@ -1,13 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { TrashIcon } from '@heroicons/react/24/solid';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styling
-
 
 const MainCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -17,16 +14,17 @@ const MainCategories = () => {
   const [attributesList, setAttributesList] = useState([]); // State for attributes list
   const [showAttributes, setShowAttributes] = useState(false); // State to toggle attributes display
   const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
-  
+
   const itemsPerPage = 6;
-  const [isModalOpen,  setIsModalOpen] = useState(false);
-  const [editingCategoryId, setEditingCategoryId] = useState(null); // Make sure this is defined
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAttributeModalOpen, setIsAttributeModalOpen] = useState(false); // For attribute modal
+
   const [newCategory, setNewCategory] = useState({
     name: '',
     slug: '',
     image: null
   });
+  
   const [newAttribute, setNewAttribute] = useState({
     name: '',
     option: '',
@@ -35,12 +33,13 @@ const MainCategories = () => {
   });
 
 
+
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories'); 
-        console.log('Fetched categories:', response.data); 
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories'); // Adjust this path based on your API
+        console.log('Fetched categories:', response.data); // Log the response
         if (Array.isArray(response.data)) {
           setCategories(response.data);
         } else {
@@ -61,19 +60,11 @@ const MainCategories = () => {
   const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
   const currentCategories = filteredCategories.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setNewCategory((prev) => ({ ...prev, [name]: value }));
-  // };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewCategory((prev) => ({
-      ...prev,
-      [name]: value,
-      slug: name === 'name' ? generateSlug(value) : prev.slug, // Auto-generate slug if the name field changes
-    }));
+    setNewCategory((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleAttributeChange = (e) => {
     const { name, value, checked, type } = e.target;
     setNewAttribute((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
@@ -95,104 +86,49 @@ const MainCategories = () => {
       setCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
       );
-      toast.success('Category status updated successfully!');
-
     } catch (error) {
-      toast.error('Error updating category status. Please try again.');
+      console.error('Error updating status:', error);
     }
   };
-
-
-
-
-
-
-
-
-  
-  const handleFeaturedChange = async (categoryId, newFeatured) => {
+  const handlefeaturedChange = async (categoryId, newfeatured) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}/featured`, { featured: newFeatured });
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { featured: newfeatured });
+      // Update categories in the state
       setCategories(prev =>
-        prev.map(cat => (cat._id === categoryId ? { ...cat, featured: newFeatured } : cat))
+        prev.map(cat => (cat._id === categoryId ? { ...cat, featured: newfeatured } : cat))
       );
-      toast.success('Category featured status updated successfully!');
-
     } catch (error) {
-      toast.error('Error updating category featured status. Please try again.');
-
       console.error('Error updating featured:', error);
     }
   };
-  
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   // Create a FormData object to send the new category
-  //   const formData = new FormData();
-  //   formData.append('name', newCategory.name);
-  //   formData.append('slug', newCategory.slug);
-  //   if (newCategory.image) {
-  //     formData.append('image', newCategory.image);
-  //   }
-
-  //   try {
-  //     const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-
-  //     // Update categories with the newly created category
-  //     setCategories((prev) => [...prev, response.data]);
-  //     setNewCategory({ name: '', slug: '', image: null });
-  //     setIsModalOpen(false);
-  //   } catch (error) {
-  //     console.error('Error creating category:', error);
-  //   }
-  // };
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-  
-    // If editing an existing category, update it
-    if (editingCategoryId) {
-      await handleUpdateCategory();
-      toast.success('Category updated successfully!'); // Notify success
+    e.preventDefault();
 
-    } else {
-      // Create a FormData object to send the new category
-      const formData = new FormData();
-      formData.append('name', newCategory.name);
-      formData.append('slug', newCategory.slug);
-      if (newCategory.image) {
-        formData.append('image', newCategory.image);
-      }
-  
-      try {
-        const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-  
-        // Update categories with the newly created category
-        setCategories((prev) => [...prev, response.data]);
-        setNewCategory({ name: '', slug: '', image: null }); // Reset fields
-        setIsModalOpen(false); // Close modal
-        toast.success('Category created successfully!'); // Notify success
+    // Create a FormData object to send the new category
+    const formData = new FormData();
+    formData.append('name', newCategory.name);
+    formData.append('slug', newCategory.slug);
+    if (newCategory.image) {
+      formData.append('image', newCategory.image);
+    }
 
-      } catch (error) {
-        toast.error('Error creating category. Please try again.');
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-        console.error('Error creating category:', error);
-      }
+      // Update categories with the newly created category
+      setCategories((prev) => [...prev, response.data]);
+      setNewCategory({ name: '', slug: '', image: null });
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error creating category:', error);
     }
   };
-
-
   const handleAttributeSubmit = async (e) => {
     e.preventDefault();
     
@@ -219,21 +155,10 @@ const MainCategories = () => {
       try {
         await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`);
         setCategories(prev => prev.filter(cat => cat._id !== categoryId)); // Update state
-        toast.success('Category deleted successfully!'); // Success toast
-
       } catch (error) {
         console.error('Error deleting category:', error);
-        toast.error('Error deleting category. Please try again.'); // Error toast
-
       }
     }
-  };
-  const generateSlug = (name) => {
-    return name
-      .toLowerCase()                     
-      .replace(/[^a-z0-9 -]/g, '')     
-      .replace(/\s+/g, '-')               
-      .replace(/-+/g, '-');              
   };
   
   const handleManageClick = (category) => {
@@ -265,69 +190,8 @@ const handleDeleteAttribute = async (attributeId) => {
   }
 };
 
-  // Function to open the edit modal
-  const handleEditCategory = (category) => {
-    setEditingCategoryId(category._id); // Set the ID of the category to be edited
-    setNewCategory({
-      name: category.name,
-      slug: category.slug,
-      image: null, // Reset the image to allow new upload
-    });
-    setIsModalOpen(true); // Open modal for editing
-  };
-
-  // Function to handle the update of the category, including name, slug, and optional image
-  const handleUpdateCategory = async () => {
-    // Log the category to be updated
-    console.log('Editing category ID:', editingCategoryId);
-    console.log('Updated category:', newCategory); // Check this log
-    
-    // Ensure the required fields are filled
-    if (!editingCategoryId || !newCategory.name || !newCategory.slug) {
-      console.error('Category ID or required fields are missing');
-      return; // Early return if any required fields are missing
-    }
-  
-    // Use FormData to send category data including image if available
-    const formData = new FormData();
-    formData.append('name', newCategory.name);
-    formData.append('slug', newCategory.slug);
-  
-    if (newCategory.image) {
-      formData.append('image', newCategory.image); // Append the new image if it exists
-    }
-  
-    // Log FormData entries
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-  
-    try {
-      const response = await axios.put(
-        `http://127.0.0.1:5000/api/categories/${editingCategoryId}`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
-  
-      const updatedData = response.data;
-  
-      // Update the categories state with the newly updated category
-      setCategories(prev =>
-        prev.map(cat => (cat._id === updatedData._id ? updatedData : cat))
-      );
-  
-      setIsModalOpen(false); // Close the modal after successful update
-    } catch (error) {
-      console.error('Error updating category:', error.response?.data?.message || error.message);
-    }
-  };
-  
-  // Function to delete a category
-
 
   return (
-    <>
-    
     <div className="content-area px-6">
       <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">Main Categories</h4>
 
@@ -390,20 +254,11 @@ const handleDeleteAttribute = async (attributeId) => {
               <td className="py-2 px-4 border">
                 <select
                   value={category.featured}
-                  onChange={(e) => handleFeaturedChange (category._id, e.target.value)}
+                  onChange={(e) =>handlefeaturedChange (category._id, e.target.value)}
                   className="border bg-pink-300 text-white rounded px-2 py-1"
-                  style={{
-                    backgroundColor: category.featured === "active" ? "#1e7e34" : "#bd2130",
-                    color: "white", // Text color for visibility
-                  }}
-                
                 >
-
-
-                  
-                   <option value="active" >Active</option>
-                  <option value="inactive">Inactive</option> 
-
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
                 </select>
                 </td>
 
@@ -411,29 +266,21 @@ const handleDeleteAttribute = async (attributeId) => {
                 <select
                   value={category.status}
                   onChange={(e) => handleStatusChange(category._id, e.target.value)}
-                  className="border  text-white rounded px-2 py-1"
-                  style={{
-                    backgroundColor: category.status === "active" ? "#1e7e34" : "#bd2130",
-                    color: "white", // Text color for visibility
-                  }}
-
+                  className="border bg-sky-300 text-white rounded px-2 py-1"
                 >
-                  <option value="active" >Active</option>
+                  <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
               </td>
               <td className="py-2 flex justify-center px-4 border">
-                <button
-                   onClick={() => handleEditCategory(category)}
-
-                className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200">
+                <button className="flex items-center rounded-2xl text-white bg-blue-900 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200">
                   <EditOutlined className="h-5 w-5 mr-1" />
                   Edit
                 </button>
                 <button
-                    onClick={() => handleDeleteCategory(category._id)} // Pass the category ID
+  onClick={() => handleDeleteCategory(category._id)} // Pass the category ID
 
-                 className="flex items-center rounded-2xl text-white bg-red-600 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
+                 className="flex items-center rounded-2xl text-white bg-red-900 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
                   <TrashIcon className="h-5 w-5 mr-1" />
                   Delete
                 </button>
@@ -503,7 +350,6 @@ const handleDeleteAttribute = async (attributeId) => {
                 </button>
                 <button
                   type="submit"
-
                   className="btn px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none"
                 >
                   Create Attribute
@@ -532,7 +378,7 @@ const handleDeleteAttribute = async (attributeId) => {
           <button
             key={index + 1}
             onClick={() => handlePageChange(index + 1)}
-            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} border rounded hover:bg-gray-200 focus:outline-none`}
+            className={`btn ml-2 px-4 py-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : 'bg-white'} rounded hover:bg-gray-200 focus:outline-none`}
           >
             {index + 1}
           </button>
@@ -618,18 +464,18 @@ const handleDeleteAttribute = async (attributeId) => {
                 />
               </div>
               <div className="mb-4">
-        <label className="block text-sm font-medium mb-1" htmlFor="slug">Slug *</label>
-        <input
-          type="text"
-          id="slug"
-          name="slug"
-          value={newCategory.slug}
-          onChange={handleInputChange} // Keep it controlled but avoid manual input if desired
-          required
-          placeholder="Enter Slug"
-          className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-      </div>
+                <label className="block text-sm font-medium mb-1" htmlFor="slug">Slug *</label>
+                <input
+                  type="text"
+                  id="slug"
+                  name="slug"
+                  value={newCategory.slug}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="Enter Slug"
+                  className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-1">Set Image *</label>
                 <input
@@ -650,9 +496,98 @@ const handleDeleteAttribute = async (attributeId) => {
         </div>
       )}
     </div>
-          <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-</>
   );
 };
 
 export default MainCategories;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Create a new category
+// exports.createCategory = async (req, res) => {
+//   const { name, slug } = req.body;
+//   const newCategory = new Category({
+//     name,
+//     slug,
+//     image: req.file ? req.file.path : null,
+//   });
+
+//   try {
+//     const savedCategory = await newCategory.save();
+//     res.status(201).json(savedCategory);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
+// Create a new category
+// exports.createCategory = async (req, res) => {
+//   console.log('Request body:', req.body);
+//   console.log('Uploaded file:', req.file);
+
+//   try {
+//     // Destructure name and slug from the request body
+//     const { name, slug } = req.body;
+
+//     // Initialize variable for the image URL
+//     let imageUrl = null;
+
+//     // Check if there is a file to upload
+//     if (req.file) {
+//       // Create a promise to handle the upload
+//       imageUrl = await new Promise((resolve, reject) => {
+//         const uploadStream = cloudinary.uploader.upload_stream({ resource_type: 'auto' }, (error, result) => {
+//           if (error) {
+//             return reject(new Error('Image upload failed: ' + error.message));
+//           }
+//           resolve(result.secure_url); // Get the secure URL from the upload result
+//         });
+
+//         // End the stream with the file buffer
+//         uploadStream.end(req.file.buffer);
+//       });
+//     }
+
+//     // Create a new category instance
+//     const newCategory = new Category({
+//       name,
+//       slug,
+//       image: imageUrl, // Use the Cloudinary image URL if available
+//     });
+
+//     // Save the new category to the database
+//     const savedCategory = await newCategory.save();
+    
+//     // Send a 201 Created response with the saved category data
+//     res.status(201).json(savedCategory);
+//   } catch (error) {
+//     console.error('Error adding category:', error.message); // Log detailed error message
+//     res.status(500).json({ message: 'Error adding category' });
+//   }
+// };

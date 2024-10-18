@@ -256,3 +256,49 @@
 
 // export default MainCategories;
 
+
+const getDataUri = require("../utils/dataUri"); // Adjust the path to your utility file
+const cloudinary = require("cloudinary").v2; // Cloudinary setup
+
+exports.createCategory = catchAsyncError(async (req, res, next) => {
+  const { name, slug } = req.body;
+
+  // Check if all required fields are provided
+  if (!name || !slug) {
+    return next(new ErrorHandler("Please provide both name and slug", 400));
+  }
+
+  // Initialize variable for the image URL
+  let imageUrl = null;
+
+  // Check if there is a file to upload
+  if (req.file) {
+    // Use getDataUri to convert the file to a data URI
+    const fileUri = getDataUri(req.file).content;
+
+    // Upload the file as a data URI to Cloudinary
+    const myCloud = await cloudinary.uploader.upload(fileUri, {
+      resource_type: 'auto',
+    });
+
+    // Get the secure URL from the upload result
+    imageUrl = myCloud.secure_url;
+  }
+
+  // Create a new category instance
+  const newCategory = new Category({
+    name,
+    slug,
+    image: imageUrl, // Use the Cloudinary image URL if available
+  });
+
+  // Save the new category to the database
+  const savedCategory = await newCategory.save();
+
+  // Send a 201 Created response with the saved category data
+  return res.status(201).json({
+    success: true,
+    category: savedCategory,
+    message: "New category created successfully.",
+  });
+});

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const SubCategories = () => {
   const [showModal, setShowModal] = useState(false);
@@ -11,9 +13,11 @@ const SubCategories = () => {
   const [subCategoryName, setSubCategoryName] = useState('');
   const [subCategorySlug, setSubCategorySlug] = useState('');
   const [editMode, setEditMode] = useState(false);
+  const [attributesList, setAttributesList] = useState([]); // State for attributes list
+  const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
+
   const [currentSubCategoryId, setCurrentSubCategoryId] = useState(null);
   const [error, setError] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAttributeModalOpen, setIsAttributeModalOpen] = useState(false); // For attribute modal
   const [showAttributes, setShowAttributes] = useState(false); // State to toggle attributes display
   const [selectedCategoryId, setSelectedCategoryId] = useState(null); // Define selectedCategoryId state
@@ -34,7 +38,7 @@ const SubCategories = () => {
         ]);
 
         setMainCategories(mainResponse.data || []);
-        setSubCategories(subResponse.data?.subCategories || []);
+        setSubCategories(subResponse.data || []);
       } catch (error) {
         setError('Error fetching data. Please try again later.');
         console.error('Error fetching data:', error);
@@ -49,6 +53,7 @@ const SubCategories = () => {
     setEditMode(false);
     resetForm();
   };
+
 
   const handleAttributeSubmit = async (e) => {
     e.preventDefault();
@@ -98,6 +103,8 @@ const SubCategories = () => {
 
       alert('Subcategory successfully submitted.');
       await fetchSubCategories(); // Refresh subcategories after adding or updating
+      await fetchSubCategories(); // Refresh subcategories after adding or updating
+
       handleModalClose();
     } catch (error) {
       setError('Failed to submit subcategory. Please try again.');
@@ -105,10 +112,27 @@ const SubCategories = () => {
     }
   };
 
+  const generateSlug = (name) => {
+    return name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')  // Replace non-alphanumeric characters with '-'
+        .replace(/^-|-$/g, '')       // Remove leading or trailing hyphens
+        .trim();                     // Remove any extra spaces
+};
+
+const handleSubCategoryNameChange = (e) => {
+  const name = e.target.value;
+  setSubCategoryName(name);
+  setSubCategorySlug(generateSlug(name)); // Generate the slug whenever the name changes
+};
+
+  
   const fetchSubCategories = async () => {
     try {
       const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/subcategories');
-      setSubCategories(response.data?.subCategories || []);
+      // setSubCategories(response.data?.subCategories || []);
+      setSubCategories(response.data); // Assuming setSubCategories updates the state correctly
+
     } catch (error) {
       console.error('Error fetching subcategories:', error);
     }
@@ -145,6 +169,44 @@ const SubCategories = () => {
       }
     }
   };
+
+
+  const handleStatusChange = async (categoryId, newStatus) => {
+    try {
+      const response = await axios.put(`http://127.0.0.1:5000/api/subcategories/${categoryId}/status`, { status: newStatus });
+      console.log('Updated Subcategory:', response.data); // Log the updated subcategory
+      // Update categories in the state
+      setSubCategories(prev =>
+        prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
+      );
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
+
+const handleManageClick = (category) => {
+    setSelectedCategoryId(category._id);
+    setAttributesList(category.attributes || []); // Set the selected category's attributes
+    setShowAttributes(true); // Show the attributes list
+  };
+
+
+  const handleEditAttribute = (attribute) => {
+    setNewAttribute({
+      name: attribute.name,
+      option: attribute.option,
+      allowPriceField: attribute.allowPriceField,
+      showOnDetailsPage: attribute.showOnDetailsPage,
+    });
+    setEditingAttributeId(attribute._id); // Store the ID for updating
+    setIsAttributeModalOpen(true); // Close modal after submission
+    setShowAttributes(false); // Show the attributes list
+  
+  };
+  
+
+
 
   return (
     <div className="content-area p-6">
@@ -193,7 +255,7 @@ const SubCategories = () => {
                 {/* Show Manage button only if there are attributes */}
                 {subCategory.attributes && subCategory.attributes.length > 0 && (
                   <button 
-                  onClick={() => handleAddNewClick(subCategory)}
+                  onClick={() => handleManageClick(subCategory)}
 
                   className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
                     <EditOutlined className="h-5 w-5 mr-1" />
@@ -206,6 +268,10 @@ const SubCategories = () => {
                   value={subCategory.status}
                   onChange={(e) => handleStatusChange(subCategory._id, e.target.value)}
                   className="border bg-sky-300 text-white rounded px-2 py-1"
+                  style={{
+                    backgroundColor: subCategory.status === "active" ? "#1e7e34" : "#bd2130",
+                    color: "white", // Text color for visibility
+                  }}
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -229,14 +295,9 @@ const SubCategories = () => {
                   </button>
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="py-2 px-4 border text-center">
-                No subcategories found.
-              </td>
-            </tr>
-          )}
+                 ))
+                ) : null}
+            
         </tbody>
       </table>
 
@@ -389,7 +450,8 @@ const SubCategories = () => {
                   type="text"
                   className="border px-4 py-2 w-full rounded"
                   value={subCategoryName}
-                  onChange={(e) => setSubCategoryName(e.target.value)}
+                  onChange={handleSubCategoryNameChange} // Update this line
+
                   required
                 />
               </div>
@@ -401,9 +463,8 @@ const SubCategories = () => {
                   type="text"
                   className="border px-4 py-2 w-full rounded"
                   value={subCategorySlug}
-                  onChange={(e) => setSubCategorySlug(e.target.value)}
-                  required
-                />
+                  readOnly // Make the slug read-only
+                  />
               </div>
 
               {/* Action Buttons */}
