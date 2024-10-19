@@ -3,7 +3,9 @@ import axios from 'axios';
 import { EditOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import {  TrashIcon } from '@heroicons/react/24/solid';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styling
 
 const ChildCategories = () => {
   const [showModal, setShowModal] = useState(false);
@@ -232,16 +234,10 @@ const ChildCategories = () => {
 
 
   return (
-    <div className="content-area p-6">
-      {/* <div className="mr-breadcrumb mb-4 flex justify-between items-center">
-        <h4 className="heading text-2xl font-semibold">Child Categories</h4>
-        <button 
-          onClick={handleAddNewClick} 
-          className="btn btn-primary rounded-2xl px-4 py-2 bg-violet-600 text-white hover:bg-violet-700 focus:outline-none">
-            + Add New
-        </button>
-      </div>
-       */}
+    <>
+    <div className="content-area px-6">
+        <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">
+          Child Categories</h4>
       <div className="flex  justify-between mb-4">
         <input
           type="text"
@@ -259,9 +255,6 @@ const ChildCategories = () => {
           + Add New
         </button>
       </div>
-
-
-
       {/* Modal for adding new child category */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -344,7 +337,6 @@ const ChildCategories = () => {
           </div>
         </div>
       )}
-
 
       {showAttributes && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -584,6 +576,9 @@ const ChildCategories = () => {
 
       </div>
     </div>
+    <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+
+    </>
   );
 };
 

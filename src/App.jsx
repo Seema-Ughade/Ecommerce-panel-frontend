@@ -13,6 +13,11 @@ import ChildCategories from './Components/Pages/ChildCategories';
 import Categories from './Components/Pages/Categories';
 import Posts from './Components/Pages/Posts';
 import ManageStaffs from './Components/Pages/ManageStaffs'
+import PhysicalCreateProduct from './Components/Pages/Products/PhysicalCreateProduct';
+import DigitalProductCreate from './Components/Pages/Products/DigitalProductCreate';
+import LicenseProductCreate from './Components/Pages/Products/LicenseProductCreate';
+import ListingProductCreate from './Components/Pages/Products/ListingProductCreate';
+import ProductList from './Components/Pages/Products/ProductList';
 const App = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -40,6 +45,12 @@ const App = () => {
               <Route path="/admin/blog/categories" element={<Categories />} />
               <Route path="/admin/blog/posts" element={<Posts />} />
               <Route path="/admin/blog/manage-staffs" element={<ManageStaffs />} />
+              <Route path="/admin/products/physical/create" element={<PhysicalCreateProduct />} />
+              <Route path="/admin/products/digital/create" element={<DigitalProductCreate />} />
+              <Route path="/admin/products/license/create" element={<LicenseProductCreate />} />
+              <Route path="/admin/products/listing/create" element={<ListingProductCreate />} />
+              <Route path="/admin/products" element={<ProductList />} />
+              
             </Routes>
           </div>
         </div>

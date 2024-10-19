@@ -15,6 +15,8 @@ const MainCategories = () => {
   const [attributesList, setAttributesList] = useState([]); // State for attributes list
   const [showAttributes, setShowAttributes] = useState(false); // State to toggle attributes display
   const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
+  const [subCategoryName, setSubCategoryName] = useState('');
+  const [subCategorySlug, setSubCategorySlug] = useState('');
 
   const itemsPerPage = 6;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,9 +88,20 @@ const MainCategories = () => {
     setCurrentPage(page);
   };
 
+
+  const handleSubCategoryNameChange = (e) => {
+    const name = e.target.value;
+    setSubCategoryName(name);
+    setSubCategorySlug(generateSlug(name)); // Generate the slug whenever the name changes
+  };
+
+
   const handleStatusChange = async (categoryId, newStatus) => {
     try {
-      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
+      // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}/status`, { status: newStatus });
+      console.log('Updated Subcategory:', response.data); // Log the updated subcategory
+
       // Update categories in the state
       setCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
@@ -556,8 +569,8 @@ const MainCategories = () => {
                     id="name"
                     name="name"
                     value={newCategory.name}
-                    // onChange={handleInputChange}
-                    onChange={handleSubCategoryNameChange} // Update this line
+                    onChange={handleInputChange}
+                    // onChange={handleSubCategoryNameChange} // Update this line
 
                     required
                     placeholder="Enter Name"
