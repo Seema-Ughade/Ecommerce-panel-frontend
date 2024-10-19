@@ -18,6 +18,7 @@ import DigitalProductCreate from './Components/Pages/Products/DigitalProductCrea
 import LicenseProductCreate from './Components/Pages/Products/LicenseProductCreate';
 import ListingProductCreate from './Components/Pages/Products/ListingProductCreate';
 import ProductList from './Components/Pages/Products/ProductList';
+import DeactivatedProducts from './Components/Pages/Products/DeactivatedProducts';
 const App = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -50,6 +51,7 @@ const App = () => {
               <Route path="/admin/products/license/create" element={<LicenseProductCreate />} />
               <Route path="/admin/products/listing/create" element={<ListingProductCreate />} />
               <Route path="/admin/products" element={<ProductList />} />
+              <Route path="/admin/products/deactive" element={<DeactivatedProducts />} />
               
             </Routes>
           </div>
