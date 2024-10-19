@@ -161,7 +161,7 @@ const ChildCategories = () => {
     console.log("New Attribute Data:", newAttribute); // Log the new attribute data
   
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/api/childcategories/${selectedCategoryId}/attributes`, newAttribute);
+      const response = await axios.post(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${selectedCategoryId}/attributes`, newAttribute);
   
       // Update the child categories state with the new attribute
       setChildCategories(prev =>
@@ -221,7 +221,7 @@ const ChildCategories = () => {
 
   const handleStatusChange = async (categoryId, newStatus) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/childcategories/${categoryId}/status`, { status: newStatus });
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${categoryId}/status`, { status: newStatus });
       setChildCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
       );
