@@ -6,20 +6,26 @@ import { EditOutlined } from '@ant-design/icons';
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [error, setError] = useState('');
   const [newProductData, setNewProductData] = useState({
-    name: '',
+    productName: '',
     sku: '',
     vendor: '',
-    type: '',
+    category: '',
+    subCategory: '',
+    childCategory: '',
     stock: '',
     price: '',
-    status: 'active',
+    discountPrice: '',
+    description: '',
+    buyReturnPolicy: '',
+    allowProductSEO: true,
     image: null,
+    status: 'active',
   });
 
   useEffect(() => {
@@ -28,7 +34,7 @@ export default function ProductList() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('https://api.example.com/products');
+      const response = await axios.get('http://127.0.0.1:5000/api/products/');
       setProducts(response.data);
     } catch (error) {
       setError('Error fetching products. Please try again later.');
@@ -38,29 +44,35 @@ export default function ProductList() {
 
   const handleAddNewClick = () => {
     setEditingProduct(null);
-    setNewProductData({
-      name: '',
-      sku: '',
-      vendor: '',
-      type: '',
-      stock: '',
-      price: '',
-      status: 'active',
-      image: null,
-    });
+    resetForm();
     setShowModal(true);
   };
 
   const handleEditClick = (product) => {
     setEditingProduct(product);
-    setNewProductData(product);
+    setNewProductData({
+      productName: product.productName,
+      sku: product.sku,
+      vendor: product.vendor,
+      category: product.category,
+      subCategory: product.subCategory,
+      childCategory: product.childCategory,
+      stock: product.stock,
+      price: product.price,
+      discountPrice: product.discountPrice,
+      description: product.description,
+      buyReturnPolicy: product.buyReturnPolicy,
+      allowProductSEO: product.allowProductSEO,
+      image: null, // Keep the image unchanged unless uploading a new one
+      status: product.status,
+    });
     setShowModal(true);
   };
 
   const handleDeleteClick = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await axios.delete(`https://api.example.com/products/${id}`);
+        await axios.delete(`http://127.0.0.1:5000/api/products/${id}`);
         fetchProducts();
       } catch (error) {
         setError('Failed to delete product. Please try again.');
@@ -69,8 +81,28 @@ export default function ProductList() {
     }
   };
 
+  const resetForm = () => {
+    setNewProductData({
+      productName: '',
+      sku: '',
+      vendor: '',
+      category: '',
+      subCategory: '',
+      childCategory: '',
+      stock: '',
+      price: '',
+      discountPrice: '',
+      description: '',
+      buyReturnPolicy: '',
+      allowProductSEO: true,
+      image: null,
+      status: 'active',
+    });
+  };
+
   const handleModalClose = () => {
     setShowModal(false);
+    resetForm();
     setEditingProduct(null);
   };
 
@@ -93,12 +125,16 @@ export default function ProductList() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const formData = new FormData();
+      for (const key in newProductData) {
+        formData.append(key, newProductData[key]);
+      }
       if (editingProduct) {
         // Update existing product
-        await axios.put(`https://api.example.com/products/${editingProduct.id}`, newProductData);
+        await axios.put(`http://127.0.0.1:5000/api/products/${editingProduct._id}`, formData);
       } else {
         // Create new product
-        await axios.post('https://api.example.com/products', newProductData);
+        await axios.post('http://127.0.0.1:5000/api/products', formData);
       }
       fetchProducts();
       handleModalClose();
@@ -108,8 +144,21 @@ export default function ProductList() {
     }
   };
 
+  const handleStatusChange = async (productId, newStatus) => {
+    try {
+      await axios.put(`http://127.0.0.1:5000/api/products/${productId}/status`, { status: newStatus });
+      // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${categoryId}/status`, { status: newStatus });
+
+      fetchProducts();
+    } catch (error) {
+      // setError('Failed to update product status. Please try again.');
+      console.error('Error updating product status:', error);
+    }
+  };
+  
+
   const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -157,25 +206,25 @@ export default function ProductList() {
         </thead>
         <tbody>
           {currentItems.map((product) => (
-            <tr key={product.id} className="hover:bg-gray-100 text-center">
+            <tr key={product.id} className="hover:bg-gray-100 justify-center text-center">
               <td className="py-2 px-4 border">
-                <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
+                <img src={product.galleryImages} alt={product.productName} className="w-16 h-16 justify-center ml-12 object-cover" />
               </td>
-              <td className="py-2 px-4 border">
-                <div>{product.name}</div>
-                <div className="text-xs text-gray-500">ID: {product.id}</div>
-                <div className="text-xs text-gray-500">SKU: {product.sku}</div>
-                <div className="text-xs text-gray-500">VENDOR: {product.vendor}</div>
+              <td className="py-2 text-center px-4 border">
+                <div>{product.productName}</div>
+                <div className='flex justify-center'>
+                <div className="text-xs ml-2 text-gray-500">ID: {product.id}</div>
+                <div className="text-xs ml-2 text-gray-500">SKU: {product.sku}</div>
+                <div className="text-xs ml-2 text-gray-500">VENDOR: {product.vendor}</div></div>
               </td>
-              <td className="py-2 px-4 border">{product.type}</td>
-              <td className="py-2 px-4 border">{product.stock}</td>
-              <td className="py-2 px-4 border">${product.price}</td>
-              <td className="py-2 px-4 border">
+              {/* <td className="py-2 text-center px-4 border">{product.type}</td> */}
+              <td className="py-2 text-center px-4 border">Physical</td>
+              <td className="py-2 text-center px-4 border">{product.stock}</td>
+              <td className="py-2 text-center px-4 border">${product.price}</td>
+              <td className="py-2 text-center px-4 border">
                 <select
                   value={product.status}
-                  onChange={(e) => {
-                    // Handle status change
-                  }}
+                  onChange={(e) => handleStatusChange(product.id, e.target.value)}
                   className="border rounded px-2 py-1"
                   style={{
                     backgroundColor: product.status === "active" ? "#1e7e34" : "#bd2130",
@@ -186,7 +235,7 @@ export default function ProductList() {
                   <option value="inactive">Inactive</option>
                 </select>
               </td>
-              <td className="py-2 px-4 border">
+              <td className="py-2 justify-center px-4 flex border">
                 <button
                   onClick={() => handleEditClick(product)}
                   className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200 mr-2"
@@ -238,6 +287,28 @@ export default function ProductList() {
         </div>
       </div>
 
+      {showModal && (
+        <div className="modal">
+          {/* Modal implementation here */}
+          <form onSubmit={handleSubmit}>
+            {/* Form fields based on newProductData state */}
+            <input type="text" name="productName" value={newProductData.productName} onChange={handleChange} placeholder="Product Name" required />
+            <input type="text" name="sku" value={newProductData.sku} onChange={handleChange} placeholder="SKU" required />
+            <input type="text" name="vendor" value={newProductData.vendor} onChange={handleChange} placeholder="Vendor" />
+            <input type="text" name="category" value={newProductData.category} onChange={handleChange} placeholder="Category" />
+            <input type="text" name="subCategory" value={newProductData.subCategory} onChange={handleChange} placeholder="Sub Category" />
+            <input type="text" name="childCategory" value={newProductData.childCategory} onChange={handleChange} placeholder="Child Category" />
+            <input type="number" name="stock" value={newProductData.stock} onChange={handleChange} placeholder="Stock" required />
+            <input type="number" name="price" value={newProductData.price} onChange={handleChange} placeholder="Price" required />
+            <input type="number" name="discountPrice" value={newProductData.discountPrice} onChange={handleChange} placeholder="Discount Price" />
+            <textarea name="description" value={newProductData.description} onChange={handleChange} placeholder="Description"></textarea>
+            <input type="text" name="buyReturnPolicy" value={newProductData.buyReturnPolicy} onChange={handleChange} placeholder="Buy Return Policy" />
+            <input type="file" onChange={handleFileChange} />
+            <button type="submit">Save</button>
+            <button type="button" onClick={handleModalClose}>Cancel</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

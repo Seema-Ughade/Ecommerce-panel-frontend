@@ -4,42 +4,40 @@ import { FaUpload } from 'react-icons/fa'; // Importing the upload icon from Fon
 
 const PhysicalCreateProduct = () => {
     const [product, setProduct] = useState({
-            productName: '',
-            sku: '',
-            category: '',
-            subCategory: '',
-            childCategory: '',
-            allowProductCondition: false,
-            allowProductPreorder: false,
-            allowMinimumOrderQty: false,
-            manageStock: false,
-            allowEstimatedShippingTime: false,
-            allowProductWholeSell: false,
-            allowProductMeasurement: false,
-            allowProductColors: false,
-            stock: '',
-            description: '',
-            buyReturnPolicy: '',
-            allowProductSEO: false,
-            featureImage: null,
-            galleryImages: [],
-            price: '',
-            discountPrice: '',
-            youtubeUrl: '',
-            tags: '',
-        });
-        
-        const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
-        const [galleryImages, setGalleryImages] = useState([]);
+        productName: '',
+        sku: '',
+        category: '',
+        subCategory: '',
+        childCategory: '',
+        allowProductCondition: false,
+        allowProductPreorder: false,
+        allowMinimumOrderQty: false,
+        manageStock: false,
+        allowEstimatedShippingTime: false,
+        allowProductWholeSell: false,
+        allowProductMeasurement: false,
+        allowProductColors: false,
+        stock: '',
+        description: '',
+        buyReturnPolicy: '',
+        allowProductSEO: false,
+        price: '',
+        discountPrice: '',
+        youtubeUrl: '',
+        tags: '',
+    });
+    const [featureImage, setFeatureImage] = useState(null);
+    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
+    const [galleryImages, setGalleryImages] = useState([]);
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
-    // const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
 
     // Function to generate a unique SKU
     const generateSKU = () => {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
     };
+
     const handleTagChange = (index, event) => {
         const newTags = [...featureTags];
         newTags[index].tag = event.target.value;
@@ -61,7 +59,6 @@ const PhysicalCreateProduct = () => {
         setFeatureTags(newTags);
     };
 
-
     // Fetch categories, subcategories, and childcategories
     useEffect(() => {
         const fetchCategories = async () => {
@@ -70,7 +67,6 @@ const PhysicalCreateProduct = () => {
             );
             setCategories(response.data);
         };
-
         fetchCategories();
     }, []);
 
@@ -82,7 +78,6 @@ const PhysicalCreateProduct = () => {
                 );
                 setSubCategories(response.data);
             };
-
             fetchSubCategories();
         }
     }, [product.category]);
@@ -95,80 +90,109 @@ const PhysicalCreateProduct = () => {
                 );
                 setChildCategories(response.data);
             };
-
             fetchChildCategories();
         }
     }, [product.subCategory]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProduct({ ...product, [name]: value });
+        const { name, type, value, checked } = e.target;
+    
+        if (type === 'checkbox') {
+            // Set the state using the 'checked' value for checkboxes
+            setProduct({ ...product, [name]: checked });
+        } else {
+            // For other types of input
+            setProduct({ ...product, [name]: value });
+        }
     };
-
-
-
+    
     const handleFileChange = (e) => {
         if (e.target.name === 'featureImage') {
             setFeatureImage(e.target.files[0]); // Only one file for feature image
 
         } else if (e.target.name === 'galleryImages') {
-            setGalleryImages(e.target.files); // Multiple files for gallery images
+            setGalleryImages(Array.from(e.target.files)); // Convert FileList to Array
         }
     };
+    // const handleFileChange = (e) => {
+    //     const { name, files } = e.target; // Destructure name and files from the event target
 
+    //     if (name === 'featureImage') {
+    //         // Set the single feature image file
+    //         setFeatureImage(files[0]); // Only one file for feature image
+    //     } else if (name === 'galleryImages') {
+    //         // Convert FileList to Array for multiple gallery images
+    //         const selectedImages = Array.from(files); // Convert FileList to Array
+    //         setGalleryImages(selectedImages); // Set state with the selected images
+    //     }
+    // };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent page refresh on submit
+        e.preventDefault();
+        console.log(product); // Log product state
 
-        // Check for required fields
-        const requiredFields = ['productName', 'sku', 'category', 'subCategory', 'childCategory', 'stock', 'description', 'buyReturnPolicy', 'price', 'featureImage'];
-        for (let field of requiredFields) {
-            if (!product[field] || (field === 'featureImage' && !featureImage)) {
-                alert(`${field} is required.`);
-                return;
-            }
+        // Validation Check
+        if (!product.productName || !product.sku || !product.category || !product.subCategory || !product.childCategory) {
+            alert("Please fill in all required fields.");
+            return;
         }
-
+        
+        // Create a new FormData object
         const formData = new FormData();
-
+    
         // Append product data to form data
-        Object.keys(product).forEach((key) => {
-            formData.append(key, product[key]);
-        });
-
-        // Append feature image
+        formData.append('productName', product.productName);
+        formData.append('sku', product.sku);
+        formData.append('category', product.category);
+        formData.append('subCategory', product.subCategory);
+        formData.append('childCategory', product.childCategory);
+        formData.append('allowProductCondition', product.allowProductCondition);
+        formData.append('allowProductPreorder', product.allowProductPreorder);
+        formData.append('allowMinimumOrderQty', product.allowMinimumOrderQty);
+        formData.append('manageStock', product.manageStock);
+        formData.append('allowEstimatedShippingTime', product.allowEstimatedShippingTime);
+        formData.append('allowProductWholeSell', product.allowProductWholeSell);
+        formData.append('allowProductMeasurement', product.allowProductMeasurement);
+        formData.append('allowProductColors', product.allowProductColors);
+        formData.append('stock', product.stock);
+        formData.append('description', product.description);
+        formData.append('buyReturnPolicy', product.buyReturnPolicy);
+        formData.append('allowProductSEO', product.allowProductSEO);
+        formData.append('price', product.price);
+        formData.append('discountPrice', product.discountPrice);
+        formData.append('youtubeUrl', product.youtubeUrl);
+        formData.append('tags', product.tags);
+    
+        // Append the feature image
         if (featureImage) {
-            formData.append('featureImage', featureImage);
+            formData.append('featureImage', featureImage); // Field name should match Multer config
         }
-
-        // Append gallery images
-        if (galleryImages.length > 0) {
-            for (let i = 0; i < galleryImages.length; i++) {
-                formData.append('galleryImages', galleryImages[i]);
-            }
+    
+        // Append the gallery images
+        if (Array.isArray(galleryImages)) {
+            galleryImages.forEach((image) => {
+                formData.append('galleryImages', image); // Field name should match Multer config
+            });
+        } else {
+            console.error('galleryImages is not an array:', galleryImages);
         }
-
-
+    
         // Send the request to the backend
         try {
-            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
+            const response = await axios.post('http://127.0.0.1:5000/api/products/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
             console.log(response.data);
-            // Handle success (e.g., show a success message or reset the form)
+            alert('Product created successfully!');
         } catch (error) {
-            console.error('Error creating product:', error.response.data);
-            // Handle error (e.g., show an error message)
+            console.error('Error creating product:', error.response ? error.response.data : error.message);
+            alert('Error creating product. Please try again.');
         }
     };
-
-    return (
+        return (
         <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
-
-            {/* <div className="flex gap-8 p-8 font-sans text-gray-700"> */}
-            {/* Left Section */}
             {/* Left Section */}
             <div className="w-2/3 space-y-4">
                 <div>
@@ -264,15 +288,19 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Allow Product Condition</span>
                     </label>
-                    <label className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            name="allowProductPreorder"
-                            className="h-4 w-4 text-blue-600"
-                            onChange={handleChange}
-                        />
-                        <span>Allow Product Preorder</span>
-                    </label>
+                    
+        <label>
+            Allow Preorder
+            <input
+                type="checkbox"
+                name="allowProductPreorder"
+                checked={product.allowProductPreorder}
+                onChange={handleChange}
+            />
+        </label>
+    
+
+
                     <label className="flex items-center space-x-2">
                         <input
                             type="checkbox"
@@ -346,7 +374,7 @@ const PhysicalCreateProduct = () => {
                         name="description"
                         value={product.description}
                         onChange={handleChange}
-                        placeholder="Font Size... Font Family... Font Format..."
+                        placeholder="Enter Product Description"
                         className="w-full p-2 border border-gray-300 rounded"
                         rows={5}
                     />
@@ -357,32 +385,25 @@ const PhysicalCreateProduct = () => {
                         name="buyReturnPolicy"
                         value={product.buyReturnPolicy}
                         onChange={handleChange}
-                        placeholder="Font Size... Font Family... Font Format..."
+                        placeholder="Enter Product Buy/Return Policy"
                         className="w-full p-2 border border-gray-300 rounded"
                         rows={5}
                     />
                 </div>
-
-
                 <div className=" ">
-
-                    <label className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            name="allowProductSEO"
-                            className="h-4 w-4 text-blue-600"
-                            onChange={handleChange}
-                        />
-                        <span>Allow Product SEO</span>
-                    </label>
-
+                <div>
+        <label>
+            Allow SEO
+            <input
+                type="checkbox"
+                name="allowProductSEO"
+                checked={product.allowProductSEO}
+                onChange={handleChange}
+            />
+        </label>
+    </div>
                 </div>
-
             </div>
-
-            {/* Right Section */}
-
-
             {/* Right Section */}
             <div className="w-1/2 space-y-4">
                 <div className="flex flex-col gap-4">
@@ -393,7 +414,7 @@ const PhysicalCreateProduct = () => {
                     </div>
                     <div className="w-full">
                         <div className="border border-gray-300 rounded-md p-4 flex justify-center items-center">
-                            <div
+                            {/* <div
                                 className="w-full h-72 border-dashed border-gray-400 bg-gray-100 flex items-center justify-center"
                                 id="landscape"
                             >
@@ -412,23 +433,19 @@ const PhysicalCreateProduct = () => {
                                     <FaUpload className="text-white mr-2" />
                                     <span className="text-white">Upload Image Here</span>
                                 </label>
+                            </div> */}
+                            <div>
+                                <label className="block mb-2">Product Gallery Images*</label>
+                                <input
+                                    type="file"
+                                    name="featureImage"
+                                    onChange={handleFileChange}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
                             </div>
-                             {/* <div>
-                            <label className="block mb-2">Product Gallery Images*</label>
-                            <input
-                                type="file"
-                                name="featureImage"
-                                multiple
-                                onChange={handleFileChange}
-                                className="w-full p-2 border border-gray-300 rounded"
-                            />
-                        </div> */}
                         </div>
-                      
                     </div>
-
                 </div>
-
                 <div>
                     <label className="block mb-2">Product Gallery Images*</label>
                     <input
@@ -461,7 +478,6 @@ const PhysicalCreateProduct = () => {
             rows={5}
           />
         </div> */}
-
                 <div>
                     <label className="block mb-2">Product Current Price* (In USD)</label>
                     <input
@@ -473,7 +489,6 @@ const PhysicalCreateProduct = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
-
                 <div>
                     <label className="block mb-2">Product Discount Price* (Optional)</label>
                     <input
@@ -485,7 +500,6 @@ const PhysicalCreateProduct = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
-
                 <div>
                     <label className="block mb-2">Youtube Video URL* (Optional)</label>
                     <input
@@ -497,13 +511,11 @@ const PhysicalCreateProduct = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
-
                 <div className="col-lg-12">
                     <div className="featured-keyword-area">
                         <div className="heading-area">
                             <h4 className="title">Feature Tags</h4>
                         </div>
-
                         <div className="feature-tag-top-fields" id="feature-section">
                             {featureTags.map((feature, index) => (
                                 <div key={index} className="feature-area flex items-center justify-between mb-4">
@@ -532,7 +544,6 @@ const PhysicalCreateProduct = () => {
                                                 }}
                                             />
                                         </div>
-
                                         <div className="w-[20%] h-[70%]  ">
                                             <input
                                                 type="color"
@@ -550,7 +561,6 @@ const PhysicalCreateProduct = () => {
                                 </div>
                             ))}
                         </div>
-
                         <a
                             href="javascript:;"
                             id="feature-btn"
@@ -562,9 +572,6 @@ const PhysicalCreateProduct = () => {
                         </a>
                     </div>
                 </div>
-
-
-
                 <div>
                     <label className="block mb-2">Tags*</label>
                     <input
@@ -575,7 +582,6 @@ const PhysicalCreateProduct = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
-
                 <button
                     type="submit"
                     className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
@@ -586,5 +592,4 @@ const PhysicalCreateProduct = () => {
         </form>
     );
 };
-
 export default PhysicalCreateProduct;

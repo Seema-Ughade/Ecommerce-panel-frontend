@@ -115,7 +115,7 @@ const Categories = () => {
             <th className="border border-gray-300 px-4 py-2">Options</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className=''>
           {currentCategories.map((category, index) => (
             <tr key={index} className="hover:bg-gray-100 ">
 
