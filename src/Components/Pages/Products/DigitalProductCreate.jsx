@@ -34,7 +34,7 @@ const DigitalProductCreate = () => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(
-                    'https://ecommerce-panel-backend.onrender.com/api/categories'
+                    "https://ecommerce-panel-backend.onrender.com/api/categories"
                 );
                 setCategories(response.data);
             } catch (error) {
@@ -50,7 +50,7 @@ const DigitalProductCreate = () => {
             const fetchSubCategories = async () => {
                 try {
                     const response = await axios.get(
-                        `https://ecommerce-panel-backend.onrender.com/api/subcategories?category=${product.category}`
+                        'https://ecommerce-panel-backend.onrender.com/api/subcategories'
                     );
                     setSubCategories(response.data);
                 } catch (error) {
@@ -70,7 +70,7 @@ const DigitalProductCreate = () => {
             const fetchChildCategories = async () => {
                 try {
                     const response = await axios.get(
-                        `https://ecommerce-panel-backend.onrender.com/api/childcategories?subcategory=${product.subCategory}`
+                        'https://ecommerce-panel-backend.onrender.com/api/childcategories'
                     );
                     setChildCategories(response.data);
                 } catch (error) {
@@ -126,10 +126,87 @@ const DigitalProductCreate = () => {
         setProduct((prev) => ({ ...prev, featureTags: updatedTags }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle product submission logic
+        
+        // Create form data to handle files and text inputs
+        const formData = new FormData();
+        
+        formData.append('productName', product.productName);
+        formData.append('category', product.category);
+        formData.append('subCategory', product.subCategory);
+        formData.append('childCategory', product.childCategory);
+        formData.append('description', product.description);
+        formData.append('buyReturnPolicy', product.buyReturnPolicy);
+        formData.append('allowProductSEO', product.allowProductSEO);
+        formData.append('price', product.price);
+        formData.append('discountPrice', product.discountPrice);
+        formData.append('youtubeUrl', product.youtubeUrl);
+
+        // // Append feature image if provided
+        // if (product.featureImage && product.featureImage[0]) {
+        //     formData.append('featureImage', product.featureImage[0]);
+        // }
+        if (product.featureImage) {
+            formData.append('featureImage', product.featureImage);
+        }
+        
+        // Append gallery images if provided
+        if (product.galleryImages) {
+            Array.from(product.galleryImages).forEach((image, index) => {
+                formData.append(`galleryImages[${index}]`, image);
+            });
+        }
+
+        // Append feature tags
+        product.featureTags.forEach((tag, index) => {
+            formData.append(`featureTags[${index}][tag]`, tag.tag);
+            formData.append(`featureTags[${index}][color]`, tag.color);
+        });
+if (product.featureImage) {
+    formData.append('featureImage', product.featureImage);
+}
+
+        try {
+            // Replace with your API endpoint
+            const response = await fetch('http://127.0.0.1:5000/api/DigitalProducts', {
+                method: 'POST',
+                body: formData,
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                alert('Product created successfully!');
+                console.log(response.data.message); // Adjust this to match your API's response structure
+
+                // Reset the form
+                setProduct({
+                    productName: '',
+                    category: '',
+                    subCategory: '',
+                    childCategory: '',
+                    description: '',
+                    buyReturnPolicy: '',
+                    allowProductSEO: false,
+                    price: '',
+                    discountPrice: '',
+                    youtubeUrl: '',
+                    featureTags: [],
+                    featureImage: null,
+                    galleryImages: [],
+                });
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.message}`);
+            }
+        } catch (error) {
+            const response = await error.response.text(); // Get the text response
+
+            console.error('Error creating product:', response);
+            alert('An error occurred while creating the product.');
+        }
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
@@ -204,7 +281,7 @@ const DigitalProductCreate = () => {
                         name="description"
                         value={product.description}
                         onChange={handleChange}
-                        placeholder="Font Size... Font Family... Font Format..."
+                        placeholder="Enter Product Description"
                         className="w-full p-2 border border-gray-300 rounded"
                         rows={5}
                     />
@@ -215,7 +292,7 @@ const DigitalProductCreate = () => {
                         name="buyReturnPolicy"
                         value={product.buyReturnPolicy}
                         onChange={handleChange}
-                        placeholder="Font Size... Font Family... Font Format..."
+                        placeholder="Enter Product Buy/Return Policy "
                         className="w-full p-2 border border-gray-300 rounded"
                         rows={5}
                     />
@@ -343,3 +420,6 @@ const DigitalProductCreate = () => {
 };
 
 export default DigitalProductCreate;
+
+
+
