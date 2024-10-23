@@ -5,11 +5,9 @@ import { FaUpload } from 'react-icons/fa';
 const DigitalProductCreate = () => {
     const [product, setProduct] = useState({
         productName: '',
-        sku: '',
         category: '',
         subCategory: '',
         childCategory: '',
-        stock: '',
         description: '',
         buyReturnPolicy: '',
         price: '',
@@ -132,6 +130,7 @@ const DigitalProductCreate = () => {
         // Create form data to handle files and text inputs
         const formData = new FormData();
         
+        // Append text fields to formData
         formData.append('productName', product.productName);
         formData.append('category', product.category);
         formData.append('subCategory', product.subCategory);
@@ -142,33 +141,26 @@ const DigitalProductCreate = () => {
         formData.append('price', product.price);
         formData.append('discountPrice', product.discountPrice);
         formData.append('youtubeUrl', product.youtubeUrl);
-
-        // // Append feature image if provided
-        // if (product.featureImage && product.featureImage[0]) {
-        //     formData.append('featureImage', product.featureImage[0]);
-        // }
+    
+        // Append feature image if provided
         if (product.featureImage) {
-            formData.append('featureImage', product.featureImage);
+            formData.append('featureImage', product.featureImage); // Assuming featureImage is a single file
         }
         
         // Append gallery images if provided
-        if (product.galleryImages) {
-            Array.from(product.galleryImages).forEach((image, index) => {
-                formData.append(`galleryImages[${index}]`, image);
+        if (product.galleryImages && product.galleryImages.length > 0) {
+            product.galleryImages.forEach((image) => {
+                formData.append('galleryImages', image); // Append each image to galleryImages
             });
         }
-
+    
         // Append feature tags
-        product.featureTags.forEach((tag, index) => {
-            formData.append(`featureTags[${index}][tag]`, tag.tag);
-            formData.append(`featureTags[${index}][color]`, tag.color);
+        product.featureTags.forEach((tag) => {
+            formData.append('featureTags[]', tag.tag); // Append tag strings
+            formData.append('featureTags[]', tag.color); // If your API needs color separately, otherwise skip this
         });
-if (product.featureImage) {
-    formData.append('featureImage', product.featureImage);
-}
-
+        
         try {
-            // Replace with your API endpoint
             const response = await fetch('https://ecommerce-panel-backend.onrender.com/api/DigitalProducts', {
                 method: 'POST',
                 body: formData,
@@ -177,8 +169,8 @@ if (product.featureImage) {
             if (response.ok) {
                 const result = await response.json();
                 alert('Product created successfully!');
-                console.log(response.data.message); // Adjust this to match your API's response structure
-
+                console.log(result.message); // Adjust this to match your API's response structure
+    
                 // Reset the form
                 setProduct({
                     productName: '',
@@ -191,7 +183,7 @@ if (product.featureImage) {
                     price: '',
                     discountPrice: '',
                     youtubeUrl: '',
-                    featureTags: [],
+                    featureTags: [{ tag: '', color: '' }], // Reset to one empty tag
                     featureImage: null,
                     galleryImages: [],
                 });
@@ -200,13 +192,11 @@ if (product.featureImage) {
                 alert(`Error: ${error.message}`);
             }
         } catch (error) {
-            const response = await error.response.text(); // Get the text response
-
-            console.error('Error creating product:', response);
+            console.error('Error creating product:', error);
             alert('An error occurred while creating the product.');
         }
     };
-
+    
 
     return (
         <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">

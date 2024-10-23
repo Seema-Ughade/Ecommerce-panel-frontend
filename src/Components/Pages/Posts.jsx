@@ -10,7 +10,7 @@ const Posts = () => {
   const [newPost, setNewPost] = useState({
     title: '',
     category: '',
-    featuredImage: null,
+    featureImage: null,
     description: '',
     source: '',
     tags: '',
@@ -20,7 +20,7 @@ const Posts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/posts'); // Replace with your API endpoint for posts
+        const response = await axios.get('http://127.0.0.1:5000/api/posts'); // Replace with your API endpoint for posts
         setPosts(response.data);
       } catch (error) {
         console.error('Error fetching posts:', error);
@@ -46,7 +46,7 @@ const Posts = () => {
   };
 
   const handleFileChange = (e) => {
-    setNewPost({ ...newPost, featuredImage: e.target.files[0] });
+    setNewPost({ ...newPost, featureImage: e.target.files[0] });
   };
 
   const handleSubmit = async (e) => {
@@ -54,18 +54,18 @@ const Posts = () => {
     const formData = new FormData();
     formData.append('title', newPost.title);
     formData.append('category', newPost.category);
-    formData.append('featuredImage', newPost.featuredImage);
+    formData.append('featureImage', newPost.featureImage);
     formData.append('description', newPost.description);
     formData.append('source', newPost.source);
     formData.append('tags', newPost.tags);
 
     try {
-      await axios.post('https://ecommerce-panel-backend.onrender.com/api/posts', formData); // Replace with your API endpoint for creating posts
+      await axios.post('http://127.0.0.1:5000/api/posts', formData); // Replace with your API endpoint for creating posts
       setPosts([...posts, newPost]); // Update local state (you might want to fetch posts again instead)
       setNewPost({
         title: '',
         category: '',
-        featuredImage: null,
+        featureImage: null,
         description: '',
         source: '',
         tags: '',
@@ -108,9 +108,9 @@ const Posts = () => {
           </thead>
           <tbody>
             {posts.map((post, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                <td className="border border-gray-300 px-4 py-2">
-                  <img src={post.featuredImage} alt={post.title} className="h-16 w-16 object-cover" />
+              <tr key={index} className="hover:bg-gray-100 text-center">
+                <td className="border border-gray-300 px-4 py-2 flex justify-center items-center">
+                  <img src={post.featureImage} alt={post.title} className="h-16 w-16  object-cover" />
                 </td>
                 <td className="border border-gray-300 px-4 py-2">{post.title}</td>
                 <td className="border border-gray-300 px-4 py-2">{post.views}</td>
@@ -163,11 +163,11 @@ const Posts = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700" htmlFor="featuredImage">Current Featured Image *</label>
+                  <label className="block text-gray-700" htmlFor="featureImage">Current Featured Image *</label>
                   <input
                     type="file"
-                    name="featuredImage"
-                    id="featuredImage"
+                    name="featureImage"
+                    id="featureImage"
                     onChange={handleFileChange}
                     required
                     className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"

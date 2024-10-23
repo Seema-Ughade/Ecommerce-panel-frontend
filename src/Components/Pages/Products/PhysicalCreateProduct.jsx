@@ -21,10 +21,13 @@ const PhysicalCreateProduct = () => {
         description: '',
         buyReturnPolicy: '',
         allowProductSEO: false,
+        featureImage : 'null',
+
         price: '',
         discountPrice: '',
         youtubeUrl: '',
-        tags: '',
+        featureTags: '',
+        tags: ''
     });
     const [featureImage, setFeatureImage] = useState(null);
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
@@ -106,26 +109,26 @@ const PhysicalCreateProduct = () => {
         }
     };
     
-    const handleFileChange = (e) => {
-        if (e.target.name === 'featureImage') {
-            setFeatureImage(e.target.files[0]); // Only one file for feature image
-
-        } else if (e.target.name === 'galleryImages') {
-            setGalleryImages(Array.from(e.target.files)); // Convert FileList to Array
-        }
-    };
     // const handleFileChange = (e) => {
-    //     const { name, files } = e.target; // Destructure name and files from the event target
+    //     if (e.target.name === 'featureImage') {
+    //         setFeatureImage(e.target.files[0]); // Only one file for feature image
 
-    //     if (name === 'featureImage') {
-    //         // Set the single feature image file
-    //         setFeatureImage(files[0]); // Only one file for feature image
-    //     } else if (name === 'galleryImages') {
-    //         // Convert FileList to Array for multiple gallery images
-    //         const selectedImages = Array.from(files); // Convert FileList to Array
-    //         setGalleryImages(selectedImages); // Set state with the selected images
+    //     } else if (e.target.name === 'galleryImages') {
+    //         setGalleryImages(Array.from(e.target.files)); // Convert FileList to Array
     //     }
     // };
+    const handleFileChange = (e) => {
+        const { name, files } = e.target; // Destructure name and files from the event target
+
+        if (name === 'featureImage') {
+            // Set the single feature image file
+            setFeatureImage(files[0]); // Only one file for feature image
+        } else if (name === 'galleryImages') {
+            // Convert FileList to Array for multiple gallery images
+            const selectedImages = Array.from(files); // Convert FileList to Array
+            setGalleryImages(selectedImages); // Set state with the selected images
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -179,7 +182,7 @@ const PhysicalCreateProduct = () => {
     
         // Send the request to the backend
         try {
-            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products/', formData, {
+            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
