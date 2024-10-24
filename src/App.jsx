@@ -20,6 +20,7 @@ import ListingProductCreate from './Components/Pages/Products/ListingProductCrea
 import ProductList from './Components/Pages/Products/ProductList';
 import DeactivatedProducts from './Components/Pages/Products/DeactivatedProducts';
 import SetCoupans from './Components/Pages/SetCoupans';
+import SocialLinks from './Components/Pages/Social Settings/SocialLinks';
 const App = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/admin/products" element={<ProductList />} />
               <Route path="/admin/products/deactive" element={<DeactivatedProducts />} />
               <Route path="/admin/coupon" element={<SetCoupans />} />
+              <Route path="/admin/social-link" element={<SocialLinks />} />
               
             </Routes>
           </div>

@@ -144,18 +144,35 @@ export default function ProductList() {
     }
   };
 
+  // const handleStatusChange = async (productId, newStatus) => {
+  //   try {
+  //     await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${productId}/status`, { status: newStatus });
+  //     // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${categoryId}/status`, { status: newStatus });
+
+  //     fetchProducts();
+  //   } catch (error) {
+  //     // setError('Failed to update product status. Please try again.');
+  //     console.error('Error updating product status:', error);
+  //   }
+  // };
   const handleStatusChange = async (productId, newStatus) => {
     try {
-      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${productId}/status`, { status: newStatus });
-      // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${categoryId}/status`, { status: newStatus });
+      // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
+      const response = await axios.put(`http://127.0.0.1:5000/api/products/${productId}/status`, { status: newStatus });
+      console.log('Updated Subcategory:', response.data); // Log the updated subcategory
 
-      fetchProducts();
+      // Update categories in the state
+      setProducts(prev =>
+        prev.map(cat => (cat._id === productId ? { ...cat, status: newStatus } : cat))
+      );
+      toast.success('Category status updated successfully!');
+
     } catch (error) {
-      // setError('Failed to update product status. Please try again.');
-      console.error('Error updating product status:', error);
+      toast.error('Error updating category status. Please try again.');
     }
   };
-  
+
+
 
   const filteredProducts = products.filter(product =>
     product.productName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -224,7 +241,7 @@ export default function ProductList() {
               <td className="py-2 text-center px-4 border">
                 <select
                   value={product.status}
-                  onChange={(e) => handleStatusChange(product.id, e.target.value)}
+                  onChange={(e) => handleStatusChange(product._id, e.target.value)}
                   className="border rounded px-2 py-1"
                   style={{
                     backgroundColor: product.status === "active" ? "#1e7e34" : "#bd2130",

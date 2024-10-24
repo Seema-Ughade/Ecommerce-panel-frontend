@@ -21,7 +21,7 @@ const PhysicalCreateProduct = () => {
         description: '',
         buyReturnPolicy: '',
         allowProductSEO: false,
-        featureImage : 'null',
+        featureImage : null,
 
         price: '',
         discountPrice: '',
@@ -29,6 +29,9 @@ const PhysicalCreateProduct = () => {
         featureTags: '',
         tags: ''
     });
+    const [showImageInput, setShowImageInput] = useState(false);
+    const [imageInputs, setImageInputs] = useState([]);
+  
     const [featureImage, setFeatureImage] = useState(null);
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
     const [galleryImages, setGalleryImages] = useState([]);
@@ -41,6 +44,29 @@ const PhysicalCreateProduct = () => {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
     };
 
+    const handleInputChange = (e) => {
+        setProduct({ ...product, [e.target.name]: e.target.value });
+      };
+    
+      const handleFeatureImageChange = (e) => {
+        setProduct({ ...product, featureImage: e.target.files[0] });
+      };
+    
+      const handleGalleryImageChange = (index, e) => {
+        const newGalleryImages = [...imageInputs];
+        newGalleryImages[index] = e.target.files[0];
+        setImageInputs(newGalleryImages);
+      };
+    
+      const handleAddImageInput = () => {
+        setImageInputs([...imageInputs, null]);
+      };
+    
+      const handleRemoveImageInput = (index) => {
+        const newImageInputs = imageInputs.filter((_, i) => i !== index);
+        setImageInputs(newImageInputs);
+      };
+    
     const handleTagChange = (index, event) => {
         const newTags = [...featureTags];
         newTags[index].tag = event.target.value;
@@ -117,6 +143,11 @@ const PhysicalCreateProduct = () => {
     //         setGalleryImages(Array.from(e.target.files)); // Convert FileList to Array
     //     }
     // };
+    
+//   const handleFeatureImageChange = (e) => {
+//     setProduct({ ...product, featureImage: e.target.files[0] });
+//   };
+
     const handleFileChange = (e) => {
         const { name, files } = e.target; // Destructure name and files from the event target
 
@@ -133,7 +164,7 @@ const PhysicalCreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(product); // Log product state
-
+    
         // Validation Check
         if (!product.productName || !product.sku || !product.category || !product.subCategory || !product.childCategory) {
             alert("Please fill in all required fields.");
@@ -142,44 +173,23 @@ const PhysicalCreateProduct = () => {
         
         // Create a new FormData object
         const formData = new FormData();
-    
+        
         // Append product data to form data
-        formData.append('productName', product.productName);
-        formData.append('sku', product.sku);
-        formData.append('category', product.category);
-        formData.append('subCategory', product.subCategory);
-        formData.append('childCategory', product.childCategory);
-        formData.append('allowProductCondition', product.allowProductCondition);
-        formData.append('allowProductPreorder', product.allowProductPreorder);
-        formData.append('allowMinimumOrderQty', product.allowMinimumOrderQty);
-        formData.append('manageStock', product.manageStock);
-        formData.append('allowEstimatedShippingTime', product.allowEstimatedShippingTime);
-        formData.append('allowProductWholeSell', product.allowProductWholeSell);
-        formData.append('allowProductMeasurement', product.allowProductMeasurement);
-        formData.append('allowProductColors', product.allowProductColors);
-        formData.append('stock', product.stock);
-        formData.append('description', product.description);
-        formData.append('buyReturnPolicy', product.buyReturnPolicy);
-        formData.append('allowProductSEO', product.allowProductSEO);
-        formData.append('price', product.price);
-        formData.append('discountPrice', product.discountPrice);
-        formData.append('youtubeUrl', product.youtubeUrl);
-        formData.append('tags', product.tags);
+        for (const key in product) {
+            formData.append(key, product[key]);
+        }
     
         // Append the feature image
         if (featureImage) {
-            formData.append('featureImage', featureImage); // Field name should match Multer config
+            formData.append('featureImage', featureImage);
         }
     
         // Append the gallery images
-        if (Array.isArray(galleryImages)) {
-            galleryImages.forEach((image) => {
-                formData.append('galleryImages', image); // Field name should match Multer config
-            });
-        } else {
-            console.error('galleryImages is not an array:', galleryImages);
-        }
+        galleryImages.forEach(image => {
+            formData.append('galleryImages', image);
+        });
     
+        
         // Send the request to the backend
         try {
             const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
@@ -189,17 +199,28 @@ const PhysicalCreateProduct = () => {
             });
             console.log(response.data);
             alert('Product created successfully!');
+            // Reset state after submission
+            setProduct({
+                productName: '',
+                sku: '',
+                category: '',
+                subCategory: '',
+                childCategory: '',
+                // reset other fields as necessary
+            });
+            setFeatureImage(null);
+            setGalleryImages([]);
         } catch (error) {
             console.error('Error creating product:', error.response ? error.response.data : error.message);
             alert('Error creating product. Please try again.');
         }
     };
-        return (
+            return (
         <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
             {/* Left Section */}
             <div className="w-2/3 space-y-4">
                 <div>
-                    <label className="block mb-2">Product Name* (In Any Language)</label>
+                    <label className="block font-semibold mb-2">Product Name* (In Any Language)</label>
                     <input
                         type="text"
                         name="productName"
@@ -211,7 +232,7 @@ const PhysicalCreateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Product Sku*</label>
+                    <label className="block font-semibold mb-2">Product Sku*</label>
                     <input
                         type="text"
                         name="sku"
@@ -223,14 +244,14 @@ const PhysicalCreateProduct = () => {
                     <button
                         type="button"
                         onClick={() => setProduct((prev) => ({ ...prev, sku: generateSKU() }))}
-                        className="mt-2 p-2 bg-blue-500 text-white rounded"
+                        className="mt-2 p-2 bg-purple-600 text-white rounded"
                     >
                         Generate New SKU
                     </button>
                 </div>
 
                 <div>
-                    <label className="block mb-2">Category*</label>
+                    <label className="block font-semibold mb-2">Category*</label>
                     <select
                         name="category"
                         value={product.category}
@@ -247,7 +268,7 @@ const PhysicalCreateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Sub Category*</label>
+                    <label className="block font-semibold mb-2">Sub Category*</label>
                     <select
                         name="subCategory"
                         value={product.subCategory}
@@ -264,7 +285,7 @@ const PhysicalCreateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Child Category*</label>
+                    <label className="block font-semibold mb-2">Child Category*</label>
                     <select
                         name="childCategory"
                         value={product.childCategory}
@@ -282,7 +303,7 @@ const PhysicalCreateProduct = () => {
 
                 {/* Checkbox Options */}
                 <div className=" w-1/2 space-y-2">
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowProductCondition"
@@ -291,20 +312,21 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Allow Product Condition</span>
                     </label>
-                    
-        <label>
-            Allow Preorder
-            <input
-                type="checkbox"
-                name="allowProductPreorder"
-                checked={product.allowProductPreorder}
-                onChange={handleChange}
-            />
-        </label>
-    
 
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            className="h-4 w-4 text-blue-600"
 
-                    <label className="flex items-center space-x-2">
+                            name="allowProductPreorder"
+                            checked={product.allowProductPreorder}
+                            onChange={handleChange}
+                        />
+                        <span>Allow Preorder</span>
+
+                    </label>
+
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowMinimumOrderQty"
@@ -313,7 +335,7 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Allow Minimum Order Qty</span>
                     </label>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="manageStock"
@@ -322,7 +344,7 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Manage Stock</span>
                     </label>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowEstimatedShippingTime"
@@ -331,7 +353,7 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Allow Estimated Shipping Time</span>
                     </label>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowProductWholeSell"
@@ -340,7 +362,7 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Allow Product Whole Sell</span>
                     </label>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowProductMeasurement"
@@ -349,7 +371,7 @@ const PhysicalCreateProduct = () => {
                         />
                         <span>Allow Product Measurement</span>
                     </label>
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowProductColors"
@@ -361,7 +383,7 @@ const PhysicalCreateProduct = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Product Stock* (Leave Empty will Show Always Available)</label>
+                    <label className="block font-semibold mb-2">Product Stock* (Leave Empty will Show Always Available)</label>
                     <input
                         type="number"
                         name="stock"
@@ -372,7 +394,7 @@ const PhysicalCreateProduct = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Product Description*</label>
+                    <label className="block font-semibold mb-2">Product Description*</label>
                     <textarea
                         name="description"
                         value={product.description}
@@ -383,7 +405,7 @@ const PhysicalCreateProduct = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Product Buy/Return Policy*</label>
+                    <label className="block font-semibold mb-2">Product Buy/Return Policy*</label>
                     <textarea
                         name="buyReturnPolicy"
                         value={product.buyReturnPolicy}
@@ -394,17 +416,20 @@ const PhysicalCreateProduct = () => {
                     />
                 </div>
                 <div className=" ">
-                <div>
-        <label>
-            Allow SEO
-            <input
-                type="checkbox"
-                name="allowProductSEO"
-                checked={product.allowProductSEO}
-                onChange={handleChange}
-            />
-        </label>
-    </div>
+                    <div>
+                        <label className="flex font-semibold items-center space-x-2">
+
+                            <input
+                                type="checkbox"
+                                className="h-4 w-4 text-blue-600"
+
+                                name="allowProductSEO"
+                                checked={product.allowProductSEO}
+                                onChange={handleChange}
+                            />
+                            <span>Allow SEO </span>
+                        </label>
+                    </div>
                 </div>
             </div>
             {/* Right Section */}
@@ -412,77 +437,71 @@ const PhysicalCreateProduct = () => {
                 <div className="flex flex-col gap-4">
                     <div className="w-full">
                         <div className="mb-4">
-                            <h4 className="text-lg font-semibold">Feature Image *</h4>
+                            <h4 className=" font-semibold">Feature Image *</h4>
                         </div>
                     </div>
                     <div className="w-full">
                         <div className="border border-gray-300 rounded-md p-4 flex justify-center items-center">
-                            {/* <div
-                                className="w-full h-72 border-dashed border-gray-400 bg-gray-100 flex items-center justify-center"
-                                id="landscape"
-                            >
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-600">Upload Feature Image:</label>
                                 <input
                                     type="file"
                                     name="featureImage"
                                     accept="image/*"
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                    id="file-upload"
-                                />
-                                <label
-                                    htmlFor="file-upload"
-                                    className="flex border p-4 rounded-full bg-blue-900 items-center cursor-pointer"
-                                >
-                                    <FaUpload className="text-white mr-2" />
-                                    <span className="text-white">Upload Image Here</span>
-                                </label>
-                            </div> */}
-                            <div>
-                                <label className="block mb-2">Product Gallery Images*</label>
-                                <input
-                                    type="file"
-                                    name="featureImage"
-                                    onChange={handleFileChange}
-                                    className="w-full p-2 border border-gray-300 rounded"
+                                    onChange={handleFeatureImageChange}
+                                    className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                                    required
                                 />
                             </div>
+
+
                         </div>
                     </div>
                 </div>
                 <div>
-                    <label className="block mb-2">Product Gallery Images*</label>
-                    <input
-                        type="file"
-                        name="galleryImages"
-                        multiple
-                        onChange={handleFileChange}
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
+                    <label className="block text-sm font-semibold text-gray-600">Product Gallery Images*</label>
+
+                    <button
+                        type="button"
+                        onClick={() => setShowImageInput(!showImageInput)}
+                        className="w-56 bg-purple-600 text-white py-3 rounded-md mt-4 hover:bg-purple-700 transition-colors duration-300"
+                    >
+                        {showImageInput ? 'Hide Gallery Image Inputs' : '+ Set Gallery '}
+                    </button>
                 </div>
 
-                {/* <div>
-          <label className="block mb-2">Product Description*</label>
-          <textarea
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            rows={5}
-          />
-        </div>
+                {showImageInput && (
+                    <>
+                        {imageInputs.map((input, index) => (
+                            <div key={index} className="flex items-center space-x-2 mt-4">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => handleGalleryImageChange(index, e)}
+                                    className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveImageInput(index)}
+                                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-300"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={handleAddImageInput}
+                            className="w-full bg-green-600 text-white py-2 rounded-md mt-2 hover:bg-green-700 transition-colors duration-300"
+                        >
+                            Add Another Image
+                        </button>
+                    </>
+                )}
 
-        <div>
-          <label className="block mb-2">Product Buy/Return Policy*</label>
-          <textarea
-            name="buyReturnPolicy"
-            value={product.buyReturnPolicy}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
-            rows={5}
-          />
-        </div> */}
                 <div>
-                    <label className="block mb-2">Product Current Price* (In USD)</label>
+                    <label className="block font-semibold  mb-2">Product Current Price* (In USD)</label>
                     <input
                         type="number"
                         name="price"
@@ -493,7 +512,7 @@ const PhysicalCreateProduct = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Product Discount Price* (Optional)</label>
+                    <label className="block font-semibold mb-2">Product Discount Price* (Optional)</label>
                     <input
                         type="number"
                         name="discountPrice"
@@ -504,7 +523,7 @@ const PhysicalCreateProduct = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Youtube Video URL* (Optional)</label>
+                    <label className="block font-semibold mb-2">Youtube Video URL* (Optional)</label>
                     <input
                         type="url"
                         name="youtubeUrl"
@@ -515,21 +534,21 @@ const PhysicalCreateProduct = () => {
                     />
                 </div>
                 <div className="col-lg-12">
-                    <div className="featured-keyword-area">
-                        <div className="heading-area">
-                            <h4 className="title">Feature Tags</h4>
+                    <div className="featured-keyword-area p-4 ">
+                        <div className="heading-area mb-4">
+                            <h4 className="title font-semibold text-xl">Feature Tags</h4>
                         </div>
                         <div className="feature-tag-top-fields" id="feature-section">
                             {featureTags.map((feature, index) => (
-                                <div key={index} className="feature-area flex items-center justify-between mb-4">
+                                <div key={index} className="feature-area flex items-center justify-between mb-4 border p-4 rounded-md bg-white shadow-sm">
                                     <span
-                                        className="remove feature-remove cursor-pointer text-red-500"
+                                        className="remove feature-remove cursor-pointer text-red-500 hover:text-red-700"
                                         onClick={() => removeField(index)}
                                     >
                                         <i className="fas fa-times"></i>
                                     </span>
                                     <div className="w-full flex space-x-4">
-                                        <div className="w-1/2">
+                                        <div className="w-2/3">
                                             <input
                                                 type="text"
                                                 name="featureTags[]"
@@ -547,36 +566,40 @@ const PhysicalCreateProduct = () => {
                                                 }}
                                             />
                                         </div>
-                                        <div className="w-[20%] h-[70%]  ">
+                                        <div className="w-1/3 flex items-center space-x-2">
                                             <input
                                                 type="color"
-                                                name="colors[]"
                                                 value={feature.color}
                                                 onChange={(e) => handleColorChange(index, e)}
-                                                className="w-full p-2 border h-[70%] border-gray-300 rounded-md"
-                                                style={{
-                                                    WebkitTapHighlightColor: 'transparent',
-                                                    WebkitTextSizeAdjust: '30%',
-                                                }}
+                                                className="w-12 h-10 border rounded-md"
                                             />
+                                            <button
+                                                type="button"
+                                                className="text-red-500 hover:text-red-700 font-medium"
+                                                onClick={() => removeField(index)}
+                                            >
+                                                Remove
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <a
-                            href="javascript:;"
-                            id="feature-btn"
-                            onClick={addNewField}
-                            className="add-field-btn text-blue-600 hover:text-blue-800 font-medium flex items-center"
-                        >
-                            <i className="icofont-plus mr-2"></i>
-                            Add More Field
-                        </a>
+                        <div className="flex justify-center mt-4">
+                            <a
+                                href="javascript:;"
+                                id="feature-btn"
+                                onClick={addNewField}
+                                className="add-field-btn border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium flex items-center px-4 py-2 rounded transition duration-200"
+                            >
+                                <i className="icofont-plus mr-2"></i>
+                                Add More Field
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <label className="block mb-2">Tags*</label>
+                    <label className="block font-semibold mb-2">Tags*</label>
                     <input
                         type="text"
                         name="tags"
@@ -587,7 +610,7 @@ const PhysicalCreateProduct = () => {
                 </div>
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                    className="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600"
                 >
                     Create Product
                 </button>
