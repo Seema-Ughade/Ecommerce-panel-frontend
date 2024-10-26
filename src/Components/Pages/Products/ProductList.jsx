@@ -158,7 +158,7 @@ export default function ProductList() {
   const handleStatusChange = async (productId, newStatus) => {
     try {
       // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
-      const response = await axios.put(`http://127.0.0.1:5000/api/products/${productId}/status`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${productId}/status`, { status: newStatus });
       console.log('Updated Subcategory:', response.data); // Log the updated subcategory
 
       // Update categories in the state
