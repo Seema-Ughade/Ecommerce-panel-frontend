@@ -34,7 +34,7 @@ export default function ProductList() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/products/');
+      const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/products/');
       setProducts(response.data);
     } catch (error) {
       setError('Error fetching products. Please try again later.');
@@ -72,7 +72,7 @@ export default function ProductList() {
   const handleDeleteClick = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await axios.delete(`http://127.0.0.1:5000/api/products/${id}`);
+        await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/products/${id}`);
         fetchProducts();
       } catch (error) {
         setError('Failed to delete product. Please try again.');
@@ -131,10 +131,10 @@ export default function ProductList() {
       }
       if (editingProduct) {
         // Update existing product
-        await axios.put(`http://127.0.0.1:5000/api/products/${editingProduct._id}`, formData);
+        await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${editingProduct._id}`, formData);
       } else {
         // Create new product
-        await axios.post('http://127.0.0.1:5000/api/products', formData);
+        await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData);
       }
       fetchProducts();
       handleModalClose();
@@ -146,8 +146,8 @@ export default function ProductList() {
 
   // const handleStatusChange = async (productId, newStatus) => {
   //   try {
-  //     await axios.put(`http://127.0.0.1:5000/api/products/${productId}/status`, { status: newStatus });
-  //     // await axios.put(`http://127.0.0.1:5000/api/childcategories/${categoryId}/status`, { status: newStatus });
+  //     await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${productId}/status`, { status: newStatus });
+  //     // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${categoryId}/status`, { status: newStatus });
 
   //     fetchProducts();
   //   } catch (error) {
@@ -157,8 +157,8 @@ export default function ProductList() {
   // };
   const handleStatusChange = async (productId, newStatus) => {
     try {
-      // await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}`, { status: newStatus });
-      const response = await axios.put(`http://127.0.0.1:5000/api/products/${productId}/status`, { status: newStatus });
+      // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${productId}/status`, { status: newStatus });
       console.log('Updated Subcategory:', response.data); // Log the updated subcategory
 
       // Update categories in the state

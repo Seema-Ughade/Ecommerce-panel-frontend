@@ -15,7 +15,7 @@ const PickupLocations = () => {
   useEffect(() => {
     const fetchPickupLocations = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/pickup-locations'); // Replace with your API endpoint
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/pickup-locations'); // Replace with your API endpoint
         setPickupLocations(response.data);
         setFilteredLocations(response.data);
       } catch (error) {
@@ -44,11 +44,11 @@ const PickupLocations = () => {
     try {
       if (newLocation.id) {
         // Update existing pickup location
-        const response = await axios.put(`http://127.0.0.1:5000/api/pickup-locations/${newLocation.id}`, newLocation);
+        const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/pickup-locations/${newLocation.id}`, newLocation);
         setPickupLocations(pickupLocations.map(location => (location._id === newLocation.id ? response.data : location)));
       } else {
         // Create new pickup location
-        const response = await axios.post('http://127.0.0.1:5000/api/pickup-locations', newLocation); // Replace with your API endpoint
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/pickup-locations', newLocation); // Replace with your API endpoint
         setPickupLocations([...pickupLocations, response.data]);
       }
       setNewLocation({ id: '', location: '' }); // Reset the form
@@ -72,7 +72,7 @@ const PickupLocations = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/pickup-locations/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/pickup-locations/${id}`); // Replace with your actual API endpoint
       setPickupLocations(pickupLocations.filter(location => location._id !== id));
       setFilteredLocations(filteredLocations.filter(location => location._id !== id));
     } catch (error) {

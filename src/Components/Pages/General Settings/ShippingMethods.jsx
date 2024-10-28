@@ -15,7 +15,7 @@ const ShippingMethods = () => {
   useEffect(() => {
     const fetchShippingMethods = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/shipping-methods'); // Replace with your API endpoint
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/shipping-methods'); // Replace with your API endpoint
         setShippingMethods(response.data);
         setFilteredMethods(response.data);
       } catch (error) {
@@ -44,11 +44,11 @@ const ShippingMethods = () => {
     try {
       if (newMethod.id) {
         // Update existing shipping method
-        const response = await axios.put(`http://127.0.0.1:5000/api/shipping-methods/${newMethod.id}`, newMethod);
+        const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/shipping-methods/${newMethod.id}`, newMethod);
         setShippingMethods(shippingMethods.map(method => (method._id === newMethod.id ? response.data : method)));
       } else {
         // Create new shipping method
-        const response = await axios.post('http://127.0.0.1:5000/api/shipping-methods', newMethod); // Replace with your API endpoint
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/shipping-methods', newMethod); // Replace with your API endpoint
         setShippingMethods([...shippingMethods, response.data]);
       }
       setNewMethod({ id: '', title: '', duration: '', price: '' }); // Reset the form
@@ -71,7 +71,7 @@ const ShippingMethods = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/shipping-methods/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/shipping-methods/${id}`); // Replace with your actual API endpoint
       setShippingMethods(shippingMethods.filter(method => method._id !== id));
       setFilteredMethods(filteredMethods.filter(method => method._id !== id));
     } catch (error) {

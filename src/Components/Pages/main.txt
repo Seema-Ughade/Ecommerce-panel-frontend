@@ -20,7 +20,7 @@
 //     // Fetch categories from the API
 //     const fetchCategories = async () => {
 //       try {
-//         const response = await axios.get('http://127.0.0.1:5000/api/categories'); // Adjust this path based on your API
+//         const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories'); // Adjust this path based on your API
 //         console.log('Fetched categories:', response.data); // Log the response
 //         if (Array.isArray(response.data)) {
 //           setCategories(response.data);
@@ -56,7 +56,7 @@
 
 //   const handleStatusChange = async (categoryId, newStatus) => {
 //     try {
-//       await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}`, { status: newStatus });
+//       await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
 //       // Update categories in the state
 //       setCategories(prev =>
 //         prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
@@ -78,7 +78,7 @@
 //     }
 
 //     try {
-//       const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
+//       const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/categories', formData, {
 //         headers: {
 //           'Content-Type': 'multipart/form-data',
 //         },

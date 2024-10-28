@@ -18,7 +18,7 @@ const FaviconUpload = () => {
     formData.append('favicon', favicon);
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/admin/general-settings/update/all', formData);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/admin/general-settings/update/all', formData);
       setSuccessMessage('Favicon uploaded successfully!');
       setErrorMessage('');
       console.log(response.data);

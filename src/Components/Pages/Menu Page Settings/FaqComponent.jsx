@@ -19,7 +19,7 @@ const FaqComponent = () => {
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/faqs');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/faqs');
         setFaqs(response.data);
       } catch (error) {
         toast.error('Error fetching FAQs. Please try again.');
@@ -37,7 +37,7 @@ const FaqComponent = () => {
   const handleUpdateFaq = async () => {
     try {
       const response = await axios.put(
-        `http://127.0.0.1:5000/api/faqs/${editingFaqId}`,
+        `https://ecommerce-panel-backend.onrender.com/api/faqs/${editingFaqId}`,
         newFaq
       );
       setFaqs((prevFaqs) =>
@@ -59,7 +59,7 @@ const FaqComponent = () => {
       await handleUpdateFaq();
     } else {
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/faqs', newFaq);
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/faqs', newFaq);
         setFaqs((prev) => [...prev, response.data]);
         setNewFaq({ title: '', description: '' });
         setIsModalOpen(false);
@@ -73,7 +73,7 @@ const FaqComponent = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/faqs/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/faqs/${id}`);
       setFaqs(faqs.filter(faq => faq._id !== id));
       toast.success('FAQ deleted successfully!');
     } catch (error) {

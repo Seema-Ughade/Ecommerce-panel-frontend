@@ -15,7 +15,7 @@ const SocialLinks = () => {
   useEffect(() => {
     const fetchSocialLinks = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/social-links'); // Replace with your API endpoint
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/social-links'); // Replace with your API endpoint
         setSocialLinks(response.data);
         setFilteredLinks(response.data);
       } catch (error) {
@@ -42,7 +42,7 @@ const SocialLinks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:5000/api/social-links', newLink); // Replace with your API endpoint
+      await axios.post('https://ecommerce-panel-backend.onrender.com/api/social-links', newLink); // Replace with your API endpoint
       setSocialLinks([...socialLinks, newLink]);
       setNewLink({ name: '', icon: '' }); // Resetting fields
       setIsOpen(false);
@@ -65,7 +65,7 @@ const SocialLinks = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/social-links/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/social-links/${id}`); // Replace with your actual API endpoint
       setSocialLinks(socialLinks.filter(link => link._id !== id)); // Use _id for filtering
       setFilteredLinks(filteredLinks.filter(link => link._id !== id)); // Update filtered links too
     } catch (error) {
@@ -75,7 +75,7 @@ const SocialLinks = () => {
   const handleStatusChange = async (socialLinkId, newStatus) => {
     try {
       // Update the status of the SocialLink using the correct API endpoint
-      const response = await axios.put(`http://127.0.0.1:5000/api/social-links/${socialLinkId}/status`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/social-links/${socialLinkId}/status`, { status: newStatus });
       console.log('Updated SocialLink:', response.data); // Log the updated SocialLink
   
       // Update socialLinks in the state

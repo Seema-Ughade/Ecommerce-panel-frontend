@@ -20,7 +20,7 @@ const ServiceComponent = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/services');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/services');
         setServices(response.data);
       } catch (error) {
         toast.error('Error fetching services. Please try again.');
@@ -49,7 +49,7 @@ const ServiceComponent = () => {
 
     try {
       const response = await axios.put(
-        `http://127.0.0.1:5000/api/services/${editingServiceId}`,
+        `https://ecommerce-panel-backend.onrender.com/api/services/${editingServiceId}`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -78,7 +78,7 @@ const ServiceComponent = () => {
       }
 
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/services', formData, {
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/services', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
@@ -95,7 +95,7 @@ const ServiceComponent = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/services/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/services/${id}`);
       setServices(services.filter(service => service._id !== id));
       toast.success('Service deleted successfully!');
     } catch (error) {

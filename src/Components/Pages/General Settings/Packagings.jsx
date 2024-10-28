@@ -15,7 +15,7 @@ const Packagings = () => {
   useEffect(() => {
     const fetchPackagings = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/packagings'); // Replace with your API endpoint
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/packagings'); // Replace with your API endpoint
         setPackagings(response.data);
         setFilteredPackagings(response.data);
       } catch (error) {
@@ -45,11 +45,11 @@ const Packagings = () => {
     try {
       if (newPackaging.id) {
         // Update existing packaging
-        const response = await axios.put(`http://127.0.0.1:5000/api/packagings/${newPackaging.id}`, newPackaging);
+        const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/packagings/${newPackaging.id}`, newPackaging);
         setPackagings(packagings.map(packaging => (packaging._id === newPackaging.id ? response.data : packaging)));
       } else {
         // Create new packaging
-        const response = await axios.post('http://127.0.0.1:5000/api/packagings', newPackaging); // Replace with your API endpoint
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/packagings', newPackaging); // Replace with your API endpoint
         setPackagings([...packagings, response.data]);
       }
       setNewPackaging({ id: '', title: '', subtitle: '', price: '' }); // Reset the form
@@ -72,7 +72,7 @@ const Packagings = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/packagings/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/packagings/${id}`); // Replace with your actual API endpoint
       setPackagings(packagings.filter(packaging => packaging._id !== id));
       setFilteredPackagings(filteredPackagings.filter(packaging => packaging._id !== id));
     } catch (error) {

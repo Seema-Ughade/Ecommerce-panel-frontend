@@ -21,7 +21,7 @@ const AllAffiliateProducts = () => {
     // Fetch products from the backend
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/products'); // Replace with your API endpoint
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/products'); // Replace with your API endpoint
         setProducts(response.data);
         setFilteredProducts(response.data);
       } catch (error) {
@@ -47,13 +47,13 @@ const AllAffiliateProducts = () => {
     try {
       if (isEdit) {
         // Update existing product
-        await axios.put(`http://127.0.0.1:5000/api/products/${editProductId}`, newProduct); // Replace with your API endpoint
+        await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${editProductId}`, newProduct); // Replace with your API endpoint
       } else {
         // Create new product
-        await axios.post('http://127.0.0.1:5000/api/products', newProduct); // Replace with your API endpoint
+        await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', newProduct); // Replace with your API endpoint
       }
       // Refresh product list
-      const response = await axios.get('http://127.0.0.1:5000/api/products'); // Refreshing product list
+      const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/products'); // Refreshing product list
       setProducts(response.data);
       setFilteredProducts(response.data);
       resetForm();
@@ -78,7 +78,7 @@ const AllAffiliateProducts = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/products/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/products/${id}`); // Replace with your actual API endpoint
       // Update the products state to remove the deleted product
       setProducts(products.filter(product => product._id !== id)); // Use _id for filtering
       setFilteredProducts(filteredProducts.filter(product => product._id !== id)); // Update filtered products too
