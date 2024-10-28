@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import {  TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
 
 const Categories = () => {

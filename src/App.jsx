@@ -21,6 +21,19 @@ import ProductList from './Components/Pages/Products/ProductList';
 import DeactivatedProducts from './Components/Pages/Products/DeactivatedProducts';
 import SetCoupans from './Components/Pages/SetCoupans';
 import SocialLinks from './Components/Pages/Social Settings/SocialLinks';
+import AddAffiliateProduct from './Components/Pages/Affiliate Product/AddAffiliateProduct';
+import AffiliateProducts from './Components/Pages/Affiliate Product/AllAffiliateProducts';
+import ProductBulkUpload from './Components/Pages/Bulk Product Upload/ProductBulkUpload';
+import LogoUpload from './Components/Pages/General Settings/LogoUpload';
+import FaviconUpload from './Components/Pages/General Settings/FaviconUpload';
+import ShippingMethods from './Components/Pages/General Settings/ShippingMethods';
+import Packagings from './Components/Pages/General Settings/Packagings';
+import PickupLocations from './Components/Pages/General Settings/PickupLocations';
+import SliderComponent from './Components/Pages/Home Page Settings/SliderComponent';
+import ServiceComponent from './Components/Pages/Home Page Settings/ServiceComponent';
+import PartnersComponent from './Components/Pages/Home Page Settings/PartnersComponent';
+import FaqComponent from './Components/Pages/Menu Page Settings/FaqComponent';
+
 const App = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -56,6 +69,19 @@ const App = () => {
               <Route path="/admin/products/deactive" element={<DeactivatedProducts />} />
               <Route path="/admin/coupon" element={<SetCoupans />} />
               <Route path="/admin/social-link" element={<SocialLinks />} />
+              <Route path="/admin/products/add-affiliate/AddAffiliateProduct" element={<AddAffiliateProduct />} />
+              <Route path="/admin/products/AllAffiliateProducts" element={<AffiliateProducts />} />
+              <Route path="/admin/ProductBulkUpload" element={<ProductBulkUpload />} />
+              <Route path="/admin/general-settings/logo" element={<LogoUpload />} />
+              <Route path="/admin/general-settings/favicon" element={<FaviconUpload />} />
+              <Route path="/admin/shipping" element={<ShippingMethods />} />
+              <Route path="/admin/package" element={<Packagings />} />
+              <Route path="/admin/pickup" element={<PickupLocations />} />
+              <Route path="/admin/slider" element={<SliderComponent />} />
+              <Route path="/admin/service" element={<ServiceComponent />} />
+              <Route path="/admin/partner" element={<PartnersComponent />} />
+              <Route path="/admin/faq" element={<FaqComponent />} />
+              
               
             </Routes>
           </div>

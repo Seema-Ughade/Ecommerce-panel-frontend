@@ -144,8 +144,8 @@ const menuItems = [
     icon: <MdAttachMoney />,  // Assuming this icon represents affiliate products
     label: 'Affiliate Products',
     children: [
-      { key: 'add-affiliate-product', icon: <MdAddBox />, label: 'Add Affiliate Product', to: '/admin/products/import/create-product' },
-      { key: 'all-affiliate-products', icon: <MdList />, label: 'All Affiliate Products', to: '/admin/products/import/index' },
+      { key: 'add-affiliate-product', icon: <MdAddBox />, label: 'Add Affiliate Product', to: '/admin/products/add-affiliate/AddAffiliateProduct' },
+      { key: 'all-affiliate-products', icon: <MdList />, label: 'All Affiliate Products', to: '/admin/products/AllAffiliateProducts' },
     ],
   },
 
@@ -153,7 +153,7 @@ const menuItems = [
     key: 'bulk-product-upload',
     icon: <MdUpload />,
     label: 'Bulk Product Upload',
-    to: '/admin/products/import',
+    to: '/admin/ProductBulkUpload',
   },
   {
     key: 'product-discussion',
