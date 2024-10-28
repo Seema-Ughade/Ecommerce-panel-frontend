@@ -32,7 +32,7 @@ const DigitalProductCreate = () => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(
-                    "https://ecommerce-panel-backend.onrender.com/api/categories"
+                    "http://127.0.0.1:5000/api/categories"
                 );
                 setCategories(response.data);
             } catch (error) {
@@ -48,7 +48,7 @@ const DigitalProductCreate = () => {
             const fetchSubCategories = async () => {
                 try {
                     const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+                        'http://127.0.0.1:5000/api/subcategories'
                     );
                     setSubCategories(response.data);
                 } catch (error) {
@@ -68,7 +68,7 @@ const DigitalProductCreate = () => {
             const fetchChildCategories = async () => {
                 try {
                     const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+                        'http://127.0.0.1:5000/api/childcategories'
                     );
                     setChildCategories(response.data);
                 } catch (error) {
@@ -161,7 +161,7 @@ const DigitalProductCreate = () => {
         });
         
         try {
-            const response = await fetch('https://ecommerce-panel-backend.onrender.com/api/DigitalProducts', {
+            const response = await fetch('http://127.0.0.1:5000/api/DigitalProducts', {
                 method: 'POST',
                 body: formData,
             });

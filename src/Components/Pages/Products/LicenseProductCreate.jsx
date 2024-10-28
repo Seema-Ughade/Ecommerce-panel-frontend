@@ -30,7 +30,7 @@ const LicenseProductCreate = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories');
+                const response = await axios.get('http://127.0.0.1:5000/api/categories');
                 setCategories(response.data);
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -45,7 +45,7 @@ const LicenseProductCreate = () => {
         const fetchSubCategories = async () => {
             if (product.category) {
                 try {
-                    const response = await axios.get(`https://ecommerce-panel-backend.onrender.com/api/subcategories?category=${product.category}`);
+                    const response = await axios.get(`http://127.0.0.1:5000/api/subcategories?category=${product.category}`);
                     setSubCategories(response.data);
                 } catch (error) {
                     console.error('Error fetching subcategories:', error);
@@ -64,7 +64,7 @@ const LicenseProductCreate = () => {
         const fetchChildCategories = async () => {
             if (product.subCategory) {
                 try {
-                    const response = await axios.get(`https://ecommerce-panel-backend.onrender.com/api/childcategories?subcategory=${product.subCategory}`);
+                    const response = await axios.get(`http://127.0.0.1:5000/api/childcategories?subcategory=${product.subCategory}`);
                     setChildCategories(response.data);
                 } catch (error) {
                     console.error('Error fetching child categories:', error);

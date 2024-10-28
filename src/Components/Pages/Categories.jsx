@@ -16,7 +16,7 @@ const Categories = () => {
     // Fetch categories from the backend
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/Blogcategories'); // Replace with your API endpoint
+        const response = await axios.get('http://127.0.0.1:5000/api/Blogcategories'); // Replace with your API endpoint
         setCategories(response.data);
         setFilteredCategories(response.data);
       } catch (error) {
@@ -45,7 +45,7 @@ const Categories = () => {
     e.preventDefault();
     try {
       // Post new category to the backend
-      await axios.post('https://ecommerce-panel-backend.onrender.com/api/Blogcategories', newCategory); // Replace with your API endpoint
+      await axios.post('http://127.0.0.1:5000/api/Blogcategories', newCategory); // Replace with your API endpoint
       setCategories([...categories, newCategory]);
       setNewCategory({ name: '', slug: '' });
       setIsOpen(false);
@@ -73,7 +73,7 @@ const Categories = () => {
   const handleDelete = async (id) => {
     try {
       // Make sure to use the correct _id parameter for deletion
-      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/Blogcategories/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`http://127.0.0.1:5000/api/Blogcategories/${id}`); // Replace with your actual API endpoint
       // Update the categories state to remove the deleted category
       setCategories(categories.filter(category => category._id !== id)); // Use _id for filtering
       setFilteredCategories(filteredCategories.filter(category => category._id !== id)); // Update filtered categories too

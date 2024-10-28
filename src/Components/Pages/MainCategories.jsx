@@ -39,7 +39,7 @@ const MainCategories = () => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories');
+        const response = await axios.get('http://127.0.0.1:5000/api/categories');
         console.log('Fetched categories:', response.data);
         if (Array.isArray(response.data)) {
           setCategories(response.data);
@@ -98,8 +98,8 @@ const MainCategories = () => {
 
   const handleStatusChange = async (categoryId, newStatus) => {
     try {
-      // await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`, { status: newStatus });
-      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}/status`, { status: newStatus });
+      // await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}`, { status: newStatus });
+      const response = await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}/status`, { status: newStatus });
       console.log('Updated Subcategory:', response.data); // Log the updated subcategory
 
       // Update categories in the state
@@ -115,7 +115,7 @@ const MainCategories = () => {
 
   const handleFeaturedChange = async (categoryId, newFeatured) => {
     try {
-      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}/featured`, { featured: newFeatured });
+      await axios.put(`http://127.0.0.1:5000/api/categories/${categoryId}/featured`, { featured: newFeatured });
       setCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, featured: newFeatured } : cat))
       );
@@ -146,7 +146,7 @@ const MainCategories = () => {
       }
 
       try {
-        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/categories', formData, {
+        const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -170,7 +170,7 @@ const MainCategories = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`https://ecommerce-panel-backend.onrender.com/api/categories/${selectedCategoryId}/attributes`, newAttribute);
+      const response = await axios.post(`http://127.0.0.1:5000/api/categories/${selectedCategoryId}/attributes`, newAttribute);
       // Assuming you have the selected category ID in state and an endpoint to handle adding attributes
       setCategories(prev =>
         prev.map(cat => (cat._id === selectedCategoryId ? { ...cat, attributes: [...cat.attributes, response.data] } : cat))
@@ -189,7 +189,7 @@ const MainCategories = () => {
   const handleDeleteCategory = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/categories/${categoryId}`);
+        await axios.delete(`http://127.0.0.1:5000/api/categories/${categoryId}`);
         setCategories(prev => prev.filter(cat => cat._id !== categoryId)); // Update state
         toast.success('Category deleted successfully!'); // Success toast
 
@@ -276,7 +276,7 @@ const MainCategories = () => {
 
     try {
       const response = await axios.put(
-        `https://ecommerce-panel-backend.onrender.com/api/categories/${editingCategoryId}`,
+        `http://127.0.0.1:5000/api/categories/${editingCategoryId}`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

@@ -39,7 +39,7 @@ const ListingProductCreate = () => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(
-                    'https://ecommerce-panel-backend.onrender.com/api/categories'
+                    'http://127.0.0.1:5000/api/categories'
                 );
                 setCategories(response.data);
             } catch (error) {
@@ -55,7 +55,7 @@ const ListingProductCreate = () => {
             const fetchSubCategories = async () => {
                 try {
                     const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+                        'http://127.0.0.1:5000/api/subcategories'
                     );
                     setSubCategories(response.data);
                 } catch (error) {
@@ -75,7 +75,7 @@ const ListingProductCreate = () => {
             const fetchChildCategories = async () => {
                 try {
                     const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+                        'http://127.0.0.1:5000/api/childcategories'
                     );
                     setChildCategories(response.data);
                 } catch (error) {

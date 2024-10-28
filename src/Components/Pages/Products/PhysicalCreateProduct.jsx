@@ -125,7 +125,7 @@ const PhysicalCreateProduct = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             const response = await axios.get(
-                "https://ecommerce-panel-backend.onrender.com/api/categories"
+                "http://127.0.0.1:5000/api/categories"
             );
             setCategories(response.data);
         };
@@ -136,7 +136,7 @@ const PhysicalCreateProduct = () => {
         if (product.category) {
             const fetchSubCategories = async () => {
                 const response = await axios.get(
-                    'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+                    'http://127.0.0.1:5000/api/subcategories'
                 );
                 setSubCategories(response.data);
             };
@@ -148,7 +148,7 @@ const PhysicalCreateProduct = () => {
         if (product.subCategory) {
             const fetchChildCategories = async () => {
                 const response = await axios.get(
-                    'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+                    'http://127.0.0.1:5000/api/childcategories'
                 );
                 setChildCategories(response.data);
             };
@@ -283,7 +283,7 @@ const PhysicalCreateProduct = () => {
         
         // Send the request to the backend
         try {
-            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
+            const response = await axios.post('http://127.0.0.1:5000/api/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

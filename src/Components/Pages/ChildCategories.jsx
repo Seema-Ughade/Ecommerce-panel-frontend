@@ -38,7 +38,7 @@ const ChildCategories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories');
+        const response = await axios.get('http://127.0.0.1:5000/api/categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -52,7 +52,7 @@ const ChildCategories = () => {
   useEffect(() => {
     const fetchSubCategories = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/subcategories');
+        const response = await axios.get('http://127.0.0.1:5000/api/subcategories');
         setSubCategories(response.data); // Use the correct property to access subcategories
       } catch (error) {
         console.error('Error fetching subcategories:', error);
@@ -66,7 +66,7 @@ const ChildCategories = () => {
   useEffect(() => {
     const fetchChildCategories = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/childcategories');
+        const response = await axios.get('http://127.0.0.1:5000/api/childcategories');
         setChildCategories(response.data);
       } catch (error) {
         console.error('Error fetching child categories:', error);
@@ -108,11 +108,11 @@ const ChildCategories = () => {
     };
 
     try {
-      await axios.post('https://ecommerce-panel-backend.onrender.com/api/childcategories', newChildCategory);
+      await axios.post('http://127.0.0.1:5000/api/childcategories', newChildCategory);
       alert('Child category added successfully!');
       handleModalClose();
       // Re-fetch child categories to update the table
-      const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/childcategories');
+      const response = await axios.get('http://127.0.0.1:5000/api/childcategories');
       setChildCategories(response.data);
     } catch (error) {
       console.error('Error adding child category:', error);
@@ -144,10 +144,10 @@ const ChildCategories = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${id}`);
+      await axios.delete(`http://127.0.0.1:5000/api/childcategories/${id}`);
       alert('Child category deleted successfully!');
       // Re-fetch child categories to update the table
-      const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/childcategories');
+      const response = await axios.get('http://127.0.0.1:5000/api/childcategories');
       setChildCategories(response.data.childCategories);
     } catch (error) {
       console.error('Error deleting child category:', error);
@@ -161,7 +161,7 @@ const ChildCategories = () => {
     console.log("New Attribute Data:", newAttribute); // Log the new attribute data
   
     try {
-      const response = await axios.post(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${selectedCategoryId}/attributes`, newAttribute);
+      const response = await axios.post(`http://127.0.0.1:5000/api/childcategories/${selectedCategoryId}/attributes`, newAttribute);
   
       // Update the child categories state with the new attribute
       setChildCategories(prev =>
@@ -221,7 +221,7 @@ const ChildCategories = () => {
 
   const handleStatusChange = async (categoryId, newStatus) => {
     try {
-      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${categoryId}/status`, { status: newStatus });
+      await axios.put(`http://127.0.0.1:5000/api/childcategories/${categoryId}/status`, { status: newStatus });
       setChildCategories(prev =>
         prev.map(cat => (cat._id === categoryId ? { ...cat, status: newStatus } : cat))
       );
