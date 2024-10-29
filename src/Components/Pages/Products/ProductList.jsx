@@ -252,7 +252,7 @@ export default function ProductList() {
                   <option value="inactive">Inactive</option>
                 </select>
               </td>
-              <td className="py-2 justify-center px-4 flex border">
+              <td className="py-2  px-4 flex ">
                 <button
                   onClick={() => handleEditClick(product)}
                   className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200 mr-2"
