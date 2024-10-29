@@ -5,73 +5,50 @@ import { SketchPicker } from 'react-color';
 
 const PhysicalCreateProduct = () => {
     const [product, setProduct] = useState({
-        // productName: '',
-        // sku: '',
-        // category: '',
-        // subCategory: '',
-        // childCategory: '',
-        // allowProductCondition: false,
-        // allowProductPreorder: false,
-        // allowMinimumOrderQty: false,
-        // manageStock: false,
-        // allowEstimatedShippingTime: false,
-        // allowProductWholeSell: false,
-        // wholeSellEntries: [{ quantity: '', discount: '' }],
-        // allowProductMeasurement: false,
-        // allowProductColors: false,
-        // colors: [''], // Initialize with one empty color field
-        // stock: '',
-        // description: '',
-        // buyReturnPolicy: '',
-        // allowProductSEO: false,
-        // featureImage : null,
-        // price: '',
-        // discountPrice: '',
-        // youtubeUrl: '',
-        // featureTags: '',
-        // tags: ''
-            allowProductCondition: false,
-            productCondition: "",
-            allowProductPreorder: false,
-            productPreorder: "",
-            allowMinimumOrderQty: false,
-            minimumOrderQty: 0,
-            manageStock: false,
-            stockQuantity: 0,
-            allowEstimatedShippingTime: false,
-            estimatedShippingTime: "",
-            allowProductWholeSell: false,
-            wholeSellEntries: [{ quantity: 0, discount: 0 }],
-            allowProductMeasurement: false,
-            productMeasurement: "",
-            allowProductColors: false,
-            colors: [''], // Initialize with one empty color field
-            stock: 0,
-            productName: '',
-            sku: '',
-            category: '',
-            subCategory: '',
-            childCategory: '',
-            description: '',
-            buyReturnPolicy: '',
-            allowProductSEO: false,
-            featureImage: null,
-            price: 0,
-            discountPrice: 0,
-            youtubeUrl: '',
-            featureTags: '',
-            tags: '',
+        productName: '',
+        sku: '',
+        category: '',
+        subCategory: '',
+        childCategory: '',
+        allowProductCondition: false,
+        productCondition: '',
+        allowProductPreorder: false,
+        productPreorder: '',
+        allowMinimumOrderQty: false,
+        minimumOrderQty: 0,
+        manageStock: false,
+        stockQuantity: 0,
+        allowEstimatedShippingTime: false,
+        estimatedShippingTime: '',
+        allowProductWholeSell: false,
+        wholeSellEntries: [{ quantity: 0, discount: 0 }],
+        allowProductMeasurement: false,
+        productMeasurement: '',
+        allowProductColors: false,
+        colors: [''], // Initialize with one empty color field
+        stock: 0,
+        description: '',
+        buyReturnPolicy: '',
+        allowProductSEO: false,
+        featureImage: null,
+        galleryImages: [], // Initialize with an empty array for gallery images
+        price: 0,
+        discountPrice: 0,
+        youtubeUrl: '',
+        featureTags: [{ tag: '', color: '' }], // Initialize with one empty feature tag
+        tags: [],
     });
-    const [showImageInput, setShowImageInput] = useState(false);
+        const [showImageInput, setShowImageInput] = useState(false);
     const [imageInputs, setImageInputs] = useState([]);
-  
+
     const [featureImage, setFeatureImage] = useState(null);
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
     const [galleryImages, setGalleryImages] = useState([]);
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
-
+    const [wholeSellEntries, setWholeSellEntries] = useState([{ quantity: 0, discount: 0 }]);
+    
     // Function to generate a unique SKU
     const generateSKU = () => {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -79,27 +56,30 @@ const PhysicalCreateProduct = () => {
 
     const handleInputChange = (e) => {
         setProduct({ ...product, [e.target.name]: e.target.value });
-      };
+    };
+    const handleFeatureImageChange = (e) => {
+        setFeatureImage(e.target.files[0]); // Set the feature image file
+    };
     
-      const handleFeatureImageChange = (e) => {
-        setProduct({ ...product, featureImage: e.target.files[0] });
-      };
-    
-      const handleGalleryImageChange = (index, e) => {
+    // const handleFeatureImageChange = (e) => {
+    //     setProduct({ ...product, featureImage: e.target.files[0] });
+    // };
+
+    const handleGalleryImageChange = (index, e) => {
         const newGalleryImages = [...imageInputs];
         newGalleryImages[index] = e.target.files[0];
         setImageInputs(newGalleryImages);
-      };
-    
-      const handleAddImageInput = () => {
+    };
+
+    const handleAddImageInput = () => {
         setImageInputs([...imageInputs, null]);
-      };
-    
-      const handleRemoveImageInput = (index) => {
+    };
+
+    const handleRemoveImageInput = (index) => {
         const newImageInputs = imageInputs.filter((_, i) => i !== index);
         setImageInputs(newImageInputs);
-      };
-    
+    };
+
     const handleTagChange = (index, event) => {
         const newTags = [...featureTags];
         newTags[index].tag = event.target.value;
@@ -158,7 +138,7 @@ const PhysicalCreateProduct = () => {
 
     const handleChange = (e) => {
         const { name, type, value, checked } = e.target;
-    
+
         if (type === 'checkbox') {
             // Set the state using the 'checked' value for checkboxes
             setProduct({ ...product, [name]: checked });
@@ -167,7 +147,7 @@ const PhysicalCreateProduct = () => {
             setProduct({ ...product, [name]: value });
         }
     };
-    
+
     // const handleFileChange = (e) => {
     //     if (e.target.name === 'featureImage') {
     //         setFeatureImage(e.target.files[0]); // Only one file for feature image
@@ -176,10 +156,10 @@ const PhysicalCreateProduct = () => {
     //         setGalleryImages(Array.from(e.target.files)); // Convert FileList to Array
     //     }
     // };
-    
-//   const handleFeatureImageChange = (e) => {
-//     setProduct({ ...product, featureImage: e.target.files[0] });
-//   };
+
+    //   const handleFeatureImageChange = (e) => {
+    //     setProduct({ ...product, featureImage: e.target.files[0] });
+    //   };
 
     const handleFileChange = (e) => {
         const { name, files } = e.target; // Destructure name and files from the event target
@@ -254,51 +234,40 @@ const PhysicalCreateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(product); // Log product state
     
         // Validation Check
         if (!product.productName || !product.sku || !product.category || !product.subCategory || !product.childCategory) {
             alert("Please fill in all required fields.");
             return;
         }
-        
-        // Create a new FormData object
+    
         const formData = new FormData();
         
-        // Append product data to form data
-        for (const key in product) {
-            formData.append(key, product[key]);
-        }
     
-        // Append the feature image
+        for (const key in product) {
+            if (Array.isArray(product[key])) {
+                formData.append(key, JSON.stringify(product[key])); // Convert arrays to JSON strings
+            } else {
+                formData.append(key, product[key]);
+            }
+        }
+            
+        // Append images
         if (featureImage) {
             formData.append('featureImage', featureImage);
         }
-    
-        // Append the gallery images
         galleryImages.forEach(image => {
             formData.append('galleryImages', image);
         });
     
-        
-        // Send the request to the backend
         try {
-            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const response = await axios.post('http://127.0.0.1:5000/api/products', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
             console.log(response.data);
             alert('Product created successfully!');
-            // Reset state after submission
-            setProduct({
-                productName: '',
-                sku: '',
-                category: '',
-                subCategory: '',
-                childCategory: '',
-                // reset other fields as necessary
-            });
+            // Reset form
+            setProduct(initialProductState); // Make sure to define this state
             setFeatureImage(null);
             setGalleryImages([]);
         } catch (error) {
@@ -306,7 +275,7 @@ const PhysicalCreateProduct = () => {
             alert('Error creating product. Please try again.');
         }
     };
-            return (
+        return (
         <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
             {/* Left Section */}
             <div className="w-2/3 space-y-4">
@@ -394,268 +363,268 @@ const PhysicalCreateProduct = () => {
 
                 {/* Checkbox Options */}
                 <div className=" w-1/2 space-y-2">
-                <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowProductCondition"
-                    className="h-4 w-4 text-blue-600"
-                    onChange={handleChange}
-                />
-                <span>Allow Product Condition</span>
-            </label>
-
-            {product.allowProductCondition && (
-                <div className="flex flex-col space-y-1">
-                    <label className="font-semibold">Product Condition*</label>
-                    <select
-                        name="productCondition"
-                        value={product.productCondition}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-1"
-                    >
-                        <option value="">Select Condition</option>
-                        <option value="new">New</option>
-                        <option value="used">Used</option>
-                    </select>
-                </div>
-            )}
                     <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowProductPreorder"
-                    className="h-4 w-4 text-blue-600"
-                    checked={product.allowProductPreorder}
-                    onChange={handleChange}
-                />
-                <span>Allow Preorder</span>
-            </label>
-
-            {product.allowProductPreorder && (
-                <div className="flex flex-col space-y-1">
-                    <label className="font-semibold">Product Preorder*</label>
-                    <select
-                        name="productPreorder"
-                        value={product.productPreorder}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-1"
-                    >
-                        <option value="">Select Preorder Option</option>
-                        <option value="sale">Sale</option>
-                        <option value="preordered">Preordered</option>
-                    </select>
-                </div>
-            )}
-
-
-
-                    <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowMinimumOrderQty"
-                    className="h-4 w-4 text-blue-600"
-                    onChange={handleChange}
-                />
-                <span>Allow Minimum Order Qty</span>
-            </label>
-
-            {product.allowMinimumOrderQty && (
-                <div className="flex flex-col space-y-1">
-                    <label className="font-semibold">Product Minimum Order Qty*</label>
-                    <input
-                        type="number"
-                        name="minimumOrderQty"
-                        value={product.minimumOrderQty}
-                        onChange={handleChange}
-                        placeholder="Enter Minimum Order Quantity"
-                        className="border border-gray-300 rounded p-1"
-                    />
-                </div>
-            )}
- <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="manageStock"
-                    className="h-4 w-4 text-blue-600"
-                    checked={product.manageStock}
-                    onChange={handleChange}
-                />
-                <span>Manage Stock</span>
-            </label>
-
-            {product.manageStock && (
-                <div className="row" id="default_stock">
-                    <div className="col-lg-12">
-                        <div className="left-area">
-                            <h4 className="heading">Product Stock*</h4>
-                            <p className="sub-heading">(Leave Empty will Show Always Available)</p>
-                        </div>
-                    </div>
-                    <div className="col-lg-12">
                         <input
-                            name="stock"
-                            type="number"
-                            className="input-field border border-gray-300 rounded p-2"
-                            placeholder="e.g 20"
-                            value={product.stockQuantity}
-                            min="0"
+                            type="checkbox"
+                            name="allowProductCondition"
+                            className="h-4 w-4 text-blue-600"
                             onChange={handleChange}
                         />
-                    </div>
-                </div>
-            )}
-                    <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowEstimatedShippingTime"
-                    className="h-4 w-4 text-blue-600"
-                    onChange={handleChange}
-                />
-                <span>Allow Estimated Shipping Time</span>
-            </label>
+                        <span>Allow Product Condition</span>
+                    </label>
 
-            {product.allowEstimatedShippingTime && (
-                <div className="flex flex-col space-y-1">
-                    <label className="font-semibold">Product Estimated Shipping Time*</label>
-                    <input
-                        type="text"
-                        name="estimatedShippingTime"
-                        value={product.estimatedShippingTime}
-                        onChange={handleChange}
-                        placeholder="Enter Estimated Shipping Time"
-                        className="border border-gray-300 rounded p-1"
-                    />
-                </div>
-            )}
-
-<label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowProductWholeSell"
-                    className="h-4 w-4 text-blue-600"
-                    checked={product.allowProductWholeSell}
-                    onChange={handleChange}
-                />
-                <span>Allow Product Whole Sell</span>
-            </label>
-
-            {product.allowProductWholeSell && (
-                <div>
-                    {product.wholeSellEntries.map((entry, index) => (
-                        <div key={index} className="flex flex-col space-y-1">
-                            <label className="font-semibold">Enter Quantity</label>
-                            <input
-                                type="number"
-                                value={entry.quantity}
-                                onChange={(e) => handleWholeSellChange(index, 'quantity', e.target.value)}
-                                placeholder="Enter Quantity"
+                    {product.allowProductCondition && (
+                        <div className="flex flex-col space-y-1">
+                            <label className="font-semibold">Product Condition*</label>
+                            <select
+                                name="productCondition"
+                                value={product.productCondition}
+                                onChange={handleChange}
                                 className="border border-gray-300 rounded p-1"
-                            />
+                            >
+                                <option value="">Select Condition</option>
+                                <option value="new">New</option>
+                                <option value="used">Used</option>
+                            </select>
+                        </div>
+                    )}
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="allowProductPreorder"
+                            className="h-4 w-4 text-blue-600"
+                            checked={product.allowProductPreorder}
+                            onChange={handleChange}
+                        />
+                        <span>Allow Preorder</span>
+                    </label>
 
-                            <label className="font-semibold">Enter Discount Percentage</label>
+                    {product.allowProductPreorder && (
+                        <div className="flex flex-col space-y-1">
+                            <label className="font-semibold">Product Preorder*</label>
+                            <select
+                                name="productPreorder"
+                                value={product.productPreorder}
+                                onChange={handleChange}
+                                className="border border-gray-300 rounded p-1"
+                            >
+                                <option value="">Select Preorder Option</option>
+                                <option value="sale">Sale</option>
+                                <option value="preordered">Preordered</option>
+                            </select>
+                        </div>
+                    )}
+
+
+
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="allowMinimumOrderQty"
+                            className="h-4 w-4 text-blue-600"
+                            onChange={handleChange}
+                        />
+                        <span>Allow Minimum Order Qty</span>
+                    </label>
+
+                    {product.allowMinimumOrderQty && (
+                        <div className="flex flex-col space-y-1">
+                            <label className="font-semibold">Product Minimum Order Qty*</label>
                             <input
                                 type="number"
-                                value={entry.discount}
-                                onChange={(e) => handleWholeSellChange(index, 'discount', e.target.value)}
-                                placeholder="Enter Discount Percentage"
+                                name="minimumOrderQty"
+                                value={product.minimumOrderQty}
+                                onChange={handleChange}
+                                placeholder="Enter Minimum Order Quantity"
                                 className="border border-gray-300 rounded p-1"
                             />
                         </div>
-                    ))}
-                    <button
-                        onClick={addWholeSellField}
-                        className="mt-2 bg-blue-500 text-white rounded p-1"
-                    >
-                        Add More Field
-                    </button>
-                </div>
-            )}
+                    )}
                     <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowProductMeasurement"
-                    className="h-4 w-4 text-blue-600"
-                    checked={product.allowProductMeasurement}
-                    onChange={handleChange}
-                />
-                <span>Allow Product Measurement</span>
-            </label>
+                        <input
+                            type="checkbox"
+                            name="manageStock"
+                            className="h-4 w-4 text-blue-600"
+                            checked={product.manageStock}
+                            onChange={handleChange}
+                        />
+                        <span>Manage Stock</span>
+                    </label>
 
-            {product.allowProductMeasurement && (
-                <div className="flex flex-col space-y-1">
-                    <label className="font-semibold">Product Measurement*</label>
-                    <select
-                        id="product_measure"
-                        name="productMeasurement"
-                        value={product.productMeasurement}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-1"
-                    >
-                        <option value="">None</option>
-                        <option value="Gram">Gram</option>
-                        <option value="Kilogram">Kilogram</option>
-                        <option value="Litre">Litre</option>
-                        <option value="Pound">Pound</option>
-                        <option value="Custom">Custom</option>
-                    </select>
-                </div>
-            )}
-                                <label className="flex font-semibold items-center space-x-2">
-                <input
-                    type="checkbox"
-                    name="allowProductColors"
-                    className="h-4 w-4 text-blue-600"
-                    checked={product.allowProductColors}
-                    onChange={handleChangenew}
-                />
-                <span>Allow Product Colors</span>
-            </label>
-
-            {product.allowProductColors && (
-                <div>
-                    <h4 className="text-lg font-bold">Product Colors*</h4>
-                    <p className="text-sm text-gray-500">(Choose Your Favorite Colors)</p>
-
-                    <div className="space-y-4">
-                        {product.colors.map((color, index) => (
-                            <div key={index} className="flex items-center space-x-2 mb-4">
-                                <span className="text-red-500 cursor-pointer" onClick={() => removeColorField(index)}>
-                                    <i className="fas fa-times" />
-                                </span>
-                                <div className="flex-grow">
-                                    <input
-                                        type="text"
-                                        value={color}
-                                        readOnly
-                                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
-                                        style={{ backgroundColor: color }}
-                                        onClick={() => {
-                                            setShowColorPicker(prev => {
-                                                const newState = [...prev];
-                                                newState[index] = !newState[index]; // Toggle color picker visibility
-                                                return newState;
-                                            });
-                                        }}
-                                    />
-                                    {showColorPicker[index] && (
-                                        <SketchPicker
-                                            color={color}
-                                            onChangeComplete={(color) => handleColorChangenew(index, color)}
-                                            disableAlpha
-                                            className="mt-2"
-                                        />
-                                    )}
+                    {product.manageStock && (
+                        <div className="row" id="default_stock">
+                            <div className="col-lg-12">
+                                <div className="left-area">
+                                    <h4 className="heading">Product Stock*</h4>
+                                    <p className="sub-heading">(Leave Empty will Show Always Available)</p>
                                 </div>
                             </div>
-                        ))}
-                        <button
-                            className="mt-4 mb-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                            onClick={addColorField}
-                        >
-                            <i className="fas fa-plus"></i> Add More Color
-                        </button>
-                    </div>
-                </div>
-            )}
+                            <div className="col-lg-12">
+                                <input
+                                    name="stock"
+                                    type="number"
+                                    className="input-field border border-gray-300 rounded p-2"
+                                    placeholder="e.g 20"
+                                    value={product.stockQuantity}
+                                    min="0"
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                    )}
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="allowEstimatedShippingTime"
+                            className="h-4 w-4 text-blue-600"
+                            onChange={handleChange}
+                        />
+                        <span>Allow Estimated Shipping Time</span>
+                    </label>
+
+                    {product.allowEstimatedShippingTime && (
+                        <div className="flex flex-col space-y-1">
+                            <label className="font-semibold">Product Estimated Shipping Time*</label>
+                            <input
+                                type="text"
+                                name="estimatedShippingTime"
+                                value={product.estimatedShippingTime}
+                                onChange={handleChange}
+                                placeholder="Enter Estimated Shipping Time"
+                                className="border border-gray-300 rounded p-1"
+                            />
+                        </div>
+                    )}
+
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="allowProductWholeSell"
+                            className="h-4 w-4 text-blue-600"
+                            checked={product.allowProductWholeSell}
+                            onChange={handleChange}
+                        />
+                        <span>Allow Product Whole Sell</span>
+                    </label>
+
+                    {product.allowProductWholeSell && (
+                        <div>
+                            {product.wholeSellEntries.map((entry, index) => (
+                                <div key={index} className="flex flex-col space-y-1">
+                                    <label className="font-semibold">Enter Quantity</label>
+                                    <input
+                                        type="number"
+                                        value={entry.quantity}
+                                        onChange={(e) => handleWholeSellChange(index, 'quantity', e.target.value)}
+                                        placeholder="Enter Quantity"
+                                        className="border border-gray-300 rounded p-1"
+                                    />
+
+                                    <label className="font-semibold">Enter Discount Percentage</label>
+                                    <input
+                                        type="number"
+                                        value={entry.discount}
+                                        onChange={(e) => handleWholeSellChange(index, 'discount', e.target.value)}
+                                        placeholder="Enter Discount Percentage"
+                                        className="border border-gray-300 rounded p-1"
+                                    />
+                                </div>
+                            ))}
+                            <button
+                                onClick={addWholeSellField}
+                                className="mt-2 bg-blue-500 text-white rounded p-1"
+                            >
+                                Add More Field
+                            </button>
+                        </div>
+                    )}
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="allowProductMeasurement"
+                            className="h-4 w-4 text-blue-600"
+                            checked={product.allowProductMeasurement}
+                            onChange={handleChange}
+                        />
+                        <span>Allow Product Measurement</span>
+                    </label>
+
+                    {product.allowProductMeasurement && (
+                        <div className="flex flex-col space-y-1">
+                            <label className="font-semibold">Product Measurement*</label>
+                            <select
+                                id="product_measure"
+                                name="productMeasurement"
+                                value={product.productMeasurement}
+                                onChange={handleChange}
+                                className="border border-gray-300 rounded p-1"
+                            >
+                                <option value="">None</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Kilogram">Kilogram</option>
+                                <option value="Litre">Litre</option>
+                                <option value="Pound">Pound</option>
+                                <option value="Custom">Custom</option>
+                            </select>
+                        </div>
+                    )}
+                    <label className="flex font-semibold items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            name="allowProductColors"
+                            className="h-4 w-4 text-blue-600"
+                            checked={product.allowProductColors}
+                            onChange={handleChangenew}
+                        />
+                        <span>Allow Product Colors</span>
+                    </label>
+
+                    {product.allowProductColors && (
+                        <div>
+                            <h4 className="text-lg font-bold">Product Colors*</h4>
+                            <p className="text-sm text-gray-500">(Choose Your Favorite Colors)</p>
+
+                            <div className="space-y-4">
+                                {product.colors.map((color, index) => (
+                                    <div key={index} className="flex items-center space-x-2 mb-4">
+                                        <span className="text-red-500 cursor-pointer" onClick={() => removeColorField(index)}>
+                                            <i className="fas fa-times" />
+                                        </span>
+                                        <div className="flex-grow">
+                                            <input
+                                                type="text"
+                                                value={color}
+                                                readOnly
+                                                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                                                style={{ backgroundColor: color }}
+                                                onClick={() => {
+                                                    setShowColorPicker(prev => {
+                                                        const newState = [...prev];
+                                                        newState[index] = !newState[index]; // Toggle color picker visibility
+                                                        return newState;
+                                                    });
+                                                }}
+                                            />
+                                            {showColorPicker[index] && (
+                                                <SketchPicker
+                                                    color={color}
+                                                    onChangeComplete={(color) => handleColorChangenew(index, color)}
+                                                    disableAlpha
+                                                    className="mt-2"
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                                <button
+                                    className="mt-4 mb-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                    onClick={addColorField}
+                                >
+                                    <i className="fas fa-plus"></i> Add More Color
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                 </div>
 
@@ -754,6 +723,7 @@ const PhysicalCreateProduct = () => {
                             <div key={index} className="flex items-center space-x-2 mt-4">
                                 <input
                                     type="file"
+                                    name="galleryImages"
                                     accept="image/*"
                                     onChange={(e) => handleGalleryImageChange(index, e)}
                                     className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"

@@ -33,6 +33,9 @@ import SliderComponent from './Components/Pages/Home Page Settings/SliderCompone
 import ServiceComponent from './Components/Pages/Home Page Settings/ServiceComponent';
 import PartnersComponent from './Components/Pages/Home Page Settings/PartnersComponent';
 import FaqComponent from './Components/Pages/Menu Page Settings/FaqComponent';
+import PageComponent from './Components/Pages/Menu Page Settings/PageComponent';
+import PaymentGatewayComponent from './Components/Pages/Payment Settings/PaymentGatewayComponent';
+
 
 const App = () => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -81,6 +84,8 @@ const App = () => {
               <Route path="/admin/service" element={<ServiceComponent />} />
               <Route path="/admin/partner" element={<PartnersComponent />} />
               <Route path="/admin/faq" element={<FaqComponent />} />
+              <Route path="/admin/page" element={<PageComponent />} />
+              <Route path="/admin/paymentgateway" element={<PaymentGatewayComponent />} />
               
               
             </Routes>

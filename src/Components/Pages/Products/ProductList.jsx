@@ -225,7 +225,7 @@ export default function ProductList() {
           {currentItems.map((product) => (
             <tr key={product.id} className="hover:bg-gray-100 justify-center text-center">
               <td className="py-2 px-4 border">
-                <img src={product.galleryImages} alt={product.productName} className="w-16 h-16 justify-center ml-12 object-cover" />
+                <img src={product.featureImage} alt={product.productName} className="w-16 h-16 justify-center ml-12 object-cover" />
               </td>
               <td className="py-2 text-center px-4 border">
                 <div>{product.productName}</div>
