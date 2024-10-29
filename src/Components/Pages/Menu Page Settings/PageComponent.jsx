@@ -22,7 +22,7 @@ const PageComponent = () => {
     useEffect(() => {
         const fetchPages = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5000/api/pages');
+                const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/pages');
                 setPages(response.data);
             } catch (error) {
                 toast.error('Error fetching pages. Please try again.');
@@ -46,7 +46,7 @@ const PageComponent = () => {
     const handleUpdatePage = async () => {
         try {
             const response = await axios.put(
-                `http://127.0.0.1:5000/api/pages/${editingPageId}`,
+                `https://ecommerce-panel-backend.onrender.com/api/pages/${editingPageId}`,
                 newPage
             );
             setPages((prevPages) =>
@@ -73,7 +73,7 @@ const PageComponent = () => {
         }
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/api/pages', formData);
+            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/pages', formData);
             setPages((prev) => [...prev, response.data]);
             setNewPage({ title: '', slug: '', description: '', seo: false, image: null });
             setIsModalOpen(false);
@@ -86,7 +86,7 @@ const PageComponent = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://127.0.0.1:5000/api/pages/${id}`);
+            await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/pages/${id}`);
             setPages(pages.filter(page => page._id !== id));
             toast.success('Page deleted successfully!');
         } catch (error) {
@@ -105,7 +105,7 @@ const PageComponent = () => {
 
     const handleHeaderChange = async (HeaderId, newHeader) => {
         try {
-            const response = await axios.put(`http://127.0.0.1:5000/api/pages/${HeaderId}/Header`, { Header: newHeader });
+            const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/pages/${HeaderId}/Header`, { Header: newHeader });
             console.log('Updated Header:', response.data);
 
             // Update pages in the state
@@ -121,7 +121,7 @@ const PageComponent = () => {
 
     const handleFooterChange = async (FooterId, newFooter) => {
         try {
-            const response = await axios.put(`http://127.0.0.1:5000/api/pages/${FooterId}/Footer`, { Footer: newFooter });
+            const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/pages/${FooterId}/Footer`, { Footer: newFooter });
             console.log('Updated Footer:', response.data);
 
             // Update pages in the state

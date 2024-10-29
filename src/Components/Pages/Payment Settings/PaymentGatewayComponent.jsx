@@ -20,7 +20,7 @@ const PaymentGatewayComponent = () => {
   useEffect(() => {
     const fetchGateways = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/payment-gateways');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/payment-gateways');
         setGateways(response.data);
       } catch (error) {
         toast.error('Error fetching payment gateways. Please try again.');
@@ -41,7 +41,7 @@ const PaymentGatewayComponent = () => {
       if (editingGatewayId) {
         // Update existing gateway
         const response = await axios.put(
-          `http://127.0.0.1:5000/api/payment-gateways/${editingGatewayId}`,
+          `https://ecommerce-panel-backend.onrender.com/api/payment-gateways/${editingGatewayId}`,
           newGateway
         );
         setGateways((prev) =>
@@ -50,7 +50,7 @@ const PaymentGatewayComponent = () => {
         toast.success('Payment gateway updated successfully!');
       } else {
         // Add new gateway
-        const response = await axios.post('http://127.0.0.1:5000/api/payment-gateways', newGateway);
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/payment-gateways', newGateway);
         setGateways((prev) => [...prev, response.data]);
         toast.success('Payment gateway added successfully!');
       }
@@ -65,7 +65,7 @@ const PaymentGatewayComponent = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/payment-gateways/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/payment-gateways/${id}`);
       setGateways(gateways.filter(gateway => gateway._id !== id));
       toast.success('Payment gateway deleted successfully!');
     } catch (error) {
@@ -84,7 +84,7 @@ const PaymentGatewayComponent = () => {
 
   const handleCheckoutChange = async (CheckoutId, newCheckout) => {
     try {
-        const response = await axios.put(`http://127.0.0.1:5000/api/payment-gateways/${CheckoutId}/Checkout`, { Checkout: newCheckout });
+        const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/payment-gateways/${CheckoutId}/Checkout`, { Checkout: newCheckout });
         console.log('Updated Checkout:', response.data);
 
         // Update pages in the state
@@ -100,7 +100,7 @@ const PaymentGatewayComponent = () => {
 
 const handleDepositChange = async (DepositId, newDeposit) => {
     try {
-        const response = await axios.put(`http://127.0.0.1:5000/api/payment-gateways/${DepositId}/Deposit`, { Deposit: newDeposit });
+        const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/payment-gateways/${DepositId}/Deposit`, { Deposit: newDeposit });
         console.log('Updated Deposit:', response.data);
 
         // Update pages in the state
@@ -116,7 +116,7 @@ const handleDepositChange = async (DepositId, newDeposit) => {
 
 const handleSubscriptionChange = async (SubscriptionId, newSubscription) => {
     try {
-        const response = await axios.put(`http://127.0.0.1:5000/api/payment-gateways/${SubscriptionId}/Subscription`, { Subscription: newSubscription });
+        const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/payment-gateways/${SubscriptionId}/Subscription`, { Subscription: newSubscription });
         console.log('Updated Subscription:', response.data);
 
         // Update pages in the state

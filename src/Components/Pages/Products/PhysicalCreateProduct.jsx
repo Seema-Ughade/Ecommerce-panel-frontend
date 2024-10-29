@@ -261,7 +261,7 @@ const PhysicalCreateProduct = () => {
         });
     
         try {
-            const response = await axios.post('http://127.0.0.1:5000/api/products', formData, {
+            const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             console.log(response.data);
