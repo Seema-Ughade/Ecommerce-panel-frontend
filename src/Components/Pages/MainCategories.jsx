@@ -39,7 +39,7 @@ const MainCategories = () => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/categories');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories');
         console.log('Fetched categories:', response.data);
         if (Array.isArray(response.data)) {
           setCategories(response.data);
@@ -146,7 +146,7 @@ const MainCategories = () => {
       }
 
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/categories', formData, {
+        const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/categories', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
