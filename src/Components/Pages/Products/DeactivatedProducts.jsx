@@ -1,67 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
-import { EditOutlined } from '@ant-design/icons';
 
-export default function DeactivatedProducts() {
+const DeactivatedProducts = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [error, setError] = useState('');
   const [newProductData, setNewProductData] = useState({
-    name: '',
+    productName: '',
     sku: '',
     vendor: '',
-    type: '',
+    category: '',
+    subCategory: '',
+    childCategory: '',
     stock: '',
     price: '',
-    status: 'inactive', // Default to inactive for new products
+    discountPrice: '',
+    description: '',
+    buyReturnPolicy: '',
+    allowProductSEO: true,
     image: null,
+    status: 'active',
   });
+  const [dropdownOpen, setDropdownOpen] = useState(null); // Manage which dropdown is open
 
   useEffect(() => {
-    fetchDeactivatedProducts();
+    fetchProducts();
   }, []);
 
-  const fetchDeactivatedProducts = async () => {
+  const fetchProducts = async () => {
     try {
-      const response = await axios.get('https://api.example.com/products?status=inactive'); // Adjust endpoint as needed
-      setProducts(response.data);
+      const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/products/');
+      const inactiveProducts = response.data.filter(product => product.status === 'inactive');
+      setProducts(inactiveProducts);
     } catch (error) {
-      setError('Error fetching deactivated products. Please try again later.');
+      setError('Error fetching products. Please try again later.');
       console.error('Error fetching products:', error);
     }
   };
 
-  const handleAddNewClick = () => {
-    setEditingProduct(null);
-    setNewProductData({
-      name: '',
-      sku: '',
-      vendor: '',
-      type: '',
-      stock: '',
-      price: '',
-      status: 'inactive',
-      image: null,
-    });
-    setShowModal(true);
-  };
-
   const handleEditClick = (product) => {
     setEditingProduct(product);
-    setNewProductData(product);
+    setNewProductData({
+      productName: product.productName,
+      sku: product.sku,
+      vendor: product.vendor,
+      category: product.category,
+      subCategory: product.subCategory,
+      childCategory: product.childCategory,
+      stock: product.stock,
+      price: product.price,
+      discountPrice: product.discountPrice,
+      description: product.description,
+      buyReturnPolicy: product.buyReturnPolicy,
+      allowProductSEO: product.allowProductSEO,
+      image: null,
+      status: product.status,
+    });
     setShowModal(true);
   };
 
   const handleDeleteClick = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await axios.delete(`https://api.example.com/products/${id}`);
-        fetchDeactivatedProducts();
+        await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/products/${id}`);
+        fetchProducts();
       } catch (error) {
         setError('Failed to delete product. Please try again.');
         console.error('Error deleting product:', error);
@@ -69,8 +76,28 @@ export default function DeactivatedProducts() {
     }
   };
 
+  const resetForm = () => {
+    setNewProductData({
+      productName: '',
+      sku: '',
+      vendor: '',
+      category: '',
+      subCategory: '',
+      childCategory: '',
+      stock: '',
+      price: '',
+      discountPrice: '',
+      description: '',
+      buyReturnPolicy: '',
+      allowProductSEO: true,
+      image: null,
+      status: 'active',
+    });
+  };
+
   const handleModalClose = () => {
     setShowModal(false);
+    resetForm();
     setEditingProduct(null);
   };
 
@@ -90,26 +117,34 @@ export default function DeactivatedProducts() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
+
+  const handleStatusChange = async (productId, newStatus) => {
     try {
-      if (editingProduct) {
-        // Update existing product
-        await axios.put(`https://api.example.com/products/${editingProduct.id}`, newProductData);
-      } else {
-        // Create new product
-        await axios.post('https://api.example.com/products', newProductData);
-      }
-      fetchDeactivatedProducts();
-      handleModalClose();
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/products/${productId}/status`, { status: newStatus });
+      setProducts(prev => prev.filter(product => product._id !== productId || product.status === 'inactive'));
     } catch (error) {
-      setError('Failed to save product. Please try again.');
-      console.error('Error saving product:', error);
+      setError('Error updating product status. Please try again.');
     }
   };
 
+  const handleViewGallery = (productId) => {
+    // Logic to view product gallery
+    console.log(`View gallery for product ID: ${productId}`);
+  };
+
+  const handleHighlight = (productId) => {
+    // Logic to highlight the product
+    console.log(`Highlight product ID: ${productId}`);
+  };
+
+  const handleRemoveCatalog = (productId) => {
+    // Logic to remove from catalog
+    console.log(`Remove from catalog for product ID: ${productId}`);
+  };
+
   const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -117,6 +152,10 @@ export default function DeactivatedProducts() {
   const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const toggleDropdown = (productId) => {
+    setDropdownOpen(prev => (prev === productId ? null : productId)); // Toggle dropdown for the clicked product
+  };
 
   return (
     <div className="content-area px-6">
@@ -133,12 +172,6 @@ export default function DeactivatedProducts() {
           }}
           className="border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <button
-          onClick={handleAddNewClick}
-          className="btn btn-primary rounded-2xl px-4 py-1 bg-violet-600 text-white hover:bg-violet-700 focus:outline-none"
-        >
-          + Add Product
-        </button>
       </div>
 
       {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -157,26 +190,26 @@ export default function DeactivatedProducts() {
         </thead>
         <tbody>
           {currentItems.map((product) => (
-            <tr key={product.id} className="hover:bg-gray-100 text-center">
+            <tr key={product._id} className="hover:bg-gray-100 text-center">
               <td className="py-2 px-4 border">
-                <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
+                <img src={product.featureImage} alt={product.productName} className="w-16 h-16 object-cover mx-auto" />
               </td>
               <td className="py-2 px-4 border">
-                <div>{product.name}</div>
-                <div className="text-xs text-gray-500">ID: {product.id}</div>
-                <div className="text-xs text-gray-500">SKU: {product.sku}</div>
-                <div className="text-xs text-gray-500">VENDOR: {product.vendor}</div>
+                <div>{product.productName}</div>
+                <div className="flex justify-center">
+                  <div className="text-xs text-gray-500">ID: {product._id}</div>
+                  <div className="text-xs text-gray-500 ml-2">SKU: {product.sku}</div>
+                  <div className="text-xs text-gray-500 ml-2">VENDOR: {product.vendor}</div>
+                </div>
               </td>
-              <td className="py-2 px-4 border">{product.type}</td>
+              <td className="py-2 px-4 border">Physical</td>
               <td className="py-2 px-4 border">{product.stock}</td>
               <td className="py-2 px-4 border">${product.price}</td>
               <td className="py-2 px-4 border">
                 <select
                   value={product.status}
-                  onChange={(e) => {
-                    // Handle status change logic here
-                  }}
-                  className="border rounded px-2 py-1"
+                  onChange={(e) => handleStatusChange(product._id, e.target.value)}
+                  className="border rounded px-2 py-1 mx-auto"
                   style={{
                     backgroundColor: product.status === "active" ? "#1e7e34" : "#bd2130",
                     color: "white",
@@ -186,27 +219,52 @@ export default function DeactivatedProducts() {
                   <option value="inactive">Inactive</option>
                 </select>
               </td>
-              <td className="py-2 px-4 border">
+              <td className="py-2 px-4 border relative">
                 <button
-                  onClick={() => handleEditClick(product)}
-                  className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200 mr-2"
+                  onClick={() => toggleDropdown(product._id)}
+                  className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
                 >
-                  <EditOutlined className="h-5 w-5 mr-1" />
-                  Edit
+                  Actions <i className="fas fa-chevron-down ml-2"></i>
                 </button>
-                <button
-                  onClick={() => handleDeleteClick(product.id)}
-                  className="flex items-center rounded-2xl text-white bg-red-600 hover:bg-red-700 px-3 py-1 focus:outline-none transition ease-in-out duration-200"
-                >
-                  <TrashIcon className="h-5 w-5 mr-1" />
-                  Delete
-                </button>
+                {dropdownOpen === product._id && (
+                  <div className="absolute right-0 z-10 bg-white border rounded shadow-md mt-1 w-48">
+                    <button
+                      onClick={() => handleEditClick(product)}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      <PencilIcon className="h-5 w-5 inline" /> Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(product._id)}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      <TrashIcon className="h-5 w-5 inline" /> Delete
+                    </button>
+                    <button
+                      onClick={() => handleViewGallery(product._id)}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      View Gallery
+                    </button>
+                    <button
+                      onClick={() => handleHighlight(product._id)}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Highlight
+                    </button>
+                    <button
+                      onClick={() => handleRemoveCatalog(product._id)}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Remove from Catalog
+                    </button>
+                  </div>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
       <div className="flex justify-between mt-4">
         <div>
           <span>{`Showing ${indexOfFirstItem + 1} to ${Math.min(indexOfLastItem, filteredProducts.length)} of ${filteredProducts.length} entries`}</span>
@@ -238,12 +296,9 @@ export default function DeactivatedProducts() {
         </div>
       </div>
 
-      {/* Modal for adding/editing products */}
-      {showModal && (
-        <div className="modal">
-          {/* Modal content goes here */}
-        </div>
-      )}
+
     </div>
   );
-}
+};
+
+export default DeactivatedProducts;
