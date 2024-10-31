@@ -35,6 +35,7 @@ import PartnersComponent from './Components/Pages/Home Page Settings/PartnersCom
 import FaqComponent from './Components/Pages/Menu Page Settings/FaqComponent';
 import PageComponent from './Components/Pages/Menu Page Settings/PageComponent';
 import PaymentGatewayComponent from './Components/Pages/Payment Settings/PaymentGatewayComponent';
+import ProductUserDetail from './Components/Pages/Orders/ProductUserDetail';
 
 
 const App = () => {
@@ -86,6 +87,7 @@ const App = () => {
               <Route path="/admin/faq" element={<FaqComponent />} />
               <Route path="/admin/page" element={<PageComponent />} />
               <Route path="/admin/paymentgateway" element={<PaymentGatewayComponent />} />
+              <Route path="/admin/orders" element={<ProductUserDetail />} />
               
               
             </Routes>
