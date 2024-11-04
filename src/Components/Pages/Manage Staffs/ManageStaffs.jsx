@@ -7,22 +7,39 @@ const ManageStaffs = () => {
   const [staffs, setStaffs] = useState([]);
   const [filteredStaffs, setFilteredStaffs] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [roles, setRoles] = useState([]); // State for roles
+
   const [newStaff, setNewStaff] = useState({
     name: '',
     email: '',
     phone: '',
     role: '',
     password: '',
-    profileImage: null,
+    image: null,
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Adjust items per page as needed
 
+    // Fetch roles
+    useEffect(() => {
+      const fetchRoles = async () => {
+        try {
+          const response = await axios.get('http://127.0.0.1:5000/api/roles'); // Your API endpoint for roles
+          setRoles(response.data); // Assuming response.data is an array of roles
+        } catch (error) {
+          console.error('Error fetching roles:', error);
+        }
+      };
+  
+      fetchRoles();
+    }, []);
+  
+    
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/staffs'); // Replace with your API endpoint
+        const response = await axios.get('http://127.0.0.1:5000/api/staffs'); // Replace with your API endpoint
         setStaffs(response.data);
         setFilteredStaffs(response.data);
       } catch (error) {
@@ -48,7 +65,7 @@ const ManageStaffs = () => {
   };
 
   const handleFileChange = (e) => {
-    setNewStaff({ ...newStaff, profileImage: e.target.files[0] });
+    setNewStaff({ ...newStaff, image: e.target.files[0] });
   };
 
   const handleSubmit = async (e) => {
@@ -59,16 +76,16 @@ const ManageStaffs = () => {
     formData.append('phone', newStaff.phone);
     formData.append('role', newStaff.role);
     formData.append('password', newStaff.password);
-    formData.append('profileImage', newStaff.profileImage);
+    formData.append('image', newStaff.image);
 
     try {
-      await axios.post('https://ecommerce-panel-backend.onrender.com/api/staffs', formData, {
+      await axios.post('http://127.0.0.1:5000/api/staffs', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       setStaffs([...staffs, newStaff]);
-      setNewStaff({ name: '', email: '', phone: '', role: '', password: '', profileImage: null });
+      setNewStaff({ name: '', email: '', phone: '', role: '', password: '', image: null });
       setIsOpen(false);
     } catch (error) {
       console.error('Error creating staff:', error);
@@ -83,13 +100,13 @@ const ManageStaffs = () => {
   };
 
   const handleEdit = (staff) => {
-    setNewStaff({ name: staff.name, email: staff.email, phone: staff.phone, role: staff.role, password: '', profileImage: null });
+    setNewStaff({ name: staff.name, email: staff.email, phone: staff.phone, role: staff.role, password: '', image: null });
     setIsOpen(true);
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/staffs/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`http://127.0.0.1:5000/api/staffs/${id}`); // Replace with your actual API endpoint
       setStaffs(staffs.filter(staff => staff._id !== id));
       setFilteredStaffs(filteredStaffs.filter(staff => staff._id !== id));
     } catch (error) {
@@ -120,6 +137,7 @@ const ManageStaffs = () => {
         <table className="min-w-full border-collapse border border-gray-200">
           <thead>
             <tr className="bg-teal-400 text-white font-mono">
+              <th className="py-2 px-4 border border-gray-300 ">Image</th>
               <th className="border border-gray-300 px-4 py-2">Name</th>
               <th className="border border-gray-300 px-4 py-2">Email</th>
               <th className="border border-gray-300 px-4 py-2">Phone</th>
@@ -129,11 +147,17 @@ const ManageStaffs = () => {
           </thead>
           <tbody>
             {currentStaffs.map((staff, index) => (
-              <tr key={index} className="hover:bg-gray-100">
+              <tr key={index} className="hover:bg-gray-100 text-center">
+                <td className="px-6 py-4 border flex justify-center items-center ">
+                  {staff.profileImage ? <img src={staff.profileImage} alt={staff.name} className="w-12 h-12 rounded" /> : '-'}
+
+                    {/* <img src={slider.imageUrl} alt={slider.name} className="h-16 w-32 object-cover" /> */}
+                  </td>
+
                 <td className="border border-gray-300 px-4 py-2">{staff.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{staff.email}</td>
                 <td className="border border-gray-300 px-4 py-2">{staff.phone}</td>
-                <td className="border border-gray-300 px-4 py-2">{staff.role}</td>
+                <td className="border border-gray-300 px-4 py-2">{staff.role.name}</td>
                 <td className="border border-gray-300 px-4 py-2 flex justify-center space-x-2">
                   <button
                     onClick={() => handleEdit(staff)}
@@ -191,11 +215,11 @@ const ManageStaffs = () => {
               <h2 className="text-xl font-bold mb-4">Add New Staff</h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label className="block text-gray-700" htmlFor="profileImage">Staff Profile Image *</label>
+                  <label className="block text-gray-700" htmlFor="image">Staff Profile Image *</label>
                   <input
                     type="file"
-                    name="profileImage"
-                    id="profileImage"
+                    name="image"
+                    id="image"
                     onChange={handleFileChange}
                     required
                     className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -250,12 +274,11 @@ const ManageStaffs = () => {
                     required
                     className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="" disabled>Select Role</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Editor">Editor</option>
-                    <option value="Viewer">Viewer</option>
-                    {/* Add more roles as needed */}
-                  </select>
+      <option value="" disabled>Select Role</option>
+      {roles.map((role) => (
+        <option key={role._id} value={role._id}>{role.name}</option>
+      ))}
+    </select>
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700" htmlFor="password">Password *</label>

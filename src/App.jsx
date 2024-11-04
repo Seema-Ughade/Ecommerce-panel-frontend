@@ -36,6 +36,9 @@ import FaqComponent from './Components/Pages/Menu Page Settings/FaqComponent';
 import PageComponent from './Components/Pages/Menu Page Settings/PageComponent';
 import PaymentGatewayComponent from './Components/Pages/Payment Settings/PaymentGatewayComponent';
 import ProductUserDetail from './Components/Pages/Orders/ProductUserDetail';
+import Currencies from './Components/Pages/Payment Settings/Currencies';
+import Fonts from './Components/Pages/Fonts Options/Fonts';
+import Roles from './Components/Pages/Manage Roles/Roles';
 
 
 const App = () => {
@@ -88,6 +91,9 @@ const App = () => {
               <Route path="/admin/page" element={<PageComponent />} />
               <Route path="/admin/paymentgateway" element={<PaymentGatewayComponent />} />
               <Route path="/admin/orders" element={<ProductUserDetail />} />
+              <Route path="/admin/currency" element={<Currencies />} />
+              <Route path="/admin/fonts" element={<Fonts />} />
+              <Route path="/admin/role" element={<Roles />} />
               
               
             </Routes>
