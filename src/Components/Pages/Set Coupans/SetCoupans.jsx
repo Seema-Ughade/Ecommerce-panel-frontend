@@ -1,20 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import axios from 'axios';
 
 const SetCoupons = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [childCategories, setChildCategories] = useState([]);
+
   const [isOpen, setIsOpen] = useState(false);
   const [newCoupon, setNewCoupon] = useState({
     code: '',
     productType: '',
     type: '',
+    quantityType: 'unlimited', // New field to store quantity type (Limited/Unlimited)
+
     quantity: '',
+    discountValue: '', // New field to hold the discount amount or percentage
+
     startDate: '',
     endDate: '',
   });
   const [coupons, setCoupons] = useState([]); // Assume this comes from an API
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await axios.get(
+        'https://ecommerce-panel-backend.onrender.com/api/categories'
+      );
+      setCategories(response.data);
+    };
+    
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (newCoupon.productType === 'subcategories') {
+      const fetchSubCategories = async () => {
+        const response = await axios.get(
+          'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+        );
+        setSubCategories(response.data);
+      };
+      fetchSubCategories();
+    } else if (newCoupon.productType === 'childcategories') {
+      const fetchChildCategories = async () => {
+        const response = await axios.get(
+          'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+        );
+        setChildCategories(response.data);
+      };
+      fetchChildCategories();
+    }
+  }, [newCoupon.productType]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,30 +64,75 @@ const SetCoupons = () => {
       [name]: value,
     }));
   };
+  
+  const handleQuantityTypeChange = (e) => {
+    const value = e.target.value;
+    setNewCoupon((prev) => ({
+      ...prev,
+      quantityType: value,
+      quantity: value === 'unlimited' ? '' : prev.quantity, // Clear quantity if "Unlimited" is selected
+    }));
+  };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic to add coupon to the coupons state
-    setCoupons((prev) => [...prev, { ...newCoupon, _id: Date.now() }]); // Mocked coupon ID
-    setNewCoupon({
-      code: '',
-      productType: '',
-      type: '',
-      quantity: '',
-      startDate: '',
-      endDate: '',
-    });
-    setIsOpen(false);
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/api/coupons', newCoupon);
+      setCoupons((prev) => [...prev, response.data]); // Add the new coupon from the response
+      setNewCoupon({
+        code: '',
+        productType: '',
+        type: '',
+        quantity: '',
+        discountValue: '',
+        quantityType: 'unlimited',
+        startDate: '',
+        endDate: '',
+      });
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error creating coupon:", error);
+    }
   };
-
-  const handleEdit = (coupon) => {
-    // Logic for editing the coupon
+  const handleEdit = async (coupon) => {
+    try {
+      setNewCoupon(coupon); // Fill form with existing coupon data for editing
+      setIsOpen(true); // Open form in edit mode
+  
+      // Once the form is submitted, save the changes
+      const response = await axios.patch(
+        `http://127.0.0.1:5000/api/coupons/${coupon._id}`,
+        newCoupon
+      );
+      setCoupons((prev) =>
+        prev.map((item) => (item._id === coupon._id ? response.data : item))
+      );
+      setIsOpen(false);
+      setNewCoupon({
+        code: '',
+        productType: '',
+        type: '',
+        quantity: '',
+        discountValue: '',
+        quantityType: 'unlimited',
+        startDate: '',
+        endDate: '',
+      });
+    } catch (error) {
+      console.error("Error updating coupon:", error);
+    }
   };
-
-  const handleDelete = (id) => {
-    setCoupons((prev) => prev.filter((coupon) => coupon._id !== id));
+  
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://127.0.0.1:5000/api/coupons/${id}`);
+      setCoupons((prev) => prev.filter((coupon) => coupon._id !== id)); // Remove from state
+    } catch (error) {
+      console.error("Error deleting coupon:", error);
+    }
   };
-
+  
   const totalPages = Math.ceil(coupons.length / itemsPerPage);
   const currentCoupons = coupons.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -153,7 +239,8 @@ const SetCoupons = () => {
                     className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                <div className="mb-4">
+   {/* Product Type Selection */}
+   <div className="mb-4">
                   <label className="block text-gray-700" htmlFor="productType">Allow Product Type *</label>
                   <select
                     name="productType"
@@ -164,25 +251,114 @@ const SetCoupons = () => {
                     className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Type</option>
-                    <option value="type1">Type 1</option>
-                    <option value="type2">Type 2</option>
+                    <option value="categories">Categories</option>
+                    <option value="subcategories">Subcategories</option>
+                    <option value="childcategories">Child Categories</option>
                   </select>
                 </div>
-                <div className="mb-4 col-lg-7">
-  <label className="block text-gray-700" htmlFor="type">Type *</label>
-  <select
-    id="type"
-    name="type"
-    value={newCoupon.type}
-    onChange={handleInputChange}
-    required
-    className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
-    <option value="">Choose a type</option>
-    <option value="0">Discount By Percentage</option>
-    <option value="1">Discount By Amount</option>
-  </select>
-</div>
+
+                {/* Conditional Field */}
+                {newCoupon.productType === 'categories' && (
+                  <div className="mb-4">
+                    <label className="block text-gray-700" htmlFor="category">Select Category</label>
+                    <select
+                      name="category"
+                      id="category"
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Choose a category</option>
+                      {categories.map((category) => (
+                        <option key={category._id} value={category._id}>{category.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {newCoupon.productType === 'subcategories' && (
+                  <div className="mb-4">
+                    <label className="block text-gray-700" htmlFor="subCategory">Select Subcategory</label>
+                    <select
+                      name="subCategory"
+                      id="subCategory"
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Choose a subcategory</option>
+                      {subCategories.map((subCategory) => (
+                        <option key={subCategory._id} value={subCategory._id}>{subCategory.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {newCoupon.productType === 'childcategories' && (
+                  <div className="mb-4">
+                    <label className="block text-gray-700" htmlFor="childCategory">Select Child Category</label>
+                    <select
+                      name="childCategory"
+                      id="childCategory"
+                      onChange={handleInputChange}
+                      className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Choose a child category</option>
+                      {childCategories.map((childCategory) => (
+                        <option key={childCategory._id} value={childCategory._id}>{childCategory.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}              
+        <div className="mb-4 col-lg-7">
+                <label className="block text-gray-700" htmlFor="type">Type *</label>
+                <select
+                  id="type"
+                  name="type"
+                  value={newCoupon.type}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Choose a type</option>
+                  <option value="0">Discount By Percentage</option>
+                  <option value="1">Discount By Amount</option>
+                </select>
+              </div>
+
+              {/* Conditional rendering for discount input field */}
+              {newCoupon.type && (
+                <div className="mb-4">
+                  <label className="block text-gray-700" htmlFor="discountValue">
+                    {newCoupon.type === "0" ? "Discount Percentage (%)" : "Discount Amount ($)"} *
+                  </label>
+                  <input
+                    type="number"
+                    name="discountValue"
+                    id="discountValue"
+                    value={newCoupon.discountValue}
+                    onChange={handleInputChange}
+                    required
+                    placeholder={newCoupon.type === "0" ? "Enter discount percentage" : "Enter discount amount"}
+                    className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              )}            
+              <div className="mb-4">
+                <label className="block text-gray-700" htmlFor="quantityType">Quantity Type *</label>
+                <select
+                  id="quantityType"
+                  name="quantityType"
+                  value={newCoupon.quantityType}
+                  onChange={handleQuantityTypeChange}
+                  required
+                  className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="unlimited">Unlimited</option>
+                  <option value="limited">Limited</option>
+                </select>
+              </div>
+
+              {/* Conditional rendering for quantity input */}
+              {newCoupon.quantityType === 'limited' && (
                 <div className="mb-4">
                   <label className="block text-gray-700" htmlFor="quantity">Quantity *</label>
                   <input
@@ -192,10 +368,11 @@ const SetCoupons = () => {
                     value={newCoupon.quantity}
                     onChange={handleInputChange}
                     required
-                    placeholder="Enter quantity (or 'Unlimited')"
+                    placeholder="Enter quantity"
                     className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+              )}
                 <div className="mb-4">
                   <label className="block text-gray-700" htmlFor="startDate">Start Date *</label>
                   <input

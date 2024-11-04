@@ -133,15 +133,6 @@ const ChildCategories = () => {
   };
 
 
-
-
-
-
-
-
-
-  
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/childcategories/${id}`);
