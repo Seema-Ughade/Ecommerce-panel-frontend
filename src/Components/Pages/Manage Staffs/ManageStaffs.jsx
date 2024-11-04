@@ -25,7 +25,7 @@ const ManageStaffs = () => {
     useEffect(() => {
       const fetchRoles = async () => {
         try {
-          const response = await axios.get('http://127.0.0.1:5000/api/roles'); // Your API endpoint for roles
+          const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/roles'); // Your API endpoint for roles
           setRoles(response.data); // Assuming response.data is an array of roles
         } catch (error) {
           console.error('Error fetching roles:', error);
@@ -39,7 +39,7 @@ const ManageStaffs = () => {
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/staffs'); // Replace with your API endpoint
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/staffs'); // Replace with your API endpoint
         setStaffs(response.data);
         setFilteredStaffs(response.data);
       } catch (error) {
@@ -79,7 +79,7 @@ const ManageStaffs = () => {
     formData.append('image', newStaff.image);
 
     try {
-      await axios.post('http://127.0.0.1:5000/api/staffs', formData, {
+      await axios.post('https://ecommerce-panel-backend.onrender.com/api/staffs', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -106,7 +106,7 @@ const ManageStaffs = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/staffs/${id}`); // Replace with your actual API endpoint
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/staffs/${id}`); // Replace with your actual API endpoint
       setStaffs(staffs.filter(staff => staff._id !== id));
       setFilteredStaffs(filteredStaffs.filter(staff => staff._id !== id));
     } catch (error) {

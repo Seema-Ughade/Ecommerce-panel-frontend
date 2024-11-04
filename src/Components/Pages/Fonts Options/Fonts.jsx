@@ -17,7 +17,7 @@ const Fonts = () => {
   useEffect(() => {
     const fetchFonts = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/fonts');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/fonts');
         setFonts(response.data);
         setFilteredFonts(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const Fonts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/fonts', newFont);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/fonts', newFont);
       setFonts([...fonts, response.data]);
       setNewFont({ family: '' });
       setIsOpen(false);
@@ -54,7 +54,7 @@ const Fonts = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/fonts/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/fonts/${id}`);
       setFonts(fonts.filter((font) => font._id !== id));
       setFilteredFonts(filteredFonts.filter((font) => font._id !== id));
     } catch (error) {
@@ -75,7 +75,7 @@ const Fonts = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/fonts/${editFont._id}`, editFont);
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/fonts/${editFont._id}`, editFont);
       setFonts(fonts.map((font) =>
         font._id === editFont._id ? response.data : font
       ));

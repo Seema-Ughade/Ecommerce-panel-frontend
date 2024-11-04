@@ -47,7 +47,7 @@ const Roles = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/roles');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/roles');
         setRoles(response.data);
         setFilteredRoles(response.data);
       } catch (error) {
@@ -83,7 +83,7 @@ const Roles = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/roles', newRole);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/roles', newRole);
       setRoles([...roles, response.data]);
       setNewRole({ name: '', permissions: {} });
       setIsOpen(false);
@@ -94,7 +94,7 @@ const Roles = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/roles/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/roles/${id}`);
       setRoles(roles.filter((role) => role._id !== id));
       setFilteredRoles(filteredRoles.filter((role) => role._id !== id));
     } catch (error) {
@@ -125,7 +125,7 @@ const Roles = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/roles/${editRole._id}`, editRole);
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/roles/${editRole._id}`, editRole);
       setRoles(roles.map((role) => (role._id === editRole._id ? response.data : role)));
       setIsEditOpen(false);
     } catch (error) {

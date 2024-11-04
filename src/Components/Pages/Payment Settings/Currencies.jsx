@@ -17,7 +17,7 @@ const Currencies = () => {
   useEffect(() => {
     const fetchCurrencies = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/currencies');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/currencies');
         setCurrencies(response.data);
         setFilteredCurrencies(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const Currencies = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:5000/api/currencies', newCurrency);
+      await axios.post('https://ecommerce-panel-backend.onrender.com/api/currencies', newCurrency);
       setCurrencies([...currencies, newCurrency]);
       setNewCurrency({ name: '', sign: '', value: '' });
       setIsOpen(false);
@@ -54,7 +54,7 @@ const Currencies = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/currencies/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/currencies/${id}`);
       setCurrencies(currencies.filter((currency) => currency._id !== id));
       setFilteredCurrencies(filteredCurrencies.filter((currency) => currency._id !== id));
     } catch (error) {
@@ -75,7 +75,7 @@ const Currencies = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://127.0.0.1:5000/api/currencies/${editCurrency._id}`, editCurrency);
+      await axios.put(`https://ecommerce-panel-backend.onrender.com/api/currencies/${editCurrency._id}`, editCurrency);
       setCurrencies(currencies.map((currency) =>
         currency._id === editCurrency._id ? editCurrency : currency
       ));
