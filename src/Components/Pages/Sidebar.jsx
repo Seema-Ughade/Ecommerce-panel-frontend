@@ -82,11 +82,13 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const menuItems = [
-  { key: 'dashboard', icon: <MdDashboard />, label: 'Dashboard', to: '/dashboard' },
+  { key: 'dashboard', icon: <MdDashboard />, label: 'Dashboard', to: '/dashboard', permission: "Manage Tasks",
+  },
   {
     key: 'orders',
     icon: <MdShoppingCart />,
     label: 'Orders',
+    permission: "Orders",
     children: [
       { key: 'all-orders', icon: <MdShoppingCart />, label: 'All Orders', to: '/admin/orders' },
       { key: 'pending-orders', icon: <MdHourglassEmpty />, label: 'Pending Orders', to: '/admin/orders?status=pending' },
@@ -100,6 +102,8 @@ const menuItems = [
     key: 'manage-country',
     icon: <MdFlag />,
     label: 'Manage Country',
+    permission: "Orders",
+
     children: [
       { key: 'country', icon: <MdMap />, label: 'Country', to: '/admin/manage/country' },
       { key: 'manage-tax', icon: <MdAttachMoney />, label: 'Manage Tax', to: '/admin/manage/country/tax' },
@@ -120,6 +124,8 @@ const menuItems = [
     key: 'manage-categories',
     icon: <MdShop />,
     label: 'Manage Categories',
+    permission: 'Manage Categories',
+
     children: [
       { key: 'main-category', icon: <MdCategory />, label: 'Main Category', to: '/admin/category' },
       { key: 'sub-category', icon: <MdFolder />, label: 'Sub Category', to: '/admin/subcategory' },

@@ -26,7 +26,20 @@ const DigitalProductCreate = () => {
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
+    const [uploadType, setUploadType] = useState('file'); // Default to 'file' option
+    const [showImageInput, setShowImageInput] = useState(false);
+    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
 
+    const handleUploadTypeChange = (event) => {
+      setUploadType(event.target.value);
+    };
+
+    const handleFeatureImageChange = (e) => {
+        setFeatureImage(e.target.files[0]); // Set the feature image file
+    };
+
+
+  
     // Fetch categories, subcategories, and childcategories
     useEffect(() => {
         const fetchCategories = async () => {
@@ -200,10 +213,11 @@ const DigitalProductCreate = () => {
 
     return (
         <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
+            
             {/* Left Section */}
             <div className="w-2/3 space-y-4">
                 <div>
-                    <label className="block mb-2">Product Name* (In Any Language)</label>
+                    <label className="block font-semibold mb-2">Product Name* (In Any Language)</label>
                     <input
                         type="text"
                         name="productName"
@@ -216,7 +230,7 @@ const DigitalProductCreate = () => {
                 
                 {/* Category, Sub Category, Child Category */}
                 <div>
-                    <label className="block mb-2">Category*</label>
+                    <label className="block font-semibold mb-2">Category*</label>
                     <select
                         name="category"
                         value={product.category}
@@ -232,7 +246,7 @@ const DigitalProductCreate = () => {
                     </select>
                 </div>
                 <div>
-                    <label className="block mb-2">Sub Category*</label>
+                    <label className="block font-semibold mb-2">Sub Category*</label>
                     <select
                         name="subCategory"
                         value={product.subCategory}
@@ -248,7 +262,7 @@ const DigitalProductCreate = () => {
                     </select>
                 </div>
                 <div>
-                    <label className="block mb-2">Child Category*</label>
+                    <label className="block font-semibold mb-2">Child Category*</label>
                     <select
                         name="childCategory"
                         value={product.childCategory}
@@ -263,10 +277,36 @@ const DigitalProductCreate = () => {
                         ))}
                     </select>
                 </div>
+                <div className="flex items-center space-x-2"> {/* Flex container for label and select */}
+        <label htmlFor="uploadType" className="font-semibold">Select Upload Type*</label>
+        <select
+          id="uploadType"
+          value={uploadType}
+          onChange={handleUploadTypeChange}
+          className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
+        >
+          <option value="file">Upload by File</option>
+          <option value="link">Upload by Link</option>
+        </select>
+      </div>
 
+      {/* Conditional rendering based on upload type */}
+      {uploadType === 'file' ? (
+        <div className="flex flex-col">
+          <input type="file" multiple className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" /> {/* Input for file upload */}
+        </div>
+      ) : (
+        <div className="flex flex-col">
+          <input
+            type="url"
+            placeholder="Enter image URL"
+            className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
+          /> {/* Input for link upload */}
+        </div>
+      )}
                 {/* Text Areas */}
                 <div>
-                    <label className="block mb-2">Product Description*</label>
+                    <label className="block font-semibold mb-2">Product Description*</label>
                     <textarea
                         name="description"
                         value={product.description}
@@ -277,7 +317,7 @@ const DigitalProductCreate = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Product Buy/Return Policy*</label>
+                    <label className="block font-semibold mb-2">Product Buy/Return Policy*</label>
                     <textarea
                         name="buyReturnPolicy"
                         value={product.buyReturnPolicy}
@@ -290,7 +330,7 @@ const DigitalProductCreate = () => {
 
                 {/* Checkboxes */}
                 <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
+                    <label className="flex font-semibold items-center space-x-2">
                         <input
                             type="checkbox"
                             name="allowProductSEO"
@@ -305,28 +345,75 @@ const DigitalProductCreate = () => {
 
             {/* Right Section */}
             <div className="w-1/2 space-y-4">
-                <div>
-                    <label className="block mb-2">Feature Image*</label>
-                    <input
-                        type="file"
-                        name="featureImage"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
+                <div className="flex flex-col gap-4">
+                    <div className="w-full">
+                        <div className="mb-4">
+                            <h4 className=" font-semibold">Feature Image *</h4>
+                        </div>
+                    </div>
+                    <div className="w-full">
+                        <div className="border border-gray-300 rounded-md p-4 flex justify-center items-center">
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-600">Upload Feature Image:</label>
+                                <input
+                                    type="file"
+                                    name="featureImage"
+                                    accept="image/*"
+                                    onChange={handleFeatureImageChange}
+                                    className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                                    required
+                                />
+                            </div>
+
+
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    <label className="block mb-2">Product Gallery Images*</label>
-                    <input
-                        type="file"
-                        name="galleryImages"
-                        multiple
-                        onChange={handleFileChange}
-                        className="w-full p-2 border border-gray-300 rounded"
-                    />
+                    <label className="block text-sm font-semibold text-gray-600">Product Gallery Images*</label>
+
+                    <button
+                        type="button"
+                        onClick={() => setShowImageInput(!showImageInput)}
+                        className="w-56 bg-purple-600 text-white py-3 rounded-md mt-4 hover:bg-purple-700 transition-colors duration-300"
+                    >
+                        {showImageInput ? 'Hide Gallery Image Inputs' : '+ Set Gallery '}
+                    </button>
                 </div>
+
+                {showImageInput && (
+                    <>
+                        {imageInputs.map((input, index) => (
+                            <div key={index} className="flex items-center space-x-2 mt-4">
+                                <input
+                                    type="file"
+                                    name="galleryImages"
+                                    accept="image/*"
+                                    onChange={(e) => handleGalleryImageChange(index, e)}
+                                    className="w-full px-4 py-3 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveImageInput(index)}
+                                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-300"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={handleAddImageInput}
+                            className="w-full bg-green-600 text-white py-2 rounded-md mt-2 hover:bg-green-700 transition-colors duration-300"
+                        >
+                            Add Another Image
+                        </button>
+                    </>
+                )}
+
                 <div>
-                    <label className="block mb-2">Product Current Price* (In USD)</label>
+                    <label className="block font-semibold  mb-2">Product Current Price* (In USD)</label>
                     <input
                         type="number"
                         name="price"
@@ -337,7 +424,7 @@ const DigitalProductCreate = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Product Discount Price* (Optional)</label>
+                    <label className="block font-semibold mb-2">Product Discount Price* (Optional)</label>
                     <input
                         type="number"
                         name="discountPrice"
@@ -348,7 +435,7 @@ const DigitalProductCreate = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Youtube Video URL* (Optional)</label>
+                    <label className="block font-semibold mb-2">Youtube Video URL* (Optional)</label>
                     <input
                         type="url"
                         name="youtubeUrl"
@@ -358,49 +445,84 @@ const DigitalProductCreate = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
-
-                {/* Feature Tags */}
                 <div className="col-lg-12">
-                    <h4 className="text-lg font-semibold">Feature Tags</h4>
-                    <div>
-                        {product.featureTags.map((feature, index) => (
-                            <div key={index} className="flex items-center space-x-4 mb-4">
-                                <input
-                                    type="text"
-                                    name="tag"
-                                    value={feature.tag}
-                                    onChange={(e) => handleTagChange(index, e)}
-                                    placeholder="Enter Your Keyword"
-                                    className="w-1/2 p-2 border border-gray-300 rounded"
-                                />
-                                <input
-                                    type="color"
-                                    value={feature.color}
-                                    onChange={(e) => handleColorChange(index, e)}
-                                    className="w-12 h-10"
-                                />
-                                <button
-                                    type="button"
-                                    className="text-red-500"
-                                    onClick={() => removeField(index)}
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        ))}
-                        <button
-                            type="button"
-                            className="text-blue-500"
-                            onClick={addNewField}
-                        >
-                            Add More Field
-                        </button>
+                    <div className="featured-keyword-area p-4 ">
+                        <div className="heading-area mb-4">
+                            <h4 className="title font-semibold text-xl">Feature Tags</h4>
+                        </div>
+                        <div className="feature-tag-top-fields" id="feature-section">
+                            {featureTags.map((feature, index) => (
+                                <div key={index} className="feature-area flex items-center justify-between mb-4 border p-4 rounded-md bg-white shadow-sm">
+                                    <span
+                                        className="remove feature-remove cursor-pointer text-red-500 hover:text-red-700"
+                                        onClick={() => removeField(index)}
+                                    >
+                                        <i className="fas fa-times"></i>
+                                    </span>
+                                    <div className="w-full flex space-x-4">
+                                        <div className="w-2/3">
+                                            <input
+                                                type="text"
+                                                name="featureTags[]"
+                                                value={feature.tag}
+                                                onChange={(e) => handleTagChange(index, e)}
+                                                placeholder="Enter Your Keyword"
+                                                className="w-full p-2 border border-gray-300 rounded-md text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                style={{
+                                                    WebkitTapHighlightColor: 'transparent',
+                                                    WebkitTextSizeAdjust: '100%',
+                                                    fontFamily: '"Open Sans", sans-serif',
+                                                    fontSize: '14px',
+                                                    lineHeight: '1.5',
+                                                    color: '#465541',
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="w-1/3 flex items-center space-x-2">
+                                            <input
+                                                type="color"
+                                                value={feature.color}
+                                                onChange={(e) => handleColorChange(index, e)}
+                                                className="w-12 h-10 border rounded-md"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="text-red-500 hover:text-red-700 font-medium"
+                                                onClick={() => removeField(index)}
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-center mt-4">
+                            <a
+                                href="javascript:;"
+                                id="feature-btn"
+                                onClick={addNewField}
+                                className="add-field-btn border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-medium flex items-center px-4 py-2 rounded transition duration-200"
+                            >
+                                <i className="icofont-plus mr-2"></i>
+                                Add More Field
+                            </a>
+                        </div>
                     </div>
                 </div>
-
+                <div>
+                    <label className="block font-semibold mb-2">Tags*</label>
+                    <input
+                        type="text"
+                        name="tags"
+                        value={product.tags}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                    />
+                </div>
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded"
+                    className="w-full bg-purple-500 text-white py-2 rounded hover:bg-purple-600"
                 >
                     Create Product
                 </button>

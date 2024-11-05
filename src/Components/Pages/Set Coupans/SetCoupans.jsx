@@ -172,7 +172,7 @@ const SetCoupons = () => {
               <tr key={index} className="hover:bg-gray-100">
                 <td className="border border-gray-300 px-4 py-2">{coupon.code}</td>
                 <td className="border border-gray-300 px-4 py-2">{coupon.type}</td>
-                <td className="border border-gray-300 px-4 py-2">{coupon.amount}</td>
+                <td className="border border-gray-300 px-4 py-2">{coupon.discountValue}</td>
                 <td className="border border-gray-300 px-4 py-2">{coupon.used}</td>
                 <td className="border border-gray-300 px-4 py-2">{coupon.status}</td>
                 <td className="border border-gray-300 px-4 py-2 flex justify-center space-x-2">
@@ -222,8 +222,9 @@ const SetCoupons = () => {
         </div>
 
         {isOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded shadow-md w-1/3">
+
               <h2 className="text-xl font-bold mb-4">Add New Coupon</h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
