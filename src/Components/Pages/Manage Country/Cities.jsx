@@ -17,7 +17,7 @@ const Cities = () => {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/cities');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/cities');
         setCities(response.data);
         setFilteredCities(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const Cities = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/cities', newCity);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/cities', newCity);
       setCities([...cities, response.data]);
       setNewCity({ state: '', city: '' });
       setIsOpen(false);
@@ -54,7 +54,7 @@ const Cities = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/cities/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/cities/${id}`);
       setCities(cities.filter((city) => city._id !== id));
       setFilteredCities(filteredCities.filter((city) => city._id !== id));
     } catch (error) {
@@ -75,7 +75,7 @@ const Cities = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/cities/${editCity._id}`, editCity);
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/cities/${editCity._id}`, editCity);
       setCities(cities.map((city) =>
         city._id === editCity._id ? response.data : city
       ));
@@ -92,7 +92,7 @@ const Cities = () => {
 
   const handleCityStatusChange = async (cityId, newStatus) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/cities/${cityId}/status`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/cities/${cityId}/status`, { status: newStatus });
       console.log('Updated City:', response.data); // Log the updated city
   
       // Update cities in the state

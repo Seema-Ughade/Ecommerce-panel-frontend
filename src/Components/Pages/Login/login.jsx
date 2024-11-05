@@ -11,14 +11,14 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     try {
       // Authenticate user
-      const response = await axios.post('http://127.0.0.1:5000/api/auth/login', values);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/auth/login', values);
       const { token, staff } = response.data;
 
       // Store token
       localStorage.setItem('authToken', token);
 
       // Fetch user role details
-      const roleResponse = await axios.get(`http://127.0.0.1:5000/api/roles${staff.role}`);
+      const roleResponse = await axios.get(`https://ecommerce-panel-backend.onrender.com/api/roles${staff.role}`);
       const userWithRole = { ...staff, role: roleResponse.data };
 
       // Pass user data to onLogin prop

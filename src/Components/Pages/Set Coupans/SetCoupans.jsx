@@ -78,7 +78,7 @@ const SetCoupons = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/coupons', newCoupon);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/coupons', newCoupon);
       setCoupons((prev) => [...prev, response.data]); // Add the new coupon from the response
       setNewCoupon({
         code: '',
@@ -102,7 +102,7 @@ const SetCoupons = () => {
   
       // Once the form is submitted, save the changes
       const response = await axios.patch(
-        `http://127.0.0.1:5000/api/coupons/${coupon._id}`,
+        `https://ecommerce-panel-backend.onrender.com/api/coupons/${coupon._id}`,
         newCoupon
       );
       setCoupons((prev) =>
@@ -126,7 +126,7 @@ const SetCoupons = () => {
   
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/coupons/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/coupons/${id}`);
       setCoupons((prev) => prev.filter((coupon) => coupon._id !== id)); // Remove from state
     } catch (error) {
       console.error("Error deleting coupon:", error);

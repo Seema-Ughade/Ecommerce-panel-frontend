@@ -18,7 +18,7 @@ const States = () => {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/states');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/states');
         setStates(response.data);
         setFilteredStates(response.data);
       } catch (error) {
@@ -44,7 +44,7 @@ const States = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/states', newState);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/states', newState);
       setStates([...states, response.data]);
       setNewState({ country: '', state: '' });
       setIsOpen(false);
@@ -57,7 +57,7 @@ const States = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/states/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/states/${id}`);
       setStates(states.filter((state) => state._id !== id));
       setFilteredStates(filteredStates.filter((state) => state._id !== id));
       toast.success('State deleted successfully!');
@@ -80,7 +80,7 @@ const States = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/states/${editState._id}`, editState);
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/states/${editState._id}`, editState);
       setStates(states.map((state) =>
         state._id === editState._id ? response.data : state
       ));
@@ -99,7 +99,7 @@ const States = () => {
 
   const handleStateStatusChange = async (stateId, newStatus) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/states/${stateId}/status`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/states/${stateId}/status`, { status: newStatus });
       console.log('Updated State:', response.data);
   
       // Update states in the state
