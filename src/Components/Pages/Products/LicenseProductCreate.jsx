@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const LicenseProductCreate = () => {
     const [product, setProduct] = useState({
@@ -26,7 +28,7 @@ const LicenseProductCreate = () => {
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
     const [showImageInput, setShowImageInput] = useState(false);
-    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
+    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
 
     // Fetch categories
     useEffect(() => {
@@ -129,10 +131,27 @@ const LicenseProductCreate = () => {
         // Handle product submission logic
         console.log('Submitted product data:', product);
     };
+    const navigate = useNavigate();
+
+    const handleBackClick = () => {
+      navigate('/admin/products/types');
+    };
 
     return (
-        <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
-            {/* Left Section */}
+        <>
+        <div className="flex justify-between px-8 items-center ">
+          <h4 className="heading text-2xl text-purple-600 font-semibold">Add license Product</h4>
+          <button
+            onClick={handleBackClick}
+            className="flex items-center border bg-purple-600 p-2 text-white  "
+          >
+            <ArrowLeftOutlined className="w-5 h-5 mr-1" />
+            Back
+          </button>
+        </div>
+    
+        <form onSubmit={handleSubmit} className="flex gap-8 pl-8 pr-8 pt-4 pb-8 font-sans text-gray-700">
+        {/* Left Section */}
             <div className="w-2/3 space-y-4">
                 <div>
                     <label className="block mb-2">Product Name* (In Any Language)</label>
@@ -439,7 +458,7 @@ const LicenseProductCreate = () => {
                     Create Product
                 </button>
             </div>
-        </form>
+        </form></>
     );
 };
 

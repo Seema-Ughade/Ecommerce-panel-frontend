@@ -41,6 +41,9 @@ import Fonts from './Components/Pages/Fonts Options/Fonts';
 import Roles from './Components/Pages/Manage Roles/Roles';
 import Cities from './Components/Pages/Manage Country/Cities';
 import States from './Components/Pages/Manage Country/States';
+import TaxManagementForm from './Components/Pages/Manage Country/TaxManagementForm';
+import ManageTax from './Components/Pages/Manage Country/ManageTax';
+import Countries from './Components/Pages/Manage Country/Countries';
 
 
 const App = () => {
@@ -98,6 +101,9 @@ const App = () => {
               <Route path="/admin/role" element={<Roles />} />
               <Route path="/admin/cities" element={<Cities />} />
               <Route path="/admin/states" element={<States />} />
+              <Route path="/admin/TaxManagementForm" element={<TaxManagementForm />} />
+              <Route path="/admin/manage/country/tax" element={<ManageTax />} />
+              <Route path="/admin/manage/country" element={<Countries />} />
               
               
             </Routes>

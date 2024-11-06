@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaUpload } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const DigitalProductCreate = () => {
     const [product, setProduct] = useState({
@@ -8,38 +9,51 @@ const DigitalProductCreate = () => {
         category: '',
         subCategory: '',
         childCategory: '',
+        uploadType: '',
         description: '',
         buyReturnPolicy: '',
-        price: '',
-        discountPrice: '',
-        youtubeUrl: '',
-        tags: '',
+        allowProductSEO: false,
         featureImage: null,
         galleryImages: [],
-        featureTags: [{ tag: '', color: '#000000' }],
-        allowProductSEO: false,
-        allowProductCondition: false,
-        allowProductPreorder: false,
-        manageStock: false,
+        price: 0,
+        discountPrice: 0,
+        youtubeUrl: '',
+        featureTags: [{ tag: '', color: '' }], // Initialize with one empty feature tag
+        tags: [],
     });
-
+    const [imageInputs, setImageInputs] = useState([]);
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
     const [uploadType, setUploadType] = useState('file'); // Default to 'file' option
     const [showImageInput, setShowImageInput] = useState(false);
-    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
+    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
+    const [galleryImages, setGalleryImages] = useState([]);
+    const [featureImage, setFeatureImage] = useState(null);
 
     const handleUploadTypeChange = (event) => {
-      setUploadType(event.target.value);
+        setUploadType(event.target.value);
     };
 
     const handleFeatureImageChange = (e) => {
         setFeatureImage(e.target.files[0]); // Set the feature image file
     };
 
+    const handleAddImageInput = () => {
+        setImageInputs([...imageInputs, null]);
+    };
 
+    const handleRemoveImageInput = (index) => {
+        const newImageInputs = imageInputs.filter((_, i) => i !== index);
+        setImageInputs(newImageInputs);
+    };
+    const navigate = useNavigate();
+
+    const handleBackClick = () => {
+      navigate('/admin/products/types');
+    };
   
+
     // Fetch categories, subcategories, and childcategories
     useEffect(() => {
         const fetchCategories = async () => {
@@ -112,93 +126,106 @@ const DigitalProductCreate = () => {
         }
     };
 
-    const handleTagChange = (index, e) => {
-        const { name, value } = e.target;
-        const updatedTags = [...product.featureTags];
-        updatedTags[index][name] = value;
-        setProduct((prev) => ({ ...prev, featureTags: updatedTags }));
+    const handleTagChange = (index, event) => {
+        const newTags = [...featureTags];
+        newTags[index].tag = event.target.value;
+        setFeatureTags(newTags);
     };
 
-    const handleColorChange = (index, e) => {
-        const updatedTags = [...product.featureTags];
-        updatedTags[index].color = e.target.value;
-        setProduct((prev) => ({ ...prev, featureTags: updatedTags }));
+    const handleColorChange = (index, event) => {
+        const newTags = [...featureTags];
+        newTags[index].color = event.target.value;
+        setFeatureTags(newTags);
     };
 
     const addNewField = () => {
-        setProduct((prev) => ({
-            ...prev,
-            featureTags: [...prev.featureTags, { tag: '', color: '#000000' }],
-        }));
+        setFeatureTags([...featureTags, { tag: '', color: '#000000' }]);
     };
 
     const removeField = (index) => {
-        const updatedTags = product.featureTags.filter((_, i) => i !== index);
-        setProduct((prev) => ({ ...prev, featureTags: updatedTags }));
+        const newTags = featureTags.filter((_, i) => i !== index);
+        setFeatureTags(newTags);
+    };
+
+
+
+
+
+    const handleGalleryImageChange = (index, e) => {
+        const newGalleryImages = [...imageInputs];
+        newGalleryImages[index] = e.target.files[0];
+        setImageInputs(newGalleryImages);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Create form data to handle files and text inputs
         const formData = new FormData();
-        
+
         // Append text fields to formData
         formData.append('productName', product.productName);
         formData.append('category', product.category);
         formData.append('subCategory', product.subCategory);
         formData.append('childCategory', product.childCategory);
+        formData.append('uploadType', product.uploadType);
         formData.append('description', product.description);
         formData.append('buyReturnPolicy', product.buyReturnPolicy);
         formData.append('allowProductSEO', product.allowProductSEO);
         formData.append('price', product.price);
         formData.append('discountPrice', product.discountPrice);
         formData.append('youtubeUrl', product.youtubeUrl);
-    
+
         // Append feature image if provided
         if (product.featureImage) {
             formData.append('featureImage', product.featureImage); // Assuming featureImage is a single file
         }
-        
+        if (featureImage) {
+            formData.append('featureImage', featureImage);
+        }
+        galleryImages.forEach(image => {
+            formData.append('galleryImages', image);
+        });
+
+
+
         // Append gallery images if provided
         if (product.galleryImages && product.galleryImages.length > 0) {
             product.galleryImages.forEach((image) => {
                 formData.append('galleryImages', image); // Append each image to galleryImages
             });
         }
-    
+
         // Append feature tags
-        product.featureTags.forEach((tag) => {
-            formData.append('featureTags[]', tag.tag); // Append tag strings
-            formData.append('featureTags[]', tag.color); // If your API needs color separately, otherwise skip this
-        });
-        
+
         try {
-            const response = await fetch('https://ecommerce-panel-backend.onrender.com/api/DigitalProducts', {
+            const response = await fetch('http://127.0.0.1:5000/api/DigitalProducts', {
                 method: 'POST',
                 body: formData,
             });
-            
+
             if (response.ok) {
                 const result = await response.json();
                 alert('Product created successfully!');
                 console.log(result.message); // Adjust this to match your API's response structure
-    
+
                 // Reset the form
                 setProduct({
                     productName: '',
                     category: '',
                     subCategory: '',
                     childCategory: '',
+                    uploadType: '',
                     description: '',
                     buyReturnPolicy: '',
                     allowProductSEO: false,
-                    price: '',
-                    discountPrice: '',
-                    youtubeUrl: '',
-                    featureTags: [{ tag: '', color: '' }], // Reset to one empty tag
                     featureImage: null,
-                    galleryImages: [],
+                    galleryImages: [], // Initialize with an empty array for gallery images
+                    price: 0,
+                    discountPrice: 0,
+                    youtubeUrl: '',
+                    featureTags: [{ tag: '', color: '' }], // Initialize with one empty feature tag
+                    tags: [],
                 });
             } else {
                 const error = await response.json();
@@ -209,11 +236,22 @@ const DigitalProductCreate = () => {
             alert('An error occurred while creating the product.');
         }
     };
-    
+
 
     return (
-        <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
-            
+        <>
+    <div className="flex justify-between px-8 items-center ">
+      <h4 className="heading text-2xl text-purple-600 font-semibold">Add Digital Product</h4>
+      <button
+        onClick={handleBackClick}
+        className="flex items-center border bg-purple-600 p-2 text-white  "
+      >
+        <ArrowLeftOutlined className="w-5 h-5 mr-1" />
+        Back
+      </button>
+    </div>
+        <form onSubmit={handleSubmit} className="flex gap-8 pl-8 pr-8 pt-4 pb-8 font-sans text-gray-700">
+
             {/* Left Section */}
             <div className="w-2/3 space-y-4">
                 <div>
@@ -227,7 +265,7 @@ const DigitalProductCreate = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                     />
                 </div>
-                
+
                 {/* Category, Sub Category, Child Category */}
                 <div>
                     <label className="block font-semibold mb-2">Category*</label>
@@ -278,32 +316,33 @@ const DigitalProductCreate = () => {
                     </select>
                 </div>
                 <div className="flex items-center space-x-2"> {/* Flex container for label and select */}
-        <label htmlFor="uploadType" className="font-semibold">Select Upload Type*</label>
-        <select
-          id="uploadType"
-          value={uploadType}
-          onChange={handleUploadTypeChange}
-          className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
-        >
-          <option value="file">Upload by File</option>
-          <option value="link">Upload by Link</option>
-        </select>
-      </div>
+                    <label htmlFor="uploadType" className="font-semibold">Select Upload Type*</label>
+                    <select
+                        name='uploadType'
+                        id="uploadType"
+                        value={uploadType}
+                        onChange={handleUploadTypeChange}
+                        className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
+                    >
+                        <option value="file">Upload by File</option>
+                        <option value="link">Upload by Link</option>
+                    </select>
+                </div>
 
-      {/* Conditional rendering based on upload type */}
-      {uploadType === 'file' ? (
-        <div className="flex flex-col">
-          <input type="file" multiple className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" /> {/* Input for file upload */}
-        </div>
-      ) : (
-        <div className="flex flex-col">
-          <input
-            type="url"
-            placeholder="Enter image URL"
-            className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
-          /> {/* Input for link upload */}
-        </div>
-      )}
+                {/* Conditional rendering based on upload type */}
+                {uploadType === 'file' ? (
+                    <div className="flex flex-col">
+                        <input type="file" multiple className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" /> {/* Input for file upload */}
+                    </div>
+                ) : (
+                    <div className="flex flex-col">
+                        <input
+                            type="url"
+                            placeholder="Enter image URL"
+                            className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
+                        /> {/* Input for link upload */}
+                    </div>
+                )}
                 {/* Text Areas */}
                 <div>
                     <label className="block font-semibold mb-2">Product Description*</label>
@@ -527,7 +566,7 @@ const DigitalProductCreate = () => {
                     Create Product
                 </button>
             </div>
-        </form>
+        </form></>
     );
 };
 

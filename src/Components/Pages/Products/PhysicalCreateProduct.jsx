@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaUpload } from 'react-icons/fa'; // Importing the upload icon from FontAwesome
 import { SketchPicker } from 'react-color';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const PhysicalCreateProduct = () => {
     const [product, setProduct] = useState({
@@ -38,17 +39,17 @@ const PhysicalCreateProduct = () => {
         featureTags: [{ tag: '', color: '' }], // Initialize with one empty feature tag
         tags: [],
     });
-        const [showImageInput, setShowImageInput] = useState(false);
+    const [showImageInput, setShowImageInput] = useState(false);
     const [imageInputs, setImageInputs] = useState([]);
 
     const [featureImage, setFeatureImage] = useState(null);
-    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#ffffff' }]);
+    const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
     const [galleryImages, setGalleryImages] = useState([]);
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
     const [wholeSellEntries, setWholeSellEntries] = useState([{ quantity: 0, discount: 0 }]);
-    
+
     // Function to generate a unique SKU
     const generateSKU = () => {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -60,7 +61,7 @@ const PhysicalCreateProduct = () => {
     const handleFeatureImageChange = (e) => {
         setFeatureImage(e.target.files[0]); // Set the feature image file
     };
-    
+
     // const handleFeatureImageChange = (e) => {
     //     setProduct({ ...product, featureImage: e.target.files[0] });
     // };
@@ -99,6 +100,11 @@ const PhysicalCreateProduct = () => {
     const removeField = (index) => {
         const newTags = featureTags.filter((_, i) => i !== index);
         setFeatureTags(newTags);
+    };
+    const navigate = useNavigate();
+
+    const handleBackClick = () => {
+      navigate('/admin/products/types');
     };
 
     // Fetch categories, subcategories, and childcategories
@@ -234,16 +240,16 @@ const PhysicalCreateProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         // Validation Check
         if (!product.productName || !product.sku || !product.category || !product.subCategory || !product.childCategory) {
             alert("Please fill in all required fields.");
             return;
         }
-    
+
         const formData = new FormData();
-        
-    
+
+
         for (const key in product) {
             if (Array.isArray(product[key])) {
                 formData.append(key, JSON.stringify(product[key])); // Convert arrays to JSON strings
@@ -251,7 +257,7 @@ const PhysicalCreateProduct = () => {
                 formData.append(key, product[key]);
             }
         }
-            
+
         // Append images
         if (featureImage) {
             formData.append('featureImage', featureImage);
@@ -259,7 +265,7 @@ const PhysicalCreateProduct = () => {
         galleryImages.forEach(image => {
             formData.append('galleryImages', image);
         });
-    
+
         try {
             const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/products', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -275,9 +281,20 @@ const PhysicalCreateProduct = () => {
             alert('Error creating product. Please try again.');
         }
     };
-        return (
-        <form onSubmit={handleSubmit} className="flex gap-8 p-8 font-sans text-gray-700">
-            {/* Left Section */}
+    return (<>
+    <div className="flex justify-between px-8 items-center ">
+      <h4 className="heading text-2xl text-purple-600 font-semibold">Add Physical Product</h4>
+      <button
+        onClick={handleBackClick}
+        className="flex items-center border bg-purple-600 p-2 text-white "
+      >
+        <ArrowLeftOutlined className="w-5 h-5 mr-1" />
+        Back
+      </button>
+    </div>
+
+    <form onSubmit={handleSubmit} className="flex gap-8 pl-8 pr-8 pt-4 pb-8 font-sans text-gray-700">
+    {/* Left Section */}
             <div className="w-2/3 space-y-4">
                 <div>
                     <label className="block font-semibold mb-2">Product Name* (In Any Language)</label>
@@ -862,7 +879,7 @@ const PhysicalCreateProduct = () => {
                     Create Product
                 </button>
             </div>
-        </form>
+        </form></>
     );
 };
 export default PhysicalCreateProduct;
