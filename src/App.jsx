@@ -44,6 +44,7 @@ import States from './Components/Pages/Manage Country/States';
 import TaxManagementForm from './Components/Pages/Manage Country/TaxManagementForm';
 import ManageTax from './Components/Pages/Manage Country/ManageTax';
 import Countries from './Components/Pages/Manage Country/Countries';
+import CustomersList from './Components/Pages/Customers/CustomersList';
 
 
 const App = () => {
@@ -104,6 +105,7 @@ const App = () => {
               <Route path="/admin/TaxManagementForm" element={<TaxManagementForm />} />
               <Route path="/admin/manage/country/tax" element={<ManageTax />} />
               <Route path="/admin/manage/country" element={<Countries />} />
+              <Route path="/admin/users" element={<CustomersList />} />
               
               
             </Routes>
