@@ -47,7 +47,7 @@ const CustomersList = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/customers');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/customers');
         const data = Array.isArray(response.data) ? response.data : [];
         setCustomers(data);
         setFilteredCustomers(data);
@@ -88,7 +88,7 @@ const CustomersList = () => {
   const handleVendorSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/vendors', vendorData);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/vendors', vendorData);
       toast.success('Vendor added successfully!');
       setIsVendorOpen(false);
       setVendorData({
@@ -110,7 +110,7 @@ const CustomersList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/customers', newCustomer);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/customers', newCustomer);
       const updatedCustomers = [...customers, response.data];
       setCustomers(updatedCustomers);
       setFilteredCustomers(updatedCustomers);
@@ -142,7 +142,7 @@ const CustomersList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/customers/${id}`);
+      await axios.delete(`https://ecommerce-panel-backend.onrender.com/api/customers/${id}`);
       const updatedCustomers = customers.filter((customer) => customer._id !== id);
       setCustomers(updatedCustomers);
       setFilteredCustomers(updatedCustomers);
@@ -163,7 +163,7 @@ const CustomersList = () => {
 
   const handleStateStatusChange = async (customerId, newStatus) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/customers/${customerId}/status`, { status: newStatus });
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/customers/${customerId}/status`, { status: newStatus });
       console.log('Updated Customer:', response.data);
 
       // Update customers in state
