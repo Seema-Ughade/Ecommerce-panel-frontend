@@ -9,7 +9,7 @@ const CustomerDetails = () => {
     const fetchCustomerData = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/api/customers"
+          "https://ecommerce-panel-backend.onrender.com/api/customers"
         );
         setCustomer(response.data.customer || {}); // Safely handle missing customer data
         setOrders(response.data.orders || []); // Set an empty array if orders are missing
