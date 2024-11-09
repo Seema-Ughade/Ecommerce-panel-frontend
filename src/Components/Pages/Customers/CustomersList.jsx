@@ -3,8 +3,16 @@ import axios from 'axios';
 import { TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 const CustomersList = () => {
+  const navigate = useNavigate();
+
+  const handleDetailsClick = () => {
+    navigate("/admin/customerdetails");
+  };
+
+
   const [customers, setCustomers] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -227,7 +235,8 @@ const CustomersList = () => {
                     >
                       Make Vendor
                     </button>
-                    <button className="bg-blue-500 text-white px-3 py-1 rounded">Details</button>
+                    <button className="bg-blue-500 text-white px-3 py-1 rounded"         onClick={handleDetailsClick}
+                    >Details</button>
                     <button className="bg-indigo-500 text-white px-3 py-1 rounded">Edit</button>
                     <button className="bg-indigo-500 text-white px-3 py-1 rounded">send</button>
                     <button
