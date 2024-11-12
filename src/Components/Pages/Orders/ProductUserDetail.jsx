@@ -566,7 +566,7 @@ const ProductUserDetail = () => {
               ))}
               <tr>
                 <td className="border border-gray-300 p-2" colSpan="3">Total</td>
-                <td className="border border-gray-300 p-2" colSpan="2">${totalPrice}</td>
+                <td className="border border-gray-300 p-2" colSpan="2">{totalPrice}</td>
               </tr>
             </tbody>
           </table>
