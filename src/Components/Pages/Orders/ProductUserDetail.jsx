@@ -83,7 +83,7 @@
 //                 <div>
 //                   {/* <h3 className="font-bold">{product.title}</h3> */}
 //                   <p className="text-sm text-gray-600">{product.productName}</p>
-//                   <p className="py-2 ">${product.price}</p>
+//                   <p className="py-2 ">{product.price}</p>
 //                 </div>
 //               </div>
 //               <button 
@@ -247,11 +247,11 @@
 //               </span>
 //               {item.productName}
 //             </td>
-//             <td className="border border-gray-300 p-2">${item.price}</td>
+//             <td className="border border-gray-300 p-2">{item.price}</td>
 //             <td className="border border-gray-300 p-2">
 //               Size: {item.size} <br /> Color: {item.color} <br /> Qty: {item.quantity}
 //             </td>
-//             <td className="border border-gray-300 p-2">${(item.price * item.quantity).toFixed(2)}</td>
+//             <td className="border border-gray-300 p-2">{(item.price * item.quantity).toFixed(2)}</td>
 //             <td className="border border-gray-300 p-2">
 //               <button onClick={() => handleRemoveFromCart(item.id)} className="bg-red-500 text-white p-1 rounded">
 //                 Remove
@@ -265,7 +265,7 @@
 //     <p className="mt-4">No products added.</p>
 //   )}
 //   <div className="mt-4">
-//     <h3 className="font-semibold">Total: ${totalPrice.toFixed(2)}</h3>
+//     <h3 className="font-semibold">Total: {totalPrice.toFixed(2)}</h3>
 //     <button className="mt-2 bg-purple-500 text-white p-2 rounded">
 //       View & Continue
 //     </button>
@@ -278,7 +278,7 @@
 //           <div className="bg-white p-6 rounded shadow-lg w-1/3">
 //             <h2 className="text-xl font-semibold mb-4">Add Product</h2>
 //             <p>{selectedProduct?.title}</p>
-//             <p className="py-2 border">${selectedProduct?.price}</p>
+//             <p className="py-2 border">{selectedProduct?.price}</p>
 //             <div className="flex flex-col mb-4">
 //               <label className="font-medium">Quantity</label>
 //               <input
@@ -400,7 +400,7 @@ const ProductUserDetail = () => {
                 />
                 <div className="ml-4">
                   <p className="text-sm text-gray-600">{product.productName}</p>
-                  <p className="py-2 text-lg font-semibold">${product.price}</p>
+                  <p className="py-2 text-lg font-semibold">{product.price}</p>
                 </div>
               </div>
               <button
@@ -552,7 +552,7 @@ const ProductUserDetail = () => {
                 <tr key={index}>
                   <td className="border border-gray-300 p-2">{product.id}</td>
                   <td className="border border-gray-300 p-2">{product.productName}</td>
-                  <td className="border border-gray-300 p-2">${product.price}</td>
+                  <td className="border border-gray-300 p-2">{product.price}</td>
                   <td className="border border-gray-300 p-2">{product.quantity}</td>
                   <td className="border border-gray-300 p-2">
                     <button
