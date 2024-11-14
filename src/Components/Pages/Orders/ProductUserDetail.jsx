@@ -74,15 +74,16 @@ const ProductUserDetail = () => {
         {error ? (
           <p className="text-red-500">{error}</p>
         ) : (
-          products.map((product, index) => (
-                        <div key={index} className="border border-gray-300 p-4 mb-3 flex items-center justify-between rounded-lg shadow-md">
+          <div className="h-[700px] overflow-y-scroll">
+          {products.map((product, index) => (
+                            <div key={index} className="border border-gray-300 p-4 mb-3 flex items-center justify-between rounded-lg shadow-md">
 
              {/* <div key={index} className="border border-gray-300 p-4 mb-3 flex items-center justify-between"> */}
               <div className="flex items-center">
                 <img 
                   src={product.featureImage} 
                   alt={product.title} 
-                  className="w-20 m-3 h-20 mb-2 object-cover" 
+                  className="w-20 border rounded-md p-1 m-3 h-20 mb-2 object-cover" 
                   />
                 <div>
                   {/* <h3 className="font-bold">{product.title}</h3> */}
@@ -98,12 +99,12 @@ const ProductUserDetail = () => {
                 // className="bg-purple-500 text-white p-2 rounded"
               >
                 +
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-
+                </button>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
       {/* Right Side: User Details Form */}
       {/* <div className="flex-1 p-6 border border-gray-300"> */}
             <div className="flex-1 p-6 border border-gray-300 rounded-lg bg-white shadow-sm">

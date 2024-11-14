@@ -71,6 +71,11 @@ const Countries = () => {
     }
   };
 
+  const handleStatesClick = () => {
+    navigate('/admin/states');
+  };
+
+
   const openEditModal = (country) => {
     setEditCountry(country);
     setIsEditOpen(true);
@@ -165,6 +170,14 @@ const Countries = () => {
                   </select>
                 </td>
                 <td className="border border-gray-300 px-4 py-2 flex justify-center space-x-2">
+                <button
+        onClick={handleStatesClick}
+        className="flex items-center border bg-purple-600 p-2 text-white "
+      >
+        <ArrowLeftOutlined className="w-5 h-5 mr-1" />
+        Manage State
+      </button>
+
                   <button
                     onClick={() => openEditModal(country)}
                     className="flex items-center rounded-2xl text-white bg-blue-900 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
