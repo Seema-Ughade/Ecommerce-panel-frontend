@@ -38,6 +38,7 @@ import PaymentGatewayComponent from './Components/Pages/Payment Settings/Payment
 import ProductUserDetail from './Components/Pages/Orders/ProductUserDetail';
 import Currencies from './Components/Pages/Payment Settings/Currencies';
 import Fonts from './Components/Pages/Fonts Options/Fonts';
+import VendorSubscriptionPlans from './Components/Pages/Vendor Subscription Plans/VendorSubscriptionPlans';
 import Roles from './Components/Pages/Manage Roles/Roles';
 import Cities from './Components/Pages/Manage Country/Cities';
 import States from './Components/Pages/Manage Country/States';
@@ -107,6 +108,7 @@ const App = () => {
               <Route path="/admin/manage/country/tax" element={<ManageTax />} />
               <Route path="/admin/manage/country" element={<Countries />} />
               <Route path="/admin/users" element={<CustomersList />} />
+              <Route path="/admin/subscription" element={<VendorSubscriptionPlans />} />
               {/* <Route path="/admin/customerdetails" element={<CustomerDetails />} /> */}
               
               

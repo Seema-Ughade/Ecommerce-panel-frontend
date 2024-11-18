@@ -15,12 +15,12 @@ const AddNewProduct = () => {
   return (
     <div className={`content-area px-6 transition-opacity duration-700 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
       <div className="mb-2">
-        <h4 className="heading text-2xl font-semibold">Add Product</h4>
+        <h4 className="heading text-purple-600 text-2xl font-semibold">Add Product</h4>
       </div>
 
       <div className="add-product-content h-auto">
         <div className="product-description mb-6">
-          <h2 className="title text-xl font-bold">Product Types</h2>
+          <h2 className="title text-center text-xl font-bold">PRODUCT TYPES</h2>
         </div>
 
         <div className="ap-product-categories">

@@ -3,8 +3,12 @@ import axios from 'axios';
 import { TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
+import { EnvironmentOutlined } from "@ant-design/icons";
+import { useNavigate } from 'react-router-dom';
 
 const Countries = () => {
+  const navigate = useNavigate();
+
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [states, setStates] = useState([]);  // State for storing states data
@@ -15,15 +19,31 @@ const Countries = () => {
   const [editCountry, setEditCountry] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const itemsPerPage = 10;
+  const [currentStates, setCurrentStates] = useState([]);
+
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/api/states');
+        setStates(response.data);
+        setCurrentStates(response.data); // Assuming you have pagination or filtering logic
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
+
+    fetchStates();
+  }, []);
+
 
   useEffect(() => {
     const fetchCountriesAndStates = async () => {
       try {
-        const countryResponse = await axios.get('https://ecommerce-panel-backend.onrender.com/api/countries');
+        const countryResponse = await axios.get('http://127.0.0.1:5000/api/states');
         setCountries(countryResponse.data);
         setFilteredCountries(countryResponse.data);
 
-        const stateResponse = await axios.get('https://ecommerce-panel-backend.onrender.com/api/states');
+        const stateResponse = await axios.get('http://127.0.0.1:5000/api/states');
         setStates(stateResponse.data);  // Set the states data
       } catch (error) {
         console.error('Error fetching countries and states:', error);
@@ -32,13 +52,13 @@ const Countries = () => {
     fetchCountriesAndStates();
   }, []);
 
-  useEffect(() => {
-    const results = countries.filter((country) =>
-      country.countryName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredCountries(results);
-    setCurrentPage(1);
-  }, [searchTerm, countries]);
+  // useEffect(() => {
+  //   const results = countries.filter((country) =>
+  //     country.countryName.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  //   setFilteredCountries(results);
+  //   setCurrentPage(1);
+  // }, [searchTerm, countries]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -144,24 +164,26 @@ const Countries = () => {
             </tr>
           </thead>
           <tbody>
-            {currentCountries.map((country) => (
-              <tr key={country._id} className="hover:bg-gray-100 text-center">
-                <td className="border border-gray-300 px-4 py-2">{country.countryName}</td>
-                <td className="border border-gray-300 px-4 py-2">
+          {currentStates.map((state) => (
+          <tr key={state._id} className="hover:bg-gray-100 text-center">
+            <td className="border border-gray-300 px-4 py-2">
+              {state.country}
+            </td>
+                {/* <td className="border border-gray-300 px-4 py-2">
                   {/* Render state for each country */}
-                  {states
+                  {/* {states
                     .filter(state => state.countryId === country._id)
                     .map((state) => (
                       <div key={state._id}>{state.stateName}</div>
                     ))}
-                </td>
+                </td> */} 
                 <td className="py-2 px-4 border">
                   <select
-                    value={country.status}
-                    onChange={(e) => handleCountryStatusChange(country._id, e.target.value)}
-                    className="border text-white rounded px-2 py-1"
+                    value={state.status}
+                    onChange={(e) => handleCountryStatusChange(state._id, e.target.value)}
+                    className="border  text-white rounded px-2 py-1"
                     style={{
-                      backgroundColor: country.status === "active" ? "#1e7e34" : "#bd2130",
+                      backgroundColor: state.status === "active" ? "#1e7e34" : "#bd2130",
                       color: "white",
                     }}
                   >
@@ -174,11 +196,11 @@ const Countries = () => {
         onClick={handleStatesClick}
         className="flex items-center border bg-purple-600 p-2 text-white "
       >
-        <ArrowLeftOutlined className="w-5 h-5 mr-1" />
+        <EnvironmentOutlined className="w-5 h-5 mr-1" />
         Manage State
       </button>
 
-                  <button
+                  {/* <button
                     onClick={() => openEditModal(country)}
                     className="flex items-center rounded-2xl text-white bg-blue-900 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
                   >
@@ -191,7 +213,7 @@ const Countries = () => {
                   >
                     <TrashIcon className="h-5 w-5 mr-1" />
                     Delete
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}
