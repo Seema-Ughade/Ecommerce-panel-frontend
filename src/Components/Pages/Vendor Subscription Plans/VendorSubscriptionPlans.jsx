@@ -21,7 +21,7 @@ const VendorSubscriptionPlans = () => {
     const fetchPlans = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/api/subscription-plans"
+          "https://ecommerce-panel-backend.onrender.com/api/subscription-plans"
         );
         setPlans(response.data);
       } catch (error) {
@@ -41,7 +41,7 @@ const VendorSubscriptionPlans = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/api/subscription-plans",
+        "https://ecommerce-panel-backend.onrender.com/api/subscription-plans",
         newPlan
       );
       setPlans([...plans, response.data]);
@@ -63,7 +63,7 @@ const VendorSubscriptionPlans = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://127.0.0.1:5000/api/subscription-plans/${id}`
+        `https://ecommerce-panel-backend.onrender.com/api/subscription-plans/${id}`
       );
       setPlans(plans.filter((plan) => plan._id !== id));
       toast.success("Subscription Plan deleted successfully!");
@@ -89,7 +89,7 @@ const VendorSubscriptionPlans = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://127.0.0.1:5000/api/subscription-plans/${editingPlanId}`,
+        `https://ecommerce-panel-backend.onrender.com/api/subscription-plans/${editingPlanId}`,
         newPlan
       );
       setPlans(

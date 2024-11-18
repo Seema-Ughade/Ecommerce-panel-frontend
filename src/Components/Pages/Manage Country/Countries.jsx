@@ -24,7 +24,7 @@ const Countries = () => {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/states');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/states');
         setStates(response.data);
         setCurrentStates(response.data); // Assuming you have pagination or filtering logic
       } catch (error) {
@@ -39,11 +39,11 @@ const Countries = () => {
   useEffect(() => {
     const fetchCountriesAndStates = async () => {
       try {
-        const countryResponse = await axios.get('http://127.0.0.1:5000/api/states');
+        const countryResponse = await axios.get('https://ecommerce-panel-backend.onrender.com/api/states');
         setCountries(countryResponse.data);
         setFilteredCountries(countryResponse.data);
 
-        const stateResponse = await axios.get('http://127.0.0.1:5000/api/states');
+        const stateResponse = await axios.get('https://ecommerce-panel-backend.onrender.com/api/states');
         setStates(stateResponse.data);  // Set the states data
       } catch (error) {
         console.error('Error fetching countries and states:', error);
