@@ -351,7 +351,11 @@ const MainCategories = () => {
                   )}
                 </td>
                 <td className="py-2 px-4   border">
-                  {category.image ? <img src={category.image} alt={category.name} className="w-12 h-12 rounded" /> : '-'}
+                  {category.image ? <img src={category.image} alt={category.name} 
+                  className="w-12   h-12 rounded"
+                  // className="w-14 border rounded-md p-1 m-3 h-14 " 
+
+                   /> : '-'}
                 </td>
                 <td className="py-2 px-4 border">
                   <select

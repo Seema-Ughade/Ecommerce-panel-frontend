@@ -29,6 +29,7 @@ const LicenseProductCreate = () => {
     const [childCategories, setChildCategories] = useState([]);
     const [showImageInput, setShowImageInput] = useState(false);
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
+    const [imageInputs, setImageInputs] = useState([]);
 
     // Fetch categories
     useEffect(() => {
@@ -89,6 +90,22 @@ const LicenseProductCreate = () => {
         }));
     };
 
+    const handleAddImageInput = () => {
+        setImageInputs([...imageInputs, null]);
+    };
+
+    const handleRemoveImageInput = (index) => {
+        const newImageInputs = imageInputs.filter((_, i) => i !== index);
+        setImageInputs(newImageInputs);
+    };
+
+    const handleGalleryImageChange = (index, e) => {
+        const newGalleryImages = [...imageInputs];
+        newGalleryImages[index] = e.target.files[0];
+        setImageInputs(newGalleryImages);
+    };
+
+
     const handleFileChange = (e) => {
         const { name, files } = e.target;
         if (name === 'featureImage') {
@@ -101,6 +118,7 @@ const LicenseProductCreate = () => {
         setFeatureImage(e.target.files[0]); // Set the feature image file
     };
 
+    
     const handleTagChange = (index, e) => {
         const { name, value } = e.target;
         const updatedTags = [...product.featureTags];
@@ -139,7 +157,10 @@ const LicenseProductCreate = () => {
 
     return (
         <>
-        <div className="flex justify-between px-8 items-center ">
+        {/* <div className="flex justify-between px-8 items-center "> */}
+        <div className="flex flex-col sm:flex-row justify-between px-4 sm:px-8 items-center">
+
+
           <h4 className="heading text-2xl text-purple-600 font-semibold">Add license Product</h4>
           <button
             onClick={handleBackClick}
