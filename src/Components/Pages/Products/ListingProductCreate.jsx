@@ -45,57 +45,39 @@ const ListingProductCreate = () => {
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
 
     // Fetch categories, subcategories, and child categories
+    // Fetch child categories based on selected subcategory
+
     useEffect(() => {
         const fetchCategories = async () => {
-            try {
-                const response = await axios.get(
-                    'https://ecommerce-panel-backend.onrender.com/api/categories'
-                );
-                setCategories(response.data);
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-            }
+            const response = await axios.get(
+                "https://ecommerce-panel-backend.onrender.com/api/categories"
+            );
+            setCategories(response.data);
         };
-
         fetchCategories();
     }, []);
 
     useEffect(() => {
         if (product.category) {
             const fetchSubCategories = async () => {
-                try {
-                    const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/subcategories'
-                    );
-                    setSubCategories(response.data);
-                } catch (error) {
-                    console.error('Error fetching subcategories:', error);
-                }
+                const response = await axios.get(
+                    'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+                );
+                setSubCategories(response.data);
             };
-
             fetchSubCategories();
-        } else {
-            setSubCategories([]);
-            setChildCategories([]);
         }
     }, [product.category]);
 
     useEffect(() => {
         if (product.subCategory) {
             const fetchChildCategories = async () => {
-                try {
-                    const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/childcategories'
-                    );
-                    setChildCategories(response.data);
-                } catch (error) {
-                    console.error('Error fetching child categories:', error);
-                }
+                const response = await axios.get(
+                    'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+                );
+                setChildCategories(response.data);
             };
-
             fetchChildCategories();
-        } else {
-            setChildCategories([]);
         }
     }, [product.subCategory]);
 
@@ -108,6 +90,11 @@ const ListingProductCreate = () => {
     };
     const handleFeatureImageChange = (e) => {
         setFeatureImage(e.target.files[0]); // Set the feature image file
+    };
+
+    // Function to generate a unique SKU
+    const generateSKU = () => {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
     };
 
 
@@ -178,16 +165,24 @@ const ListingProductCreate = () => {
                     />
                 </div>
                 <div>
-                    <label className="block mb-2">Product SKU*</label>
+                    <label className="block font-semibold mb-2">Product Sku*</label>
                     <input
                         type="text"
                         name="sku"
                         value={product.sku}
                         onChange={handleChange}
-                        placeholder="Enter Product SKU"
                         className="w-full p-2 border border-gray-300 rounded"
+                        readOnly // Optional: Makes the SKU field read-only if you don't want the user to edit it
                     />
+                    <button
+                        type="button"
+                        onClick={() => setProduct((prev) => ({ ...prev, sku: generateSKU() }))}
+                        className="mt-2 p-2 bg-purple-600 text-white rounded"
+                    >
+                        Generate New SKU
+                    </button>
                 </div>
+
 
                 {/* Category, Sub Category, Child Category */}
                 <div>

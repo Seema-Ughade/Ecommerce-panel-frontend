@@ -9,7 +9,7 @@ const LicenseProductCreate = () => {
         category: '',
         subCategory: '',
         childCategory: '',
-        uploadType: 'file', // Default to file upload
+        imageUploadMethod: '',
         licenseKey: '',
         description: '',
         buyReturnPolicy: '',
@@ -30,57 +30,56 @@ const LicenseProductCreate = () => {
     const [showImageInput, setShowImageInput] = useState(false);
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
     const [imageInputs, setImageInputs] = useState([]);
+    const [imageUploadMethod, setimageUploadMethod] = useState('file'); // Default to 'file' option
+    const [platform, setPlatform] = useState("");
+    const [region, setRegion] = useState("");
+    const [licenseType, setLicenseType] = useState("");
+  
+    // Fetch child categories based on selected subcategory
 
-    // Fetch categories
     useEffect(() => {
         const fetchCategories = async () => {
-            try {
-                const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories');
-                setCategories(response.data);
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-            }
+            const response = await axios.get(
+                "https://ecommerce-panel-backend.onrender.com/api/categories"
+            );
+            setCategories(response.data);
         };
-
         fetchCategories();
     }, []);
 
-    // Fetch subcategories based on selected category
     useEffect(() => {
-        const fetchSubCategories = async () => {
-            if (product.category) {
-                try {
-                    const response = await axios.get(`https://ecommerce-panel-backend.onrender.com/api/subcategories?category=${product.category}`);
-                    setSubCategories(response.data);
-                } catch (error) {
-                    console.error('Error fetching subcategories:', error);
-                }
-            } else {
-                setSubCategories([]);
-                setChildCategories([]);
-            }
-        };
-
-        fetchSubCategories();
+        if (product.category) {
+            const fetchSubCategories = async () => {
+                const response = await axios.get(
+                    'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+                );
+                setSubCategories(response.data);
+            };
+            fetchSubCategories();
+        }
     }, [product.category]);
 
-    // Fetch child categories based on selected subcategory
     useEffect(() => {
-        const fetchChildCategories = async () => {
-            if (product.subCategory) {
-                try {
-                    const response = await axios.get(`https://ecommerce-panel-backend.onrender.com/api/childcategories?subcategory=${product.subCategory}`);
-                    setChildCategories(response.data);
-                } catch (error) {
-                    console.error('Error fetching child categories:', error);
-                }
-            } else {
-                setChildCategories([]);
-            }
-        };
-
-        fetchChildCategories();
+        if (product.subCategory) {
+            const fetchChildCategories = async () => {
+                const response = await axios.get(
+                    'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+                );
+                setChildCategories(response.data);
+            };
+            fetchChildCategories();
+        }
     }, [product.subCategory]);
+
+
+
+
+
+
+
+
+
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -116,6 +115,9 @@ const LicenseProductCreate = () => {
     };
     const handleFeatureImageChange = (e) => {
         setFeatureImage(e.target.files[0]); // Set the feature image file
+    };
+    const handleimageUploadMethodChange = (event) => {
+        setimageUploadMethod(event.target.value);
     };
 
     
@@ -155,7 +157,29 @@ const LicenseProductCreate = () => {
       navigate('/admin/products/types');
     };
 
-    return (
+
+
+
+
+
+
+    const [licenseFields, setLicenseFields] = useState([{ licenseKey: "", licenseQuantity: "" }]);
+
+    const handleFieldChange = (index, fieldName, value) => {
+      const updatedFields = [...licenseFields];
+      updatedFields[index][fieldName] = value;
+      setLicenseFields(updatedFields);
+    };
+  
+    const handleAddField = () => {
+      setLicenseFields([...licenseFields, { licenseKey: "", licenseQuantity: "" }]);
+    };
+  
+    const handleRemoveField = (index) => {
+      const updatedFields = licenseFields.filter((_, i) => i !== index);
+      setLicenseFields(updatedFields);
+    };
+      return (
         <>
         {/* <div className="flex justify-between px-8 items-center "> */}
         <div className="flex flex-col sm:flex-row justify-between px-4 sm:px-8 items-center">
@@ -188,15 +212,14 @@ const LicenseProductCreate = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Category*</label>
+                    <label className="block font-semibold mb-2">Category*</label>
                     <select
                         name="category"
                         value={product.category}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
-                        required
                     >
-                        <option value="">Select Category</option>
+                        <option>Select Category</option>
                         {categories.map((category) => (
                             <option key={category._id} value={category._id}>
                                 {category.name}
@@ -206,15 +229,14 @@ const LicenseProductCreate = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Sub Category*</label>
+                    <label className="block font-semibold mb-2">Sub Category*</label>
                     <select
                         name="subCategory"
                         value={product.subCategory}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
-                        required
                     >
-                        <option value="">Select Sub Category</option>
+                        <option>Select Sub Category</option>
                         {subCategories.map((subCategory) => (
                             <option key={subCategory._id} value={subCategory._id}>
                                 {subCategory.name}
@@ -224,15 +246,14 @@ const LicenseProductCreate = () => {
                 </div>
 
                 <div>
-                    <label className="block mb-2">Child Category*</label>
+                    <label className="block font-semibold mb-2">Child Category*</label>
                     <select
                         name="childCategory"
                         value={product.childCategory}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded"
-                        required
                     >
-                        <option value="">Select Child Category</option>
+                        <option>Select Child Category</option>
                         {childCategories.map((childCategory) => (
                             <option key={childCategory._id} value={childCategory._id}>
                                 {childCategory.name}
@@ -240,33 +261,79 @@ const LicenseProductCreate = () => {
                         ))}
                     </select>
                 </div>
+                <div className="flex items-center space-x-2"> {/* Flex container for label and select */}
+                        <label htmlFor="imageUploadMethod" className="font-semibold">Select Upload Type*</label>
+                        <select
+                            name='imageUploadMethod'
+                            id="imageUploadMethod"
+                            value={imageUploadMethod}
+                            onChange={handleimageUploadMethodChange}
+                            className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
+                        >
+                            <option value="file">Upload by File</option>
+                            <option value="link">Upload by Link</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <label className="block mb-2">Upload Type*</label>
-                    <select
-                        name="uploadType"
-                        value={product.uploadType}
-                        onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
-                    >
-                        <option value="file">Upload By File</option>
-                        <option value="url">Upload By URL</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label className="block mb-2">License Key*</label>
-                    <input
-                        type="text"
-                        name="licenseKey"
-                        value={product.licenseKey}
-                        onChange={handleChange}
-                        placeholder="Enter License Key"
-                        className="w-full p-2 border border-gray-300 rounded"
-                        required
-                    />
-                </div>
-
+                    {/* Conditional rendering based on upload type */}
+                    {imageUploadMethod === 'file' ? (
+                        <div className="flex flex-col">
+                            <input type="file" multiple className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" /> {/* Input for file upload */}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col">
+                            <input
+                                type="url"
+                                placeholder="Enter image URL"
+                                className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
+                            /> {/* Input for link upload */}
+                        </div>
+                    )}
+ <div>
+      <h2 className="text-lg font-semibold mb-4">Product Licenses</h2>
+      {licenseFields.map((field, index) => (
+        <div key={index} className="flex gap-4 mb-4 items-center">
+          <div className="w-1/2">
+            <label className="block mb-2">License Key *</label>
+            <input
+              type="text"
+              name={`licenseKey-${index}`}
+              value={field.licenseKey}
+              onChange={(e) => handleFieldChange(index, "licenseKey", e.target.value)}
+              placeholder="Enter License Key"
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <div className="w-1/2">
+            <label className="block mb-2">License Quantity *</label>
+            <input
+              type="number"
+              name={`licenseQuantity-${index}`}
+              value={field.licenseQuantity}
+              onChange={(e) => handleFieldChange(index, "licenseQuantity", e.target.value)}
+              placeholder="Enter License Quantity"
+              className="w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => handleRemoveField(index)}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={handleAddField}
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Add More Fields
+      </button>
+    </div>  
                 <div>
                     <label className="block mb-2">Product Description*</label>
                     <textarea
@@ -292,6 +359,83 @@ const LicenseProductCreate = () => {
                         required
                     />
                 </div>
+                <div>
+                    <label className="flex font-semibold items-center space-x-2">
+    <input
+        type="checkbox"
+        className="h-4 w-4 text-blue-600"
+        name="allowProductSEO"
+        checked={product.allowProductSEO}
+        onChange={handleChange}
+    />
+    <span>Allow Product SEO</span>
+</label>
+
+{product.allowProductSEO && (
+    <div className="flex flex-col space-y-1 mt-2">
+        <label className="font-semibold">Meta Tags*</label>
+        <input
+            type="text"
+            name="metaTags"
+            value={product.metaTags}
+            onChange={handleChange}
+            placeholder="Enter Meta Tags (e.g., keyword1, keyword2)"
+            className="border border-gray-300 rounded p-1"
+        />
+        
+        <label className="font-semibold mt-2">Meta Description*</label>
+        <input
+            type="text"
+            name="metaDescription"
+            value={product.metaDescription}
+            onChange={handleChange}
+            placeholder="Enter Meta Description"
+            className="border border-gray-300 rounded p-1"
+        />
+    </div>
+)}
+
+
+
+
+
+
+
+
+                    </div>
+                    <div className="mb-4">
+        <label className="block mb-2">Platform <span className="text-gray-500">(Optional)</span></label>
+        <input
+          type="text"
+          value={platform}
+          onChange={(e) => setPlatform(e.target.value)}
+          placeholder="Enter Platform"
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2">Region <span className="text-gray-500">(Optional)</span></label>
+        <input
+          type="text"
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+          placeholder="Enter Region"
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div className="mb-6">
+        <label className="block mb-2">License Type <span className="text-gray-500">(Optional)</span></label>
+        <input
+          type="text"
+          value={licenseType}
+          onChange={(e) => setLicenseType(e.target.value)}
+          placeholder="Enter Type"
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+
+
+
             </div>
 
             {/* Right Section */}

@@ -723,6 +723,7 @@ const AddAffiliateProduct = () => {
                         rows={5}
                     />
                 </div>
+                
                 <div className=" ">
                     <div>
                     <label className="flex font-semibold items-center space-x-2">
