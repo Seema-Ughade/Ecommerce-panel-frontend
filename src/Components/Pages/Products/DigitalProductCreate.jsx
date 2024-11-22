@@ -314,6 +314,12 @@ const DigitalProductCreate = () => {
                                 </option>
                             ))}
                         </select>
+
+
+
+
+
+
                     </div>
                     <div className="flex items-center space-x-2"> {/* Flex container for label and select */}
                         <label htmlFor="imageUploadMethod" className="font-semibold">Select Upload Type*</label>
@@ -343,6 +349,13 @@ const DigitalProductCreate = () => {
                             /> {/* Input for link upload */}
                         </div>
                     )}
+
+
+
+
+
+
+                    
                     {/* Text Areas */}
                     <div>
                         <label className="block font-semibold mb-2">Product Description*</label>
@@ -368,18 +381,45 @@ const DigitalProductCreate = () => {
                     </div>
 
                     {/* Checkboxes */}
-                    <div className="space-y-2">
-                        <label className="flex font-semibold items-center space-x-2">
-                            <input
-                                type="checkbox"
-                                name="allowProductSEO"
-                                checked={product.allowProductSEO}
-                                onChange={handleChange}
-                                className="h-4 w-4"
-                            />
-                            <span>Allow Product SEO</span>
-                        </label>
+                    <div className=" ">
+                    <div>
+                    <label className="flex font-semibold items-center space-x-2">
+    <input
+        type="checkbox"
+        className="h-4 w-4 text-blue-600"
+        name="allowProductSEO"
+        checked={product.allowProductSEO}
+        onChange={handleChange}
+    />
+    <span>Allow Product SEO</span>
+</label>
+
+{product.allowProductSEO && (
+    <div className="flex flex-col space-y-1 mt-2">
+        <label className="font-semibold">Meta Tags*</label>
+        <input
+            type="text"
+            name="metaTags"
+            value={product.metaTags}
+            onChange={handleChange}
+            placeholder="Enter Meta Tags (e.g., keyword1, keyword2)"
+            className="border border-gray-300 rounded p-1"
+        />
+        
+        <label className="font-semibold mt-2">Meta Description*</label>
+        <input
+            type="text"
+            name="metaDescription"
+            value={product.metaDescription}
+            onChange={handleChange}
+            placeholder="Enter Meta Description"
+            className="border border-gray-300 rounded p-1"
+        />
+    </div>
+)}
+
                     </div>
+                </div>
                 </div>
 
                 {/* Right Section */}
