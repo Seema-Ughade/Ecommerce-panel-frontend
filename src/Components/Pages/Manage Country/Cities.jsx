@@ -109,7 +109,7 @@ const Cities = () => {
   return (
     <div className="container">
       <div className="content-area px-6">
-        <h4 className="heading text-2xl font-semibold mb-4">Manage Cities</h4>
+        <h4 className="heading text-2xl font-semibold mb-4">Manage City</h4>
 
         <div className="flex justify-between mb-4">
           <input
@@ -242,13 +242,13 @@ const Cities = () => {
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className="btn btn-secondary rounded-2xl px-4 py-1 mr-2 border border-gray-300 bg-gray-200 hover:bg-gray-300 focus:outline-none"
+                    className="btn btn-secondary  px-4 py-1 mr-2 border border-gray-300 bg-gray-200 hover:bg-gray-300 focus:outline-none"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary rounded-2xl px-4 py-1 bg-blue-900 text-white hover:bg-blue-700 focus:outline-none"
+                    className="btn btn-primary  px-4 py-1 bg-blue-900 text-white hover:bg-blue-700 focus:outline-none"
                   >
                     Save
                   </button>

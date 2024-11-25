@@ -3,8 +3,12 @@ import axios from 'axios';
 import { TrashIcon } from '@heroicons/react/24/solid';
 import { EditOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { EnvironmentOutlined } from "@ant-design/icons";
 
 const States = () => {
+  const navigate = useNavigate();
+
   const [states, setStates] = useState([]);
   const [filteredStates, setFilteredStates] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -77,6 +81,11 @@ const States = () => {
     setEditState({ ...editState, [name]: value });
   };
 
+  const handleCitiesClick = () => {
+    navigate('/admin/cities');
+  };
+
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -116,7 +125,7 @@ const States = () => {
   return (
     <div className="container">
       <div className="content-area px-6">
-        <h4 className="heading text-2xl font-semibold mb-4">Manage States</h4>
+        <h4 className="heading text-2xl font-semibold mb-4">Manage State</h4>
 
         <div className="flex justify-between mb-4">
           <input
@@ -166,6 +175,13 @@ const States = () => {
 
                 <td className="border border-gray-300 px-4 py-2">{state.tax}</td>
                 <td className="border border-gray-300 px-4 py-2 flex justify-center space-x-2">
+                <button
+        onClick={handleCitiesClick}
+        className="flex items-center rounded-2xl text-white bg-purple-600 hover:bg-purple-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
+        >
+        <EnvironmentOutlined className="w-5 h-5 mr-1" />
+        Manage City
+      </button>
                   <button
                     onClick={() => openEditModal(state)}
                     className="flex items-center rounded-2xl text-white bg-blue-900 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
@@ -180,6 +196,7 @@ const States = () => {
                     <TrashIcon className="h-5 w-5 mr-1" />
                     Delete
                   </button>
+                 
                 </td>
               </tr>
             ))}
@@ -250,14 +267,14 @@ const States = () => {
                   <button
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className="btn btn-secondary px-4 py-1 rounded border focus:outline-none"
-                  >
+                    className="bg-gray-500 text-white px-4 py-1 rounded border border-gray-500 focus:outline-none hover:bg-gray-600"
+                    >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary px-4 py-1 rounded border focus:outline-none"
-                  >
+                    className="bg-blue-500 text-white px-4 py-1 rounded border border-blue-500 focus:outline-none hover:bg-blue-600"
+                    >
                     Submit
                   </button>
                 </div>

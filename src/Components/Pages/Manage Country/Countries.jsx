@@ -140,10 +140,32 @@ const Countries = () => {
     }
   };
 
+  const handleStateStatusChange = async (stateId, newStatus) => {
+    try {
+      const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/states/${stateId}/status`, { status: newStatus });
+      console.log('Updated State:', response.data);
+  
+      // Update states in the state
+      setStates(prev =>
+        prev.map(state => (state._id === stateId ? { ...state, status: newStatus } : state))
+      );
+      toast.success('State status updated successfully!');
+    } catch (error) {
+      toast.error('Error updating state status. Please try again.');
+    }
+  };
+  
+
+
+
+
+
+
   return (
     <div className="container">
       <div className="content-area px-6">
-        <h4 className="heading text-2xl font-semibold mb-4">Manage Countries</h4>
+        <h4 className="heading text-2xl font-semibold mb-4">Manage Country
+        </h4>
 
         <div className="flex justify-between mb-4">
           <input
@@ -180,7 +202,7 @@ const Countries = () => {
                 <td className="py-2 px-4 border">
                   <select
                     value={state.status}
-                    onChange={(e) => handleCountryStatusChange(state._id, e.target.value)}
+                    onChange={(e) => handleStateStatusChange(state._id, e.target.value)}
                     className="border  text-white rounded px-2 py-1"
                     style={{
                       backgroundColor: state.status === "active" ? "#1e7e34" : "#bd2130",
@@ -194,7 +216,7 @@ const Countries = () => {
                 <td className="border border-gray-300 px-4 py-2 flex justify-center space-x-2">
                 <button
         onClick={handleStatesClick}
-        className="flex items-center border bg-purple-600 p-2 text-white "
+        className="flex items-center rounded-2xl text-white bg-purple-600 hover:bg-purple-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
       >
         <EnvironmentOutlined className="w-5 h-5 mr-1" />
         Manage State
@@ -234,7 +256,7 @@ const Countries = () => {
               <button
                 key={index + 1}
                 onClick={() => handlePageChange(index + 1)}
-                className={`btn px-4 py-1 rounded border mx-1 ${currentPage === index + 1 ? 'bg-blue-500 text-white' : ''}`}
+                className={`btn px-4 py-1 rounded border mx-1 ${currentPage === index + 1 ? 'bg-blue-900 text-white' : ''}`}
               >
                 {index + 1}
               </button>
