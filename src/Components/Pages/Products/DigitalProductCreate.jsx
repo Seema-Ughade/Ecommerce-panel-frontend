@@ -25,14 +25,15 @@ const DigitalProductCreate = () => {
     const [categories, setCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [childCategories, setChildCategories] = useState([]);
-    const [imageUploadMethod, setimageUploadMethod] = useState('file'); // Default to 'file' option
+    const [imageUploadMethod, setImageUploadMethod] = useState('file'); // Default to 'file' option
     const [showImageInput, setShowImageInput] = useState(false);
     const [featureTags, setFeatureTags] = useState([{ tag: '', color: '#000000' }]);
     const [galleryImages, setGalleryImages] = useState([]);
     const [featureImage, setFeatureImage] = useState(null);
+    const [formData, setFormData] = useState({ image: null, imageURL: "" });
 
     const handleimageUploadMethodChange = (event) => {
-        setimageUploadMethod(event.target.value);
+        setImageUploadMethod(event.target.value);
     };
 
     const handleFeatureImageChange = (e) => {
@@ -53,13 +54,27 @@ const DigitalProductCreate = () => {
         navigate('/admin/products/types');
     };
 
+    const handleUploadMethodChange = (e) => {
+        setImageUploadMethod(e.target.value);
+        setFormData({ image: null, imageURL: "" }); // Reset form data when method changes
+      };
+    
+      const handleInputChange = (e) => {
+        const { name, value, files } = e.target;
+        if (name === "image") {
+          setFormData({ ...formData, image: files[0] });
+        } else {
+          setFormData({ ...formData, [name]: value });
+        }
+      };
+    
 
     // Fetch categories, subcategories, and childcategories
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get(
-                    "https://ecommerce-panel-backend.onrender.com/api/categories"
+                    "http://127.0.0.1:5000/api/categories"
                 );
                 setCategories(response.data);
             } catch (error) {
@@ -75,7 +90,7 @@ const DigitalProductCreate = () => {
             const fetchSubCategories = async () => {
                 try {
                     const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/subcategories'
+                        'http://127.0.0.1:5000/api/subcategories'
                     );
                     setSubCategories(response.data);
                 } catch (error) {
@@ -95,7 +110,7 @@ const DigitalProductCreate = () => {
             const fetchChildCategories = async () => {
                 try {
                     const response = await axios.get(
-                        'https://ecommerce-panel-backend.onrender.com/api/childcategories'
+                        'http://127.0.0.1:5000/api/childcategories'
                     );
                     setChildCategories(response.data);
                 } catch (error) {
@@ -162,7 +177,8 @@ const DigitalProductCreate = () => {
 
         // Create form data to handle files and text inputs
         const formData = new FormData();
-
+      
+      
         // Append text fields to formData
         formData.append('productName', product.productName);
         formData.append('category', product.category);
@@ -179,6 +195,7 @@ const DigitalProductCreate = () => {
         // Append feature image if provided
         if (product.featureImage) {
             formData.append('featureImage', product.featureImage); // Assuming featureImage is a single file
+            
         }
         if (featureImage) {
             formData.append('featureImage', featureImage);
@@ -187,6 +204,11 @@ const DigitalProductCreate = () => {
             formData.append('galleryImages', image);
         });
 
+        if (imageUploadMethod === "file" && formData.image) {
+            data.append("image", formData.image);
+          } else if (imageUploadMethod === "link" && formData.imageURL) {
+            data.append("imageURL", formData.imageURL);
+          }
 
 
         // Append gallery images if provided
@@ -199,7 +221,7 @@ const DigitalProductCreate = () => {
         // Append feature tags
 
         try {
-            const response = await fetch('https://ecommerce-panel-backend.onrender.com/api/DigitalProducts', {
+            const response = await fetch('http://127.0.0.1:5000/api/DigitalProducts', {
                 method: 'POST',
                 body: formData,
             });
@@ -336,19 +358,28 @@ const DigitalProductCreate = () => {
                     </div>
 
                     {/* Conditional rendering based on upload type */}
-                    {imageUploadMethod === 'file' ? (
-                        <div className="flex flex-col">
-                            <input type="file" multiple className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" /> {/* Input for file upload */}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col">
-                            <input
-                                type="url"
-                                placeholder="Enter image URL"
-                                className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300" // Tailwind CSS classes for styling
-                            /> {/* Input for link upload */}
-                        </div>
-                    )}
+                    {imageUploadMethod === "file" ? (
+            <div className="flex flex-col">
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleInputChange}
+                className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              />
+            </div>
+          ) : (
+            <div className="flex flex-col">
+              <input
+                type="url"
+                name="imageURL"
+                placeholder="Enter image URL"
+                value={formData.imageURL}
+                onChange={handleInputChange}
+                className="border rounded-md p-2 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+              />
+            </div>
+          )}
 
 
 
