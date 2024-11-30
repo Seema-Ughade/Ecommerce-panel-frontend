@@ -82,7 +82,7 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const menuItems = [
-  { key: 'dashboard', icon: <MdDashboard />, label: 'Dashboard', to: '/dashboard', permission: "Manage Tasks",
+  { key: 'dashboard', icon: <MdDashboard />, label: 'Dashboard', to: '/dashboard', permission: "Manage Dashboard",
   },
   {
     key: 'orders',
@@ -102,7 +102,7 @@ const menuItems = [
     key: 'manage-country',
     icon: <MdFlag />,
     label: 'Manage Country',
-    permission: "Orders",
+    permission: "Manage Country",
 
     children: [
       { key: 'country', icon: <MdMap />, label: 'Country', to: '/admin/manage/country' },
@@ -113,6 +113,7 @@ const menuItems = [
     key: 'total-earning',
     icon: <MdAttachMoney />,
     label: 'Total Earning',
+    permission : "Tax Calculate",
     children: [
       { key: 'tax-calculate', icon: <MdCalculate />, label: 'Tax Calculate', to: '/admin/tax/calculate' },
       { key: 'subscription-earning', icon: <MdMonetizationOn />, label: 'Subscription Earning', to: '/admin/subscription/earning' },
@@ -137,6 +138,7 @@ const menuItems = [
     key: 'products',
     icon: <MdAdd />,
     label: 'Products',
+    permission : "Products" ,
     children: [
       { key: 'add-product', icon: <MdAddBox />, label: 'Add New Product', to: '/admin/products/types' },
       { key: 'all-products', icon: <MdList />, label: 'All Products', to: '/admin/products' },
@@ -149,6 +151,7 @@ const menuItems = [
     key: 'affiliate-products',
     icon: <MdAttachMoney />,  // Assuming this icon represents affiliate products
     label: 'Affiliate Products',
+    permission : "Affiliate Products" ,
     children: [
       { key: 'add-affiliate-product', icon: <MdAddBox />, label: 'Add Affiliate Product', to: '/admin/products/add-affiliate/AddAffiliateProduct' },
       { key: 'all-affiliate-products', icon: <MdList />, label: 'All Affiliate Products', to: '/admin/products/AllAffiliateProducts' },
@@ -160,21 +163,25 @@ const menuItems = [
     icon: <MdUpload />,
     label: 'Bulk Product Upload',
     to: '/admin/ProductBulkUpload',
+    permission : "Bulk Product Upload" ,
   },
   {
     key: 'product-discussion',
     icon: <MdComment />,
     label: 'Product Discussion',
+    permission : "Product Discussion",
     children: [
       { key: 'product-reviews', icon: <MdRateReview />, label: 'Product Reviews', to: '/admin/ratings' },
       { key: 'reports', icon: <MdReport />, label: 'Reports', to: '/admin/reports' },
     ],
   },
-  { key: 'set-coupons', icon: <MdPercent />, label: 'Set Coupons', to: '/admin/coupon' },
+  { key: 'set-coupons', icon: <MdPercent />, label: 'Set Coupons',     permission : "Set Coupons",
+    to: '/admin/coupon' },
   {
     key: 'customers',
     icon: <MdPeople />,  // Main icon for Customers
     label: 'Customers',
+    permission : "Customers",
     children: [
       { key: 'customers-list', icon: <MdList />, label: 'Customers List', to: '/admin/users' },
       { key: 'withdraws', icon: <MdAttachMoney />, label: 'Withdraws', to: '/admin/users/withdraws' },
@@ -186,6 +193,8 @@ const menuItems = [
     key: 'riders',
     icon: <MdGroup />,
     label: 'Riders',
+    permission : "riders",
+
     children: [
       { key: 'rider-list', icon: <MdList />, label: 'Rider List', to: '/admin/riders' },
       { key: 'rider-withdraws', icon: <MdAttachMoney />, label: 'Withdraws', to: '/admin/riders/withdraws' },
@@ -195,6 +204,7 @@ const menuItems = [
     key: 'customer-deposits',
     icon: <MdMonetizationOn />,
     label: 'Customer Deposits',
+    permission : "Customer Deposits",
     children: [
       { key: 'completed-deposits', icon: <MdCheckCircle />, label: 'Completed Deposits', to: '/admin/users/deposits/all' },
       { key: 'pending-deposits', icon: <MdHourglassEmpty />, label: 'Pending Deposits', to: '/admin/users/deposits/pending' },
@@ -206,6 +216,7 @@ const menuItems = [
     key: 'vendors',
     icon: <MdShop />,
     label: 'Vendors',
+    permission : "Vendors",
     children: [
       { key: 'vendors-list', icon: <MdPeople />, label: 'Vendors List', to: '/admin/vendors' },
       { key: 'vendor-withdraws', icon: <MdMonetizationOn />, label: 'Withdraws', to: '/admin/vendors/withdraws' },
@@ -215,6 +226,8 @@ const menuItems = [
     key: 'vendor-subscriptions',
     icon: <MdAccountBalance />, // Replace with an appropriate icon
     label: 'Vendor Subscriptions',
+    permission : "Vendor Subscriptions",
+
     children: [
       { key: 'completed-subscriptions', icon: <MdCheckCircle />, label: 'Completed Subscriptions', to: '/admin/vendors/subs/completed' },
       { key: 'pending-subscriptions', icon: <MdHourglassEmpty />, label: 'Pending Subscriptions', to: '/admin/vendors/subs/pending' },
@@ -224,6 +237,8 @@ const menuItems = [
     key: 'vendor-verifications',
     icon: <MdVerifiedUser />, // Replace with an appropriate icon
     label: 'Vendor Verifications',
+    permission : "Vendor Verifications",
+
     children: [
       { key: 'all-verifications', icon: <MdList />, label: 'All Verifications', to: '/admin/verificatons/all' },
       { key: 'pending-verifications', icon: <MdHourglassEmpty />, label: 'Pending Verifications', to: '/admin/verificatons/pending' },
@@ -233,12 +248,16 @@ const menuItems = [
     key: 'vendor-subscription-plans',
     icon: <MdAttachMoney />, // Replace with an appropriate icon
     label: 'Vendor Subscription Plans',
+    permission : "Vendor Subscription Plans",
+
     to: '/admin/subscription',
   },
   {
     key: 'messages',
     icon: <MdMessage />, // Replace with an appropriate icon
     label: 'Messages',
+    permission : "Messages",
+
     children: [
       { key: 'tickets', icon: <MdSupport />, label: 'Tickets', to: '/admin/tickets' },
       { key: 'disputes', icon: <MdWarning />, label: 'Disputes', to: '/admin/disputes' },
@@ -248,6 +267,8 @@ const menuItems = [
     key: 'blog',
     icon: <MdCreate />,  // Assuming MdIcon is imported and represents the desired icon
     label: 'Blog',
+    permission : "Blog",
+
     children: [
       { key: 'categories', icon: <MdCategory />, label: 'Categories', to: '/admin/blog/categories' },
       { key: 'posts', icon: <MdPostAdd />, label: 'Posts', to: '/admin/blog/posts' },
@@ -258,6 +279,8 @@ const menuItems = [
     key: 'general-settings',
     icon: <MdSettings />, // Replace with an appropriate icon
     label: 'General Settings',
+    permission : "General Settings",
+
     children: [
       { key: 'logo', icon: <MdImage />, label: 'Logo', to: '/admin/general-settings/logo' },
       { key: 'favicon', icon: <MdImage />, label: 'Favicon', to: '/admin/general-settings/favicon' },
@@ -276,6 +299,7 @@ const menuItems = [
     key: 'home-page-settings',
     icon: <MdHome />, // Replace with an appropriate icon
     label: 'Home Page Settings',
+    permission : "Home Page Settings",
     children: [
       { key: 'home-pages', icon: <MdDashboard />, label: 'Home Pages', to: '/admin/home-page-settings' },
       { key: 'sliders', icon: <MdSlideshow />, label: 'Sliders', to: '/admin/slider' },
@@ -290,6 +314,7 @@ const menuItems = [
     key: 'menu-page-settings',
     icon: <MdMenu />, // Replace with an appropriate icon
     label: 'Menu Page Settings',
+    permission : "Menu Page Settings",
     children: [
       { key: 'faq-page', icon: <MdHelp />, label: 'FAQ Page', to: '/admin/faq' },
       { key: 'contact-us-page', icon: <MdContactMail />, label: 'Contact Us Page', to: '/admin/page-settings/contact' },
@@ -301,6 +326,7 @@ const menuItems = [
     key: 'email-settings',
     icon: <MdEmail />, // Replace with an appropriate icon
     label: 'Email Settings',
+    permission :"Email Settings",
     children: [
       { key: 'email-template', icon: <MdOutlineDescription />, label: 'Email Template', to: '/admin/email-templates' },
       { key: 'email-configurations', icon: <MdSettings />, label: 'Email Configurations', to: '/admin/email-config' },
@@ -311,6 +337,7 @@ const menuItems = [
     key: 'payment-settings',
     icon: <MdPayment />, // Replace with an appropriate icon
     label: 'Payment Settings',
+    permission : "Payment Settings",
     children: [
       { key: 'payment-information', icon: <MdInfo />, label: 'Payment Information', to: '/admin/payment-informations' },
       { key: 'payment-gateways', icon: <MdPayment />, label: 'Payment Gateways', to: '/admin/paymentgateway' },
@@ -322,6 +349,7 @@ const menuItems = [
     key: 'social-settings',
     icon: <MdShare />, // Replace with an appropriate icon
     label: 'Social Settings',
+    permission : "Social Settings",
     children: [
       { key: 'social-links', icon: <MdLink />, label: 'Social Links', to: '/admin/social-link' },
       { key: 'facebook-login', icon: <MdFacebook />, label: 'Facebook Login', to: '/admin/social/facebook' },
@@ -332,6 +360,7 @@ const menuItems = [
     key: 'language-settings',
     icon: <MdLanguage />, // Replace with an appropriate icon
     label: 'Language Settings',
+    permission : "Language Settings",
     children: [
       { key: 'website-language', icon: <MdLanguage />, label: 'Website Language', to: '/admin/languages' },
       { key: 'admin-panel-language', icon: <MdLanguage />, label: 'Admin Panel Language', to: '/admin/adminlanguages' },
@@ -341,24 +370,27 @@ const menuItems = [
     key: 'font-option',
     icon: <MdFontDownload />, // Replace with an appropriate icon
     label: 'Font Option',
+    permission : "Font Option",
     to: '/admin/fonts',
   },
   {
     key: 'seo-tools',
     icon: <MdSearch />, // Replace with an appropriate icon
     label: 'SEO Tools',
+    permission : "SEO Tools",
     children: [
       { key: 'popular-products', icon: <MdStar />, label: 'Popular Products', to: '/admin/products/popular/30' },
       { key: 'google-analytics', icon: <MdAssessment />, label: 'Google Analytics', to: '/admin/seotools/analytics' },
       { key: 'website-meta-keywords', icon: <MdTextFields />, label: 'Website Meta Keywords', to: '/admin/seotools/keywords' },
     ],
   },
-  { key: 'staffs', icon: <MdGroup />, label: 'Manage Staffs', to: '/admin/blog/manage-staffs' },
+  { key: 'staffs', icon: <MdGroup />, label: 'Manage Staffs', permission : "Manage Staffs", to: '/admin/blog/manage-staffs' },
 
   {
     key: 'subscribers',
     icon: <MdPeople />, // Replace with an appropriate icon
     label: 'Subscribers',
+    permission : "Subscribers",
     to: '/admin/subscribers',
   },
   {
@@ -366,9 +398,11 @@ const menuItems = [
     icon: <MdPerson />,
     label: 'Manage Roles',
     to: '/admin/role',
+    permission : "Manage Roles",
+
   },
-  { key: 'admin-logs', icon: <MdHistory />, label: 'Admin Logs', to: '/admin/logs' },
-  { key: 'logout', icon: <MdLogout />, label: 'Logout', to: '/logout' },
+  // { key: 'admin-logs', icon: <MdHistory />, label: 'Admin Logs', permission : "Manage Roles", to: '/admin/logs' },
+  // { key: 'logout', icon: <MdLogout />, label: 'Logout', permission : "Logout", to: '/logout' },
 ];
 
 export default function Sidebar({ collapsed, toggleSidebar }) {

@@ -16,6 +16,7 @@ const Roles = () => {
 
   // Permissions list
   const permissionsList = [
+    'Manage Dashboard',
     'Orders',
     'Manage Categories',
     'Manage Country',
@@ -24,6 +25,7 @@ const Roles = () => {
     'Affiliate Products',
     'Bulk Product Upload',
     'Product Discussion',
+    'riders',
     'Set Coupons',
     'Customers',
     'Customer Deposits',
@@ -32,6 +34,7 @@ const Roles = () => {
     'Vendor Verifications',
     'Vendor Subscription Plans',
     'Messages',
+    'Blog',
     'General Settings',
     'Home Page Settings',
     'Menu Page Settings',
@@ -39,9 +42,11 @@ const Roles = () => {
     'Payment Settings',
     'Social Settings',
     'Language Settings',
+    'Font Option',
     'SEO Tools',
     'Manage Staffs',
     'Subscribers',
+    'Manage Roles',
   ];
 
   useEffect(() => {
