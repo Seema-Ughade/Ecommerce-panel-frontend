@@ -11,7 +11,7 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     try {
       // Authenticate user
-      const response = await axios.post('http://127.0.0.1:5000/api/auth/login', values);
+      const response = await axios.post('https://ecommerce-panel-backend.onrender.com/api/auth/login', values);
       const { token, user } = response.data;
 
       // Store token
