@@ -77,7 +77,7 @@ const SocialLinks = () => {
       // Update the status of the SocialLink using the correct API endpoint
       const response = await axios.put(`https://ecommerce-panel-backend.onrender.com/api/social-links/${socialLinkId}/status`, { status: newStatus });
       console.log('Updated SocialLink:', response.data); // Log the updated SocialLink
-  
+
       // Update socialLinks in the state
       setSocialLinks(prev =>
         prev.map(link => (link._id === socialLinkId ? { ...link, status: newStatus } : link))
@@ -87,7 +87,7 @@ const SocialLinks = () => {
       toast.error('Error updating social link status. Please try again.');
     }
   };
-  
+
   return (
     <div className="container">
       <div className="content-area px-6">
@@ -120,26 +120,26 @@ const SocialLinks = () => {
           </thead>
           <tbody>
             {currentLinks.map((link, index) => (
-              <tr key={index} className="hover:bg-gray-100">
-                
+              <tr key={index} className="hover:bg-gray-100 text-center">
+
                 <td className="border border-gray-300 px-4 py-2">{link.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{link.icon}</td>
                 <td className="py-2 px-4 border">
-  <div className="flex justify-center items-center">
-    <select
-      value={link.status}
-      onChange={(e) => handleStatusChange(link._id, e.target.value)}
-      className="border rounded px-2 py-1"
-      style={{
-        backgroundColor: link.status === "active" ? "#1e7e34" : "#bd2130",
-        color: "white", // Text color for visibility
-      }}
-    >
-      <option value="active">Active</option>
-      <option value="inactive">Inactive</option>
-    </select>
-  </div>
-</td>
+                  <div className="flex justify-center items-center">
+                    <select
+                      value={link.status}
+                      onChange={(e) => handleStatusChange(link._id, e.target.value)}
+                      className="border rounded px-2 py-1"
+                      style={{
+                        backgroundColor: link.status === "active" ? "#1e7e34" : "#bd2130",
+                        color: "white", // Text color for visibility
+                      }}
+                    >
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
+                  </div>
+                </td>
                 <td className="border border-gray-300 px-4 py-2 flex justify-center space-x-2">
 
                   <button
