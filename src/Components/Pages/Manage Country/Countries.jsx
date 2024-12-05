@@ -163,7 +163,7 @@ const Countries = () => {
 
   return (
     <div className="container">
-      <div className="content-area px-6">
+      <div className="content-area ">
         <h4 className="heading text-2xl font-semibold mb-4">Manage Country
         </h4>
 

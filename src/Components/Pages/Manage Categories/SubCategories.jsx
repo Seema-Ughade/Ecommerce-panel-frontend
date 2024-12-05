@@ -240,7 +240,7 @@ const SubCategories = () => {
     //   </div>
 
 
-    <div className="content-area px-6">
+    <div className="content-area ">
       <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">Sub Categories</h4>
 
       <div className="flex  justify-between mb-4">

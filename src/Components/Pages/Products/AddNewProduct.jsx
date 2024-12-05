@@ -13,7 +13,7 @@ const AddNewProduct = () => {
   }, []);
 
   return (
-    <div className={`content-area px-6 transition-opacity duration-700 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`content-area  transition-opacity duration-700 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
       <div className="mb-2">
         <h4 className="heading text-purple-600 text-2xl font-semibold">Add Product</h4>
       </div>

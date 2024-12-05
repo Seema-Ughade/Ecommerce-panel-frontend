@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styling
+import ShimmerTable from '../Shimmer UI/ShimmerTable';
 
 const MainCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -17,6 +18,7 @@ const MainCategories = () => {
   const [editingAttributeId, setEditingAttributeId] = useState(null); // State for tracking attribute being edited
   const [subCategoryName, setSubCategoryName] = useState('');
   const [subCategorySlug, setSubCategorySlug] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
 
   const itemsPerPage = 6;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,6 +41,8 @@ const MainCategories = () => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
+        setLoading(true); // Start loading
+
         const response = await axios.get('https://ecommerce-panel-backend.onrender.com/api/categories');
         console.log('Fetched categories:', response.data);
         if (Array.isArray(response.data)) {
@@ -48,9 +52,11 @@ const MainCategories = () => {
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
+      } finally {
+        setLoading(false); // End loading
       }
     };
-
+  
     fetchCategories();
   }, []);
 
@@ -296,7 +302,7 @@ const MainCategories = () => {
 
   return (
     <>
-      <div className="content-area ">
+      <div className="content-area  ">
         <h4 className="heading text-violet-600  text-2xl font-semibold mb-4">Main Categories</h4>
         <div className="flex  justify-between mb-4">
           <input
@@ -324,84 +330,94 @@ const MainCategories = () => {
             </tr>
           </thead>
           <tbody>
-            {currentCategories.map((category) => (
-              <tr key={category._id} className="hover:bg-gray-100 ">
-                <td className="py-2 px-4 border">{category.name}</td>
-                <td className="py-2 px-4 border">{category.slug}</td>
-                <td className="py-2 flex  px-4 border">
-                  <button
-                    onClick={() => {
-                      handleCategorySelect(category._id); // Set the selected category ID
-                      setIsAttributeModalOpen(true);
-                    }}
-                    className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200"
-                  >
-                    <EditOutlined className="h-5 w-5 mr-1" />
-                    Create
-                  </button>
-                  {/* Show Manage button only if there are attributes */}
-                  {category.attributes && category.attributes.length > 0 && (
-                    <button
-                      onClick={() => handleManageClick(category)}
-
-                      className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200">
-                      <EditOutlined className="h-5 w-5 mr-1" />
-                      Manage
-                    </button>
-                  )}
-                </td>
-                <td className="py-2 px-4   border">
-                  {category.image ? <img src={category.image} alt={category.name} 
-                  className="w-12   h-12 rounded"
-                  // className="w-14 border rounded-md p-1 m-3 h-14 " 
-
-                   /> : '-'}
-                </td>
-                <td className="py-2 px-4 border">
-                  <select
-                    value={category.featured}
-                    onChange={(e) => handleFeaturedChange(category._id, e.target.value)}
-                    className="border bg-pink-300 text-white rounded px-2 py-1"
-                    style={{
-                      backgroundColor: category.featured === "active" ? "#1e7e34" : "#bd2130",
-                      color: "white", // Text color for visibility
-                    }}
-                  >
-                    <option value="active" >Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </td>
-                <td className="py-2 px-4 border">
-                  <select
-                    value={category.status}
-                    onChange={(e) => handleStatusChange(category._id, e.target.value)}
-                    className="border  text-white rounded px-2 py-1"
-                    style={{
-                      backgroundColor: category.status === "active" ? "#1e7e34" : "#bd2130",
-                      color: "white", // Text color for visibility
-                    }}
-                  >
-                    <option value="active" >Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </td>
-                <td className="py-2 flex justify-center px-4 border">
-                  <button
-                    onClick={() => handleEditCategory(category)}
-                    className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200">
-                    <EditOutlined className="h-5 w-5 mr-1" />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteCategory(category._id)} // Pass the category ID
-                    className="flex items-center rounded-2xl text-white bg-red-600 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200">
-                    <TrashIcon className="h-5 w-5 mr-1" />
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {loading ? (
+    <ShimmerTable /> // Show shimmer effect while loading
+  ) : (
+    currentCategories.map((category) => (
+      <tr key={category._id} className="hover:bg-gray-100">
+        <td className="py-2 px-4 border">{category.name}</td>
+        <td className="py-2 px-4 border">{category.slug}</td>
+        <td className="py-2 flex px-4 border">
+          <button
+            onClick={() => {
+              handleCategorySelect(category._id); // Set the selected category ID
+              setIsAttributeModalOpen(true);
+            }}
+            className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-200"
+          >
+            <EditOutlined className="h-5 w-5 mr-1" />
+            Create
+          </button>
+          {/* Show Manage button only if there are attributes */}
+          {category.attributes && category.attributes.length > 0 && (
+            <button
+              onClick={() => handleManageClick(category)}
+              className="flex items-center rounded-2xl text-white bg-violet-400 hover:bg-violet-700 ml-2 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition ease-in-out duration-200"
+            >
+              <EditOutlined className="h-5 w-5 mr-1" />
+              Manage
+            </button>
+          )}
+        </td>
+        <td className="py-2 px-4 border">
+          {category.image ? (
+            <img
+              src={category.image}
+              alt={category.name}
+              className="w-12 h-12 rounded"
+            />
+          ) : (
+            '-'
+          )}
+        </td>
+        <td className="py-2 px-4 border">
+          <select
+            value={category.featured}
+            onChange={(e) => handleFeaturedChange(category._id, e.target.value)}
+            className="border bg-pink-300 text-white rounded px-2 py-1"
+            style={{
+              backgroundColor: category.featured === 'active' ? '#1e7e34' : '#bd2130',
+              color: 'white', // Text color for visibility
+            }}
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </td>
+        <td className="py-2 px-4 border">
+          <select
+            value={category.status}
+            onChange={(e) => handleStatusChange(category._id, e.target.value)}
+            className="border text-white rounded px-2 py-1"
+            style={{
+              backgroundColor: category.status === 'active' ? '#1e7e34' : '#bd2130',
+              color: 'white', // Text color for visibility
+            }}
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </td>
+        <td className="py-2 flex justify-center px-4 border">
+          <button
+            onClick={() => handleEditCategory(category)}
+            className="flex items-center rounded-2xl text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 focus:outline-none focus:ring-2 transition ease-in-out duration-200"
+          >
+            <EditOutlined className="h-5 w-5 mr-1" />
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeleteCategory(category._id)} // Pass the category ID
+            className="flex items-center rounded-2xl text-white bg-red-600 hover:bg-red-700 ml-2 px-3 py-1 focus:outline-none transition ease-in-out duration-200"
+          >
+            <TrashIcon className="h-5 w-5 mr-1" />
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
         </table>
 
         {/* Add New Attribute Modal */}

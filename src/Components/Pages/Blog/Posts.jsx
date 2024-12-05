@@ -78,7 +78,7 @@ const Posts = () => {
 
   return (
     <div className="container">
-      <div className="content-area px-6">
+      <div className="content-area ">
         <h4 className="heading text-2xl font-semibold mb-4">Blog Posts</h4>
 
         <div className="flex justify-between mb-4">
