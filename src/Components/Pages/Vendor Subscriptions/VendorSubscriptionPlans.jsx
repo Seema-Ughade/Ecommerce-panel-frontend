@@ -11,7 +11,7 @@ const VendorSubscriptionPlans = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/subscription-plans');
+        const response = await axios.get('https://ecommerce-panel-backend.onrender.comapi/subscription-plans');
         setSubscriptionPlans(response.data);
       } catch (error) {
         console.error('Error fetching subscription plans:', error);
