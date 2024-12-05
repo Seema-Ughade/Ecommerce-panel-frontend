@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ProductUserDetail = () => {
+const ProductUserDetailPOS = () => {
   const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -314,7 +314,7 @@ const ProductUserDetail = () => {
   );
 };
 
-export default ProductUserDetail;
+export default ProductUserDetailPOS;
 
 
 
