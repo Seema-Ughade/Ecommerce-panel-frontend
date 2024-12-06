@@ -137,7 +137,7 @@ import Navbar from "./Components/Pages/Navbar";
 import Breadcrumb from './Components/Pages/Breadcrumb';
 
 // Pages
-import Dashboard from './Components/Pages/Dashboard';
+import Dashboard from './Components/Pages/Dashboard/Dashboard';
 import AddNewProduct from './Components/Pages/Products/AddNewProduct';
 import MainCategories from './Components/Pages/Manage Categories/MainCategories';
 import SubCategories from './Components/Pages/Manage Categories/SubCategories';
